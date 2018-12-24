@@ -4,6 +4,7 @@ buildscript {
     }
     dependencies {
         classpath("org.springframework.boot:spring-boot-gradle-plugin:2.1.1.RELEASE")
+        classpath('com.moowork.gradle:gradle-node-plugin:1.2.0')
     }
 }
 
@@ -17,6 +18,15 @@ apply plugin: 'idea'
 apply plugin: 'org.springframework.boot'
 apply plugin: 'io.spring.dependency-management'
 apply plugin: 'checkstyle'
+apply plugin: 'com.moowork.node'
+
+node {
+    version = '10.14.2'
+    npmVersion = '6.5.0'
+    download = true
+    workDir = file("${project.buildDir}/node")
+    nodeModulesDir = file("${project.projectDir}/src/main/webapp/chronos-ui")
+}
 
 lombok {
     version = '1.18.4'
@@ -26,6 +36,9 @@ lombok {
 bootJar {
     baseName = 'chronos'
     version = '0.1.0'
+    from('src/main/webapp/chronos-ui/build') {
+        into 'static'
+    }
 }
 
 checkstyle {
@@ -35,12 +48,25 @@ checkstyle {
             'configDir': rootProject.file('checkstyle')
     ]
 }
+
 checkstyleMain {
     source = 'src/main/java'
 }
+
 checkstyleTest {
     source = 'src/test/java'
 }
+
+task installFeDependencie(type: NpmTask) {
+    args = ['install']
+}
+
+task buildFe(type: NpmTask) {
+    args = ['run-script', 'build']
+}
+
+buildFe.dependsOn(installFeDependencie)
+build.dependsOn(buildFe)
 
 repositories {
     mavenCentral()
@@ -48,13 +74,10 @@ repositories {
 
 sourceCompatibility = 1.11
 targetCompatibility = 1.11
-group 'com.syngenta.digital.lab.kyiv'
-version '1.0-SNAPSHOT'
 
 dependencies {
     compile 'org.springframework.boot:spring-boot-starter-web'
     compile 'org.springframework.boot:spring-boot-starter-data-jpa'
-    compile ("org.springframework.boot:spring-boot-starter-security")
     compile ("org.springframework.boot:spring-boot-configuration-processor")
     compile 'org.postgresql:postgresql:42.2.5'
     compile 'org.javassist:javassist:3.23.1-GA'
