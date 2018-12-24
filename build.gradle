@@ -36,7 +36,7 @@ lombok {
 bootJar {
     baseName = 'chronos'
     version = '0.1.0'
-    from('src/main/webapp/chronos-ui/build') {
+    from("${project.projectDir}/src/main/webapp/chronos-ui/build") {
         into 'static'
     }
 }
