@@ -36,8 +36,9 @@ lombok {
 bootJar {
     baseName = 'chronos'
     version = '0.1.0'
-    from("${project.projectDir}/src/main/webapp/chronos-ui/build") {
-        into 'static'
+    println 'started copying resources'
+    from ('src/main/webapp/chronos-ui/build') {
+        into 'public'
     }
 }
 
@@ -62,7 +63,7 @@ task installFeDependencie(type: NpmTask) {
 }
 
 task buildFe(type: NpmTask) {
-    args = ['run-script', 'build']
+    args = ['run', 'build']
 }
 
 buildFe.dependsOn(installFeDependencie)
