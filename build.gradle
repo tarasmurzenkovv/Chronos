@@ -3,13 +3,16 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath("org.springframework.boot:spring-boot-gradle-plugin:2.1.1.RELEASE")
-        classpath('com.moowork.gradle:gradle-node-plugin:1.2.0')
+        classpath 'org.springframework.boot:spring-boot-gradle-plugin:2.1.1.RELEASE'
+        classpath 'com.moowork.gradle:gradle-node-plugin:1.2.0'
+        classpath 'org.liquibase:liquibase-gradle-plugin:1.2.0'
+        classpath 'mysql:mysql-connector-java:8.0.13'
     }
 }
 
 plugins {
     id 'io.franzbecker.gradle-lombok' version '1.14'
+    id "org.liquibase.gradle" version "2.0.1"
     id 'java'
 }
 
@@ -19,6 +22,7 @@ apply plugin: 'org.springframework.boot'
 apply plugin: 'io.spring.dependency-management'
 apply plugin: 'checkstyle'
 apply plugin: 'com.moowork.node'
+apply plugin: 'liquibase'
 
 node {
     version = '10.14.2'
@@ -36,8 +40,7 @@ lombok {
 bootJar {
     baseName = 'chronos'
     version = '0.1.0'
-    println 'started copying resources'
-    from ('src/main/webapp/chronos-ui/build') {
+    from('src/main/webapp/chronos-ui/build') {
         into 'public'
     }
 }
@@ -58,16 +61,45 @@ checkstyleTest {
     source = 'src/test/java'
 }
 
-task installFeDependencie(type: NpmTask) {
-    args = ['install']
+task applyDbChanges() {
+    def changeLog = "$projectDir/src/main/resources/db/changelog.xml"
+    def dbUrl = 'jdbc:mysql://139.59.210.123:3306/chrono_db?useSSL=false'
+    def dbUserName = project.findProperty("user_name")
+    def dbPassword = project.findProperty("password")
+    liquibase {
+        activities {
+            main {
+                changeLogFile changeLog
+                url dbUrl
+                username dbUserName
+                password dbPassword
+            }
+        }
+    }
+}
+
+task deletFeArtifacts(type: Delete) {
+    def pathToFeFolder = "${project.projectDir}/src/main/webapp/chronos-ui"
+    def buildFolder = "${pathToFeFolder}/build"
+    def nodeModules = "${pathToFeFolder}/node_modules"
+    def dotEnvFile = "${pathToFeFolder}/.env.production"
+    delete buildFolder, nodeModules, dotEnvFile
+}
+
+task createDotEnvFileFe(type: Copy) {
+    def pathToFeFolder = "${project.projectDir}/src/main/webapp/chronos-ui"
+    from pathToFeFolder
+    into pathToFeFolder
+    include '.env.production.example'
+    rename '.env.production.example', '.env.production'
 }
 
 task buildFe(type: NpmTask) {
-    args = ['run', 'build']
+    args = ['install', 'run', 'build']
 }
 
-buildFe.dependsOn(installFeDependencie)
-build.dependsOn(buildFe)
+build.dependsOn buildFe
+clean.dependsOn deletFeArtifacts
 
 repositories {
     mavenCentral()
@@ -79,21 +111,22 @@ targetCompatibility = 1.11
 dependencies {
     compile 'org.springframework.boot:spring-boot-starter-web'
     compile 'org.springframework.boot:spring-boot-starter-data-jpa'
-    compile ("org.springframework.boot:spring-boot-configuration-processor")
+    compile 'org.springframework.boot:spring-boot-configuration-processor'
     compile 'org.postgresql:postgresql:42.2.5'
     compile 'org.javassist:javassist:3.23.1-GA'
     compile 'org.slf4j:slf4j-api:1.7.25'
     compile 'ch.qos.logback:logback-classic:1.2.3'
     compile 'ch.qos.logback:logback-core:1.2.3'
-    compile group: 'io.jsonwebtoken', name: 'jjwt', version: '0.9.1'
-    compile group: 'javax.xml.bind', name: 'jaxb-api', version: '2.3.1'
+    compile 'io.jsonwebtoken:jjwt:0.9.1'
+    compile 'javax.xml.bind:jaxb-api:2.3.1'
+    compile 'mysql:mysql-connector-java:8.0.13'
 
     testCompile 'org.awaitility:awaitility:3.1.3'
     testCompile 'org.springframework.boot:spring-boot-starter-test'
-    testCompile group: 'com.github.springtestdbunit', name: 'spring-test-dbunit', version: '1.3.0'
-    testCompile group: 'org.dbunit', name: 'dbunit', version: '2.5.0'
-    testCompile group: 'com.h2database', name: 'h2', version: '1.4.197'
-    testCompile group: 'com.jayway.restassured', name: 'rest-assured', version: '2.9.0'
-    testCompile group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: '5.3.2'
-    testCompile group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: '5.3.2'
+    testCompile 'com.github.springtestdbunit:spring-test-dbunit:1.3.0'
+    testCompile 'org.dbunit:dbunit:2.5.0'
+    testCompile 'com.h2database:h2:1.4.197'
+    testCompile 'com.jayway.restassured:rest-assured:2.9.0'
+    testCompile 'org.junit.jupiter:junit-jupiter-engine:5.3.2'
+    testCompile 'org.junit.jupiter:junit-jupiter-api:5.3.2'
 }

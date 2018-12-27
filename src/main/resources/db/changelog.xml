@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet id="1" author="Taras Murzenkov">
+        <createTable tableName="PROJECT_TYPE">
+            <column name="ID" autoIncrement="true" type="bigint">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="TASK_TYPE_NAME" type="text">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <createTable tableName="USER_ROLE">
+            <column name="ID" autoIncrement="true" type="bigint">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="TASK_TYPE_NAME" type="text">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <createTable tableName="USER">
+            <column name="ID" autoIncrement="true" type="bigint">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="USER_ROLE_ID" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="USER_EMAIL" type="text">
+                <constraints nullable="false"/>
+            </column>
+            <column name="USER_PASSWORD" type="text">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <createTable tableName="PROJECT">
+            <column name="ID" autoIncrement="true" type="bigint">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="PROJECT_TYPE_ID" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="PROJECT_NAME" type="text">
+                <constraints nullable="false"/>
+            </column>
+            <column name="PROJECT_DESCRIPTION" type="text">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <createTable tableName="TASK">
+            <column name="ID" autoIncrement="true" type="bigint">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="USER_ID" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="PROJECT_ID" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="REPORTING_DATE" type="date">
+                <constraints nullable="false"/>
+            </column>
+            <column name="SPENT_TIME" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="COMMENTS" type="text">
+                <constraints nullable="false"/>
+            </column>
+            <column name="TAGS" type="text">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="2" author="Taras Murzenkov">
+        <addForeignKeyConstraint baseTableName="USER"
+                                 baseColumnNames="USER_ROLE_ID"
+                                 constraintName="USER_ROLE_FK"
+                                 referencedTableName="USER_ROLE"
+                                 referencedColumnNames="ID"/>
+
+        <addForeignKeyConstraint baseTableName="PROJECT"
+                                 baseColumnNames="PROJECT_TYPE_ID"
+                                 constraintName="PROJECT_TYPE_FK"
+                                 referencedTableName="PROJECT_TYPE"
+                                 referencedColumnNames="ID"/>
+
+        <addForeignKeyConstraint baseTableName="TASK"
+                                 baseColumnNames="USER_ID"
+                                 constraintName="USER_FK"
+                                 referencedTableName="USER"
+                                 referencedColumnNames="ID"/>
+
+        <addForeignKeyConstraint baseTableName="TASK"
+                                 baseColumnNames="PROJECT_ID"
+                                 constraintName="PROJECT_FK"
+                                 referencedTableName="PROJECT"
+                                 referencedColumnNames="ID"/>
+    </changeSet>
+</databaseChangeLog>
