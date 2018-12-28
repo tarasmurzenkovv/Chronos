@@ -1,0 +1,7 @@
+{
+  "error": true,
+  "data": {
+    "error_code": 6,
+    "error_message": "User password is too weak. It must have minimum eight character, at leas one uppercase letter, one lowercase letter, one number and one special character."
+  }
+}

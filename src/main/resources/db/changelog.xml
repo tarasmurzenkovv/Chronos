@@ -101,4 +101,25 @@
                                  referencedTableName="PROJECT"
                                  referencedColumnNames="ID"/>
     </changeSet>
+
+    <changeSet id="3" author="Taras Murzenkov">
+        <dropForeignKeyConstraint baseTableName="USER" constraintName="USER_ROLE_FK"/>
+        <dropTable tableName="USER_ROLE"/>
+    </changeSet>
+
+    <changeSet id="4" author="Taras Murzenkov">
+        <addColumn tableName="USER">
+            <column name="FIRST_NAME" type="text">
+                <constraints nullable="false"/>
+            </column>
+            <column name="LAST_NAME" type="text">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="5" author="Taras Murzenkov">
+        <dropColumn tableName="USER" columnName="USER_ROLE_ID"/>
+    </changeSet>
+
 </databaseChangeLog>

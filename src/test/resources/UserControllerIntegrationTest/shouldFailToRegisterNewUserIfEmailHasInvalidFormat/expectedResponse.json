@@ -1,0 +1,7 @@
+{
+  "error": true,
+  "data": {
+    "error_code": 4,
+    "error_message": "User email 'email' has the invalid format"
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "error": true,
+  "data": {
+    "error_code": 2,
+    "error_message": "User last name cannot be null/blank"
+  }
+}

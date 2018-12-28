@@ -1,0 +1,7 @@
+{
+  "error": true,
+  "data": {
+    "error_code": 5,
+    "error_message": "User email 'email@email.com' is already registered in the system"
+  }
+}

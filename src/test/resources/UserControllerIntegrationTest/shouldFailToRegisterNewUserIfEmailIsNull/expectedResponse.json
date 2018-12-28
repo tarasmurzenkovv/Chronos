@@ -1,0 +1,7 @@
+{
+  "error": true,
+  "data": {
+    "error_code": 3,
+    "error_message": "User email cannot be null/blank"
+  }
+}
