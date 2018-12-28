@@ -15,7 +15,6 @@
   "lint-staged": {
     "src/**/*.{js,jsx,ts,tsx,json}": [
       "pretty-quick --staged",
-      "eslint src/ --fix",
       "git add"
     ],
     "src/**/*.{scss,css}": [
@@ -82,6 +81,7 @@
     ]
   },
   "dependencies": {
+    "@material-ui/core": "^3.7.1",
     "build": "^0.1.4",
     "connected-react-router": "^6.0.0",
     "history": "^4.7.2",
