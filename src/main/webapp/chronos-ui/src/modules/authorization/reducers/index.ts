@@ -1,7 +1,7 @@
 import {combineReducers} from 'redux';
 
-import template from './template';
+import signUp from './signUp';
 
 export default combineReducers({
-  template
+  signUp
 });

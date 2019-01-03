@@ -16,7 +16,7 @@ import createRootReducer from './reducers';
 
 import config from './config';
 import logger from './logger';
-import templateEpic from '../modules/module1/epics';
+import templateEpic from '../modules/authorization/epics';
 
 const isDevelopment = process.env.NODE_ENV === 'development';
 const isEnableLogs = config.enable_logs;

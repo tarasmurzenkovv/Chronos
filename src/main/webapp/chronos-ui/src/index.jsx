@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import {Provider} from 'react-redux';
 import {PersistGate} from 'redux-persist/integration/react';
+import {MuiThemeProvider, createMuiTheme} from '@material-ui/core/styles';
 
 import ErrorBoundary from 'modules/common/ErrorBoundary/ErrorBoundary';
 
@@ -12,12 +13,37 @@ import configureStore from './configurations/store';
 
 const {store, persistor, history} = configureStore();
 
+const theme = createMuiTheme({
+  typography: {
+    useNextVariants: true,
+    fontSize: 16,
+    color: '#4a4a4a'
+  },
+  palette: {
+    primary: {
+      main: '#25cdda'
+    },
+    secondary: {
+      main: '#0044ff'
+    }
+  },
+  overrides: {
+    MuiButton: {
+      text: {
+        color: 'white'
+      }
+    }
+  }
+});
+
 ReactDOM.render(
   <Provider store={store}>
     <PersistGate loading={null} persistor={persistor}>
-      <ErrorBoundary>
-        <Pages history={history} />
-      </ErrorBoundary>
+      <MuiThemeProvider theme={theme}>
+        <ErrorBoundary>
+          <Pages history={history} />
+        </ErrorBoundary>
+      </MuiThemeProvider>
     </PersistGate>
   </Provider>,
   document.getElementById('root')

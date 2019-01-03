@@ -81,10 +81,11 @@
     ]
   },
   "dependencies": {
-    "@material-ui/core": "^3.7.1",
+    "@material-ui/core": "^3.8.1",
     "build": "^0.1.4",
     "connected-react-router": "^6.0.0",
     "history": "^4.7.2",
+    "jss": "^10.0.0-alpha.3",
     "prop-types": "^15.6.2",
     "react": "^16.6.3",
     "react-dom": "^16.6.3",
@@ -102,6 +103,7 @@
   "devDependencies": {
     "@babel/core": "7.1.0",
     "@babel/plugin-proposal-export-default-from": "^7.2.0",
+    "@material-ui/icons": "^3.0.1",
     "@svgr/webpack": "2.4.1",
     "@types/jest": "^23.3.10",
     "@types/node": "^10.12.12",

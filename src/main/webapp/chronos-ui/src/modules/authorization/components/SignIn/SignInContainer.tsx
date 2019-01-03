@@ -2,18 +2,19 @@ import * as React from 'react';
 import {connect} from 'react-redux';
 import {compose} from 'recompose';
 
-import {addModal} from 'modules/modals/actions/modals';
+import {createUser} from '../../actions/createUser';
 
-import Component1 from './Component1';
+import SignIn from './SignIn';
 
 const mapStateToProps = () => ({});
 
-const mapDispatchToProps = {addModal};
+const mapDispatchToProps = {createUser};
 
 export default compose(
   connect(
     mapStateToProps,
     mapDispatchToProps
   ),
+
   React.memo
-)(Component1);
+)(SignIn);
