@@ -9,11 +9,43 @@ const styles = (theme: Theme) =>
       marginLeft: '-8px',
       marginRight: '-8px'
     },
-    button: {
-      fontSize: '16px',
-      fontWeight: 'normal',
-      textTransform: 'capitalize',
-      borderWidth: '2px'
+    textField: {
+      marginLeft: theme.spacing.unit,
+      marginRight: theme.spacing.unit,
+      width: '100%',
+      height: '56px',
+      '&:hover': {
+        borderColor: '#636F88 !important'
+      }
+    },
+    textFieldLabel: {
+      color: '#4a4a4a'
+    },
+    textFieldLabelFocused: {
+      color: 'rgba(173, 181, 199, 0.87)'
+    },
+    textFieldOutlinedInput: {
+      $textFieldFocusedNotchedOutline: {
+        borderColor: '#25cdda'
+      },
+      '&:hover $textFieldFocusedNotchedOutline': {
+        borderColor: 'rgba(173, 181, 199, 0.87) !important'
+      }
+    },
+    textFieldFocusedNotchedOutline: {
+      borderWidth: '2px',
+      borderColor: 'rgba(173, 181, 199, 0.87)',
+      '&:hover': {
+        borderWidth: '2px',
+        borderColor: 'rgba(173, 181, 199, 0.87)'
+      }
+    },
+    group: {
+      margin: `${theme.spacing.unit}px 0`
+    },
+    formHelperTextProps: {
+      position: 'absolute',
+      bottom: '-20px'
     }
   });
 

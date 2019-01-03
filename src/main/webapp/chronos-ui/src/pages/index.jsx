@@ -3,6 +3,7 @@ import {Switch, Route} from 'react-router-dom';
 import {ConnectedRouter} from 'connected-react-router';
 
 import SignUpPage from './SignUpPage';
+import SignInPage from './SignInPage';
 
 const App = lazy(() => import('../App'));
 
@@ -13,6 +14,7 @@ const Pages = ({history}) => (
         <Switch>
           <Route exact path="/" component={(props) => <App {...props} />} />
           <Route path="/sign-up" component={SignUpPage} />
+          <Route path="/sign-in" component={SignInPage} />
         </Switch>
       </Suspense>
     </div>

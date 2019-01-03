@@ -55,10 +55,12 @@ const clientVerification = (
     )
     .map(Number);
 
-  return dispatch({
-    type: ADD_LOCAL_SIGN_UP_ERROR_CODES,
-    payload: {errorCodes}
-  });
+  if (errorCodes.length) {
+    return dispatch({
+      type: ADD_LOCAL_SIGN_UP_ERROR_CODES,
+      payload: {errorCodes}
+    });
+  }
 };
 
 export const resetSignUpErrorCodes = () => (dispatch, getState) => {
@@ -71,7 +73,7 @@ export const resetSignUpErrorCodes = () => (dispatch, getState) => {
   }
 };
 
-export const createUser = ({
+export const signUp = ({
   email,
   password,
   confirmPassword,

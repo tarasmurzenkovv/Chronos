@@ -2,7 +2,7 @@ import * as React from 'react';
 import {connect} from 'react-redux';
 import {compose, withState, withHandlers} from 'recompose';
 
-import {createUser, resetSignUpErrorCodes} from '../../actions/createUser';
+import {signUp, resetSignUpErrorCodes} from '../../actions/signUp';
 
 import SignUp from './SignUp';
 
@@ -11,7 +11,7 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = {
-  createUser,
+  signUp,
   resetSignUpErrorCodes
 };
 
@@ -20,8 +20,8 @@ export default compose(
     mapStateToProps,
     mapDispatchToProps
   ),
-  withState('rememberMeValue', 'setRememberMeValue', false),
 
+  withState('rememberMeValue', 'setRememberMeValue', false),
   withState('showPassword', 'setShowPassword', false),
   withState('showConfirmPassword', 'setShowConfirmPassword', false),
 
@@ -39,7 +39,7 @@ export default compose(
       setShowConfirmPassword
     }) => () => setShowConfirmPassword(!showConfirmPassword),
 
-    handleFormSubmit: ({createUser}) => (event) => {
+    handleFormSubmit: ({signUp}) => (event) => {
       event.preventDefault();
 
       const email = event.target.email.value;
@@ -48,7 +48,7 @@ export default compose(
       const firstName = event.target.firstName.value;
       const lastName = event.target.lastName.value;
 
-      createUser({
+      signUp({
         email,
         password,
         confirmPassword,

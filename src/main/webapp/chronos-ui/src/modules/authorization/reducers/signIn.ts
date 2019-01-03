@@ -4,9 +4,9 @@ import {createReducer, TCreateReducer} from 'shared/utils/createReducer';
 import requestsStatuses from 'shared/utils/requestsStatuses';
 
 import {
-  ADD_LOCAL_SIGN_UP_ERROR_CODES,
-  RESET_SIGN_UP_ERROR_CODES
-} from '../actions/signUp';
+  ADD_LOCAL_SIGN_IN_ERROR_CODES,
+  RESET_SIGN_IN_ERROR_CODES
+} from '../actions/signIn';
 
 export type TState = Readonly<{
   errorCodes: number[];
@@ -19,7 +19,7 @@ const defaultState: TState = {
 };
 
 const signUp = createReducer(defaultState, {
-  [ADD_LOCAL_SIGN_UP_ERROR_CODES]: (
+  [ADD_LOCAL_SIGN_IN_ERROR_CODES]: (
     state: TState,
     {payload: {errorCodes}}
   ) => ({
@@ -28,7 +28,7 @@ const signUp = createReducer(defaultState, {
     errorCodes
   }),
 
-  [RESET_SIGN_UP_ERROR_CODES]: (state: TState) => ({
+  [RESET_SIGN_IN_ERROR_CODES]: (state: TState) => ({
     ...state,
     status: requestsStatuses.default,
     errorCodes: []
