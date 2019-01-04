@@ -11,26 +11,28 @@ interface IProps extends WithStyles<typeof styles> {}
 
 const AuthInfoSignUp: React.FunctionComponent<IProps> = ({classes}) => (
   <div className={theme.root}>
-    <div className={theme.logo}>
-      <img src={Logo} alt="logo" width="140" height="41" />
+    <div className={theme.content}>
+      <div className={theme.logo}>
+        <img src={Logo} alt="logo" width="140" height="41" />
+      </div>
+      <div className={theme.header}>
+        Don't have <br />
+        an account?
+      </div>
+      <p className={theme.info}>
+        No problem! You can sign up <br />
+        by clicking on the button below.
+      </p>
+      <Button
+        variant="outlined"
+        color="primary"
+        size="large"
+        className={classes.button}
+        onClick={() => history.push('/sign-up')}
+      >
+        Sign Up
+      </Button>
     </div>
-    <div className={theme.header}>
-      Don't have <br />
-      an account?
-    </div>
-    <p className={theme.content}>
-      No problem! You can sign up <br />
-      by clicking on the button below.
-    </p>
-    <Button
-      variant="outlined"
-      color="primary"
-      size="large"
-      className={classes.button}
-      onClick={() => history.push('/sign-up')}
-    >
-      Sign Up
-    </Button>
   </div>
 );
 

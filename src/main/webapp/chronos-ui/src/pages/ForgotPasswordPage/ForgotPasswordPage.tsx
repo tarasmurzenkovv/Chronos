@@ -9,10 +9,10 @@ interface IProps extends WithStyles<typeof styles> {}
 const ForgotPasswordPage: React.FunctionComponent<IProps> = ({}) => (
   <div className={theme.root}>
     <div className={theme.content}>
-      <div className={theme.signIn}>
+      <div className={theme.left}>
         <ForgotPassword />
       </div>
-      <div className={theme.authInfo}>
+      <div className={theme.right}>
         <AuthInfoSignUp />
       </div>
     </div>

@@ -9,10 +9,10 @@ interface IProps extends WithStyles<typeof styles> {}
 const SignInPage: React.FunctionComponent<IProps> = ({}) => (
   <div className={theme.root}>
     <div className={theme.content}>
-      <div className={theme.signIn}>
+      <div className={theme.left}>
         <SignIn />
       </div>
-      <div className={theme.authInfo}>
+      <div className={theme.right}>
         <AuthInfoSignUp />
       </div>
     </div>
