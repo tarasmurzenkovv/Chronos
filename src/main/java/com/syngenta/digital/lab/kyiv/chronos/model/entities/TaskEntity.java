@@ -27,7 +27,7 @@ public class TaskEntity {
     @Column(name = "REPORTING_DATE")
     private LocalDate reportingDate;
     @Column(name = "SPENT_TIME")
-    private Integer spentTime;
+    private Float spentTime;
     @Column(name = "COMMENTS")
     private String comments;
     @Column(name = "TAGS")

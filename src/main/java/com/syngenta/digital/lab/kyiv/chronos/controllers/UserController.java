@@ -1,5 +1,6 @@
 package com.syngenta.digital.lab.kyiv.chronos.controllers;
 
+import com.syngenta.digital.lab.kyiv.chronos.model.dto.LoginRequest;
 import com.syngenta.digital.lab.kyiv.chronos.model.dto.UserDto;
 import com.syngenta.digital.lab.kyiv.chronos.model.response.GeneralResponse;
 import com.syngenta.digital.lab.kyiv.chronos.service.UserService;
@@ -26,6 +27,16 @@ public class UserController {
         GeneralResponse<UserDto> generalResponse = new GeneralResponse<>(false, savedUserDto);
         return ResponseEntity
                 .status(HttpStatus.CREATED)
+                .body(generalResponse);
+    }
+
+    @PostMapping("/api/v0/user/login")
+    public ResponseEntity<GeneralResponse<UserDto>> loginUser(@Valid @RequestBody LoginRequest loginRequest) {
+        log.info("About to login the following user '{}'", loginRequest);
+        UserDto savedUserDto = userService.loginRequest(loginRequest);
+        GeneralResponse<UserDto> generalResponse = new GeneralResponse<>(false, savedUserDto);
+        return ResponseEntity
+                .status(HttpStatus.FOUND)
                 .body(generalResponse);
     }
 }

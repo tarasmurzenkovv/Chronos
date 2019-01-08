@@ -94,10 +94,16 @@ task createDotEnvFileFe(type: Copy) {
     rename '.env.production.example', '.env.production'
 }
 
-task buildFe(type: NpmTask) {
-    args = ['install', 'run', 'build']
+task installFeDependencies(type: NpmTask) {
+    args = ['install']
 }
 
+task buildFe(type: NpmTask) {
+    args = ['run', 'build']
+}
+
+installFeDependencies.dependsOn createDotEnvFileFe
+buildFe.dependsOn installFeDependencies
 build.dependsOn buildFe
 clean.dependsOn deletFeArtifacts
 
