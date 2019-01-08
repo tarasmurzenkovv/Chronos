@@ -104,7 +104,9 @@ task buildFe(type: NpmTask) {
 
 installFeDependencies.dependsOn createDotEnvFileFe
 buildFe.dependsOn installFeDependencies
-build.dependsOn buildFe
+build {
+    dependsOn buildFe
+}
 clean.dependsOn deletFeArtifacts
 
 repositories {
