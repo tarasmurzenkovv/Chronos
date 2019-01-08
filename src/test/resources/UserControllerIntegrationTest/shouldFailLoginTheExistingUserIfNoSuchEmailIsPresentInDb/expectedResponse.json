@@ -1,0 +1,7 @@
+{
+  "error": true,
+  "data": {
+    "error_code": 7,
+    "error_message": "Cannot find the given email 'email_1234@email.com'"
+  }
+}

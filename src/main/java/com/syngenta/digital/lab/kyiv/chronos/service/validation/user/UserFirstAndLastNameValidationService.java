@@ -11,6 +11,7 @@ public class UserFirstAndLastNameValidationService implements UserValidationServ
     private static final int ERROR_CODE_FOR_LAST_NAME = 2;
     private static final String ERROR_MESSAGE_FOR_FIRST_NAME = "User first name cannot be null/blank";
     private static final String ERROR_MESSAGE_FOR_LAST_NAME = "User last name cannot be null/blank";
+
     @Override
     public void validate(UserDto userDto) {
         validateFirstName(userDto);
