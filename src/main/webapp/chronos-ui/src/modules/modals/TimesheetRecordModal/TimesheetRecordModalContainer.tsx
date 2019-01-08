@@ -1,9 +1,9 @@
 import {connect} from 'react-redux';
-import {compose, withState, withHandlers} from 'recompose';
+import {compose, withHandlers, withState} from 'recompose';
 
 import {removeCurrentModal} from 'modules/modals/actions/modalsActions';
 
-import LoginModal from './LoginModal';
+import TimesheetRecordModal from './TimesheetRecordModal';
 
 const mapStateToProps = null;
 const mapDispatchToProps = {removeCurrentModal};
@@ -19,6 +19,7 @@ export default compose(
         setIsOpen(false);
         removeCurrentModal();
       }
-    }
+    },
+    handleOnSave: () => () => console.log('handleOnSave')
   })
-)(LoginModal);
+)(TimesheetRecordModal);

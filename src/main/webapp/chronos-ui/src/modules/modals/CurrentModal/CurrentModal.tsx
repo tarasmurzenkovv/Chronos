@@ -1,6 +1,7 @@
 import * as React from 'react';
 
-import {LoginModal} from '..';
+import {TIMESHEET_RECORD_MODAL} from '../constants';
+import {TimesheetRecordModal} from '..';
 
 interface IProps {
   modal: {
@@ -9,7 +10,7 @@ interface IProps {
 }
 
 const modalsMap: any = {
-  LOGIN_MODAL: <LoginModal />
+  [TIMESHEET_RECORD_MODAL]: <TimesheetRecordModal />
 };
 
 const CurrentModal: React.FunctionComponent<IProps> = ({modal}) => (

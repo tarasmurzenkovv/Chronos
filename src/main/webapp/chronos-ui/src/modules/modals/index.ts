@@ -1,2 +1,2 @@
-export {default as LoginModal} from './LoginModal';
+export {default as TimesheetRecordModal} from './TimesheetRecordModal';
 export {default as CurrentModal} from './CurrentModal';

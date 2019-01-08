@@ -26,12 +26,10 @@ import {
 
 interface IProps extends WithStyles<typeof styles> {
   showPassword: boolean;
-  showConfirmPassword: boolean;
   rememberMeValue: boolean;
   errorCodes: number[];
 
   handleShowPassword(e: React.SyntheticEvent): void;
-  handleShowConfirmPassword(e: React.SyntheticEvent): void;
   handleRememberMeValue(e: React.SyntheticEvent): void;
   resetSignInErrorCodes(): void;
   handleFormSubmit(): void;
@@ -40,13 +38,11 @@ interface IProps extends WithStyles<typeof styles> {
 const SignIn: React.FunctionComponent<IProps> = ({
   classes,
   showPassword,
-  showConfirmPassword,
   rememberMeValue,
   errorCodes,
   resetSignInErrorCodes,
 
   handleShowPassword,
-  handleShowConfirmPassword,
   handleRememberMeValue,
 
   handleFormSubmit
