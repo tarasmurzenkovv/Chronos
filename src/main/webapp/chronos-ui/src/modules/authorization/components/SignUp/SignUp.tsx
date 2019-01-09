@@ -25,7 +25,7 @@ import {
   firstNameInputErrorCodes,
   lastNameInputErrorCodes,
   errorMessagesMap
-} from '../../constants/localErrorCodes';
+} from '../../constants/errorMessagesMap';
 
 interface IProps extends WithStyles<typeof styles> {
   showPassword: boolean;

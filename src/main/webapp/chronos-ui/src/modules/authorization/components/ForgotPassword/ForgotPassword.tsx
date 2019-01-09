@@ -9,7 +9,7 @@ import styles from './styles';
 import {
   emailInputErrorCodes,
   errorMessagesMap
-} from '../../constants/localErrorCodes';
+} from '../../constants/errorMessagesMap';
 
 interface IProps extends WithStyles<typeof styles> {
   errorCodes: number[];
