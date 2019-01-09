@@ -6,25 +6,9 @@
             <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{5} - %msg%n</pattern>
         </encoder>
     </appender>
-    <appender name="FILE" class="ch.qos.logback.core.FileAppender">
-        <file>./chronos-app.log</file>
-        <append>true</append>
-        <immediateFlush>false</immediateFlush>
-        <encoder>
-            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{5} - %msg%n</pattern>
-        </encoder>
-    </appender>
-
-    <logger name="com.syngenta.digital.lab.kyiv.chronos" level="ERROR" additivity="false">
-        <appender-ref ref="STDOUT" />
-    </logger>
-    <logger name="com.syngenta.digital.lab.kyiv.chronos" level="ERROR" additivity="false">
-        <appender-ref ref="FILE" />
-    </logger>
 
     <root level="DEBUG">
         <appender-ref ref="STDOUT" />
-        <appender-ref ref="FILE" />
     </root>
 
 </configuration>

@@ -26,6 +26,15 @@ apply plugin: 'com.moowork.node'
 apply plugin: 'liquibase'
 apply plugin: "org.hidetake.ssh"
 
+remotes {
+    webServer {
+    	def pathToRsa = project.findProperty("host.id_rsa.file.path")
+        host = project.findProperty("host")
+        user = project.findProperty("host.user")
+        password = project.findProperty("host.password")
+        identity = pathToRsa == null ? null : file(pathToRsa)
+    }
+}
 
 node {
     version = '10.14.2'
@@ -112,15 +121,6 @@ clean {
 }
 
 task deploy {
-    remotes {
-        webServer {
-            def pathToRsaId =  project.findProperty("host.id_rsa.file.path")
-            host = project.findProperty("host")
-            user = project.findProperty("host.user")
-            password = project.findProperty("host.password")
-            identity = pathToRsaId == null ? null : file(pathToRsaId)
-        }
-    }
     doLast {
         ssh.settings {
             knownHosts = allowAnyHosts
