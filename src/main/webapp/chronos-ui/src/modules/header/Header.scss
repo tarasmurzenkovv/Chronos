@@ -1,0 +1,46 @@
+.navBar {
+  margin-bottom: 32px;
+  padding: 8px 0;
+  background: #fff !important;
+  box-shadow: 0 2px 40px 1px rgba(221, 229, 252, 0.5) !important;
+}
+
+.iconMenu {
+  color: #25cdda;
+}
+
+.logo {
+  margin-left: 24px;
+}
+
+.navTitle {
+  margin: 0 auto !important;
+  padding-top: 5px;
+  font-size: 20px !important;
+}
+
+.navButton {
+  width: 40px;
+  height: 36px;
+  padding: 0 !important;
+  background-color: #d6d6e3 !important;
+  border-radius: 6px !important;
+}
+
+.navSettings {
+  margin: 0 14px 0 36px !important;
+}
+
+.active {
+  background-color: #25cdda !important;
+}
+
+.iconCalendar {
+  color: #fff;
+  font-size: 22px !important;
+}
+
+.iconSettings {
+  color: #fff;
+  font-size: 20px !important;
+}
