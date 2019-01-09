@@ -57,10 +57,6 @@ checkstyleMain {
     source = 'src/main/java'
 }
 
-checkstyleTest {
-    source = 'src/test/java'
-}
-
 task applyDbChanges() {
     def changeLog = "$projectDir/src/main/resources/db/changelog.xml"
     def dbUrl = 'jdbc:mysql://139.59.210.123:3306/chrono_db?useSSL=false'

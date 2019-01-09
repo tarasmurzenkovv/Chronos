@@ -7,57 +7,61 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
 
 @Slf4j
 @RestController
+@RequestMapping("/api/v0")
 @RequiredArgsConstructor
 public class ProjectTypeController {
     private final ProjectTypeService projectTypeService;
 
-    @PostMapping("/api/v0/project-type")
+    @PostMapping("/project-type")
     public ResponseEntity<GeneralResponse<ProjectTypeDto>> addNewProjectType(@RequestBody ProjectTypeDto projectTypeDto) {
         log.info("About to register the following project type '{}'", projectTypeDto);
         ProjectTypeDto savedProjectTypeDto = projectTypeService.saveNew(projectTypeDto);
-        GeneralResponse<ProjectTypeDto> generalResponse = new GeneralResponse<>(false, savedProjectTypeDto);
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(generalResponse);
+                .body(GeneralResponse.buildResponse(savedProjectTypeDto));
     }
 
-    @GetMapping("/api/v0/project-type")
+    @GetMapping("/project-type")
     public ResponseEntity<GeneralResponse<List<ProjectTypeDto>>> findAll() {
         log.info("About to find all project types");
         List<ProjectTypeDto> allProjectTypes = projectTypeService.findAll();
-        GeneralResponse<List<ProjectTypeDto>> generalResponse = new GeneralResponse<>(false, allProjectTypes);
         return ResponseEntity
                 .status(HttpStatus.FOUND)
-                .body(generalResponse);
+                .body(GeneralResponse.buildResponse(allProjectTypes));
     }
 
-    @GetMapping("/api/v0/project-type/{id}")
+    @GetMapping("/project-type/{id}")
     public ResponseEntity<GeneralResponse<ProjectTypeDto>> find(@PathVariable("id") long id) {
         log.info("About to find for project type id " + id);
         ProjectTypeDto projectType = projectTypeService.findById(id);
-        GeneralResponse<ProjectTypeDto> generalResponse = new GeneralResponse<>(false, projectType);
         return ResponseEntity
                 .status(HttpStatus.FOUND)
-                .body(generalResponse);
+                .body(GeneralResponse.buildResponse(projectType));
     }
 
-    @PutMapping("/api/v0/project-type")
+    @PutMapping("/project-type")
     public ResponseEntity<GeneralResponse<ProjectTypeDto>> update(@RequestBody ProjectTypeDto projectTypeDto) {
         log.info("About to register the following project type '{}'", projectTypeDto);
         ProjectTypeDto projectType = projectTypeService.update(projectTypeDto);
-        GeneralResponse<ProjectTypeDto> generalResponse = new GeneralResponse<>(false, projectType);
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(generalResponse);
+                .body(GeneralResponse.buildResponse(projectType));
     }
 
-    @DeleteMapping("/api/v0/project-type/{id}")
+    @DeleteMapping("/project-type/{id}")
     public ResponseEntity<Void> delete(@PathVariable("id") long id) {
         log.info("About to delete project type id " + id);
         projectTypeService.delete(id);
