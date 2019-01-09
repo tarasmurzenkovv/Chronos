@@ -26,14 +26,6 @@ apply plugin: 'com.moowork.node'
 apply plugin: 'liquibase'
 apply plugin: "org.hidetake.ssh"
 
-remotes {
-    webServer {
-        host = project.findProperty("host")
-        user = project.findProperty("host.user")
-        password = project.findProperty("host.password")
-        identity = file(project.findProperty("host.id_rsa.file.path"))
-    }
-}
 
 node {
     version = '10.14.2'
@@ -120,6 +112,15 @@ clean {
 }
 
 task deploy {
+    remotes {
+        webServer {
+            def pathToRsaId =  project.findProperty("host.id_rsa.file.path")
+            host = project.findProperty("host")
+            user = project.findProperty("host.user")
+            password = project.findProperty("host.password")
+            identity = pathToRsaId == null ? null : file(pathToRsaId)
+        }
+    }
     doLast {
         ssh.settings {
             knownHosts = allowAnyHosts
@@ -128,7 +129,7 @@ task deploy {
             session(remotes.webServer) {
                 executeSudo('systemctl stop chronos_web_app', pty: true)
 
-                put from: jar.archivePath,
+                put from: "${project.projectDir}/build/libs/chronos-0.1.0.jar",
                     into: '/home/syngenta/deployed_applications/chronos_app'
 
                 executeSudo('systemctl start chronos_web_app', pty: true)
