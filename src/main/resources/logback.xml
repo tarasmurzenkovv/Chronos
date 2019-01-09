@@ -7,13 +7,7 @@
         </encoder>
     </appender>
     <appender name="FILE" class="ch.qos.logback.core.FileAppender">
-        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <!-- daily rollover -->
-            <fileNamePattern>logFile.%d{yyyy-MM-dd}.log</fileNamePattern>
-            <maxHistory>30</maxHistory>
-            <totalSizeCap>10MB</totalSizeCap>
-        </rollingPolicy>
-        <file>./chronos-${bySecond}.log</file>
+        <file>./chronos-app.log</file>
         <append>true</append>
         <immediateFlush>false</immediateFlush>
         <encoder>
