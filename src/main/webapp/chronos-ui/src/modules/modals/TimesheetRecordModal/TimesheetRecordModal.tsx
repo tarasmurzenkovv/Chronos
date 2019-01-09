@@ -10,49 +10,150 @@ import {
   MenuItem,
   OutlinedInput,
   Select,
+  TextField,
   withStyles,
   WithStyles
 } from '@material-ui/core';
+
+import {IListItem} from '../reducers/projects';
 
 import styles from './styles';
 
 interface IProps extends WithStyles<typeof styles> {
   isOpen: boolean;
-  handleOnSave(): void;
-  handleOnClose(): void;
+  list: IListItem[];
+  projectId: string;
+  date: string;
+  comments: string;
+
+  handleProjectChange(): void;
+  handleDateChange(): void;
+  handleCommentsChange(): void;
+
+  handleFormSubmit(): void;
 }
 
 const TimesheetRecordModal: React.FunctionComponent<IProps> = ({
   classes,
+
   isOpen,
-  handleOnClose,
-  handleOnSave
+  list,
+  projectId,
+  date,
+
+  handleProjectChange,
+  handleDateChange,
+  handleCommentsChange,
+  handleFormSubmit
 }) => (
   <div>
-    <Dialog open={isOpen} onClose={handleOnClose}>
+    <Dialog open={isOpen} onClose={handleFormSubmit}>
       <DialogTitle>Add new time Report</DialogTitle>
-      <DialogContent>
-        <form className={classes.container}>
-          <FormControl className={classes.formControl}>
-            <InputLabel htmlFor="type">Type</InputLabel>
+      <form className={classes.container} onSubmit={handleFormSubmit}>
+        <DialogContent>
+          <FormControl variant="outlined" className={classes.formControl}>
+            <InputLabel htmlFor="outlined-projectId">Project</InputLabel>
             <Select
-              value="Project"
-              onChange={() => console.log('handleChange2')}
+              value={projectId}
+              onChange={handleProjectChange}
               input={
-                <OutlinedInput labelWidth={0} name="type" id="outlined-type" />
+                <OutlinedInput
+                  labelWidth={0}
+                  name="projectId"
+                  id="outlined-projectId"
+                />
               }
             >
-              <MenuItem value="Project">Project</MenuItem>
-              <MenuItem value="Internal">Internal</MenuItem>
+              {list.map((item) => (
+                <MenuItem key={item.id} value={item.id}>
+                  {item.project_name}
+                </MenuItem>
+              ))}
             </Select>
           </FormControl>
-        </form>
-      </DialogContent>
-      <DialogActions>
-        <Button onClick={handleOnSave} color="primary">
-          Save Report
-        </Button>
-      </DialogActions>
+
+          <TextField
+            id="time"
+            name="time"
+            label="Spent time, h."
+            margin="normal"
+            variant="outlined"
+            type="number"
+            InputLabelProps={{
+              classes: {
+                root: classes.textFieldLabel,
+                focused: classes.textFieldLabelFocused
+              }
+            }}
+            InputProps={{
+              classes: {
+                root: classes.textFieldOutlinedInput,
+                notchedOutline: classes.textFieldFocusedNotchedOutline
+              }
+            }}
+            className={classes.textField}
+            required
+          />
+
+          <TextField
+            id="date"
+            name="date"
+            label="Date"
+            margin="normal"
+            variant="outlined"
+            type="date"
+            defaultValue={date}
+            InputLabelProps={{
+              shrink: true,
+              classes: {
+                root: classes.textFieldLabel,
+                focused: classes.textFieldLabelFocused
+              }
+            }}
+            InputProps={{
+              classes: {
+                root: classes.textFieldOutlinedInput,
+                notchedOutline: classes.textFieldFocusedNotchedOutline
+              }
+            }}
+            className={classes.textField}
+            required
+            onChange={handleDateChange}
+          />
+
+          <div>Comments</div>
+          <TextField
+            id="comments"
+            name="comments"
+            label="Comments"
+            margin="normal"
+            variant="outlined"
+            type="text"
+            InputLabelProps={{
+              classes: {
+                root: classes.textFieldLabel,
+                focused: classes.textFieldLabelFocused
+              }
+            }}
+            InputProps={{
+              classes: {
+                root: classes.textFieldOutlinedInput,
+                notchedOutline: classes.textFieldFocusedNotchedOutline
+              }
+            }}
+            className={classes.textField}
+            multiline
+            rows={2}
+            rowsMax={4}
+            onChange={handleCommentsChange}
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button type="submit" color="primary">
+            Save Report
+          </Button>
+        </DialogActions>
+      </form>
     </Dialog>
   </div>
 );
