@@ -13,6 +13,7 @@ buildscript {
 plugins {
     id 'io.franzbecker.gradle-lombok' version '1.14'
     id "org.liquibase.gradle" version "2.0.1"
+    id 'org.hidetake.ssh' version '2.9.0'
     id 'java'
 }
 
@@ -23,6 +24,16 @@ apply plugin: 'io.spring.dependency-management'
 apply plugin: 'checkstyle'
 apply plugin: 'com.moowork.node'
 apply plugin: 'liquibase'
+apply plugin: "org.hidetake.ssh"
+
+remotes {
+    webServer {
+        host = project.findProperty("host")
+        user = project.findProperty("host.user")
+        password = project.findProperty("host.password")
+        identity = file(project.findProperty("host.id_rsa.file.path"))
+    }
+}
 
 node {
     version = '10.14.2'
@@ -92,18 +103,39 @@ task createDotEnvFileFe(type: Copy) {
 
 task installFeDependencies(type: NpmTask) {
     args = ['install']
+    dependsOn createDotEnvFileFe
 }
 
 task buildFe(type: NpmTask) {
     args = ['run', 'build']
+    dependsOn installFeDependencies
 }
 
-installFeDependencies.dependsOn createDotEnvFileFe
-buildFe.dependsOn installFeDependencies
-build {
+compileJava {
     dependsOn buildFe
 }
-clean.dependsOn deletFeArtifacts
+
+clean {
+	dependsOn deletFeArtifacts
+}
+
+task deploy {
+    doLast {
+        ssh.settings {
+            knownHosts = allowAnyHosts
+        }
+        ssh.run {
+            session(remotes.webServer) {
+                executeSudo('systemctl stop chronos_web_app', pty: true)
+
+                put from: jar.archivePath,
+                    into: '/home/syngenta/deployed_applications/chronos_app'
+
+                executeSudo('systemctl start chronos_web_app', pty: true)
+            }
+        }
+    }
+}
 
 repositories {
     mavenCentral()
