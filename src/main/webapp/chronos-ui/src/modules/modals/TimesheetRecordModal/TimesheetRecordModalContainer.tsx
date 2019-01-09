@@ -1,21 +1,23 @@
 import {connect} from 'react-redux';
 import {compose, lifecycle, withHandlers, withState} from 'recompose';
+import * as moment from 'moment';
 
-import {getProjectsList} from 'modules/modals/actions/_api/getProjectsList';
+import getProjectsList from 'modules/modals/actions/api/getProjectsList';
 import {removeCurrentModal} from 'modules/modals/actions/modalsActions';
+import createRecordApi from 'modules/modals/actions/api/createRecordApi';
 
 import TimesheetRecordModal from './TimesheetRecordModal';
 
 const mapStateToProps = (state) => ({
-  list: state.projects.list
+  list: state.projects.list,
+  userId: state.auth.signIn.user.id
 });
 
-interface DispatchProps {
-  removeCurrentModal: () => void;
-  getProjectsList: () => void;
-}
-
-const mapDispatchToProps: DispatchProps = {removeCurrentModal, getProjectsList};
+const mapDispatchToProps = {
+  removeCurrentModal,
+  getProjectsList,
+  createRecordApi
+};
 
 interface IProps {
   getProjectsList: () => void;
@@ -59,14 +61,29 @@ export default compose(
       if (comments !== value) {
         setComments(value);
       }
-    },
+    }
+  }),
 
-    handleFormSubmit: ({}) => (event) => {
+  withHandlers({
+    handleFormSubmit: ({createRecordApi, handleOnClose, userId, projectId}) => (
+      event
+    ) => {
       event.preventDefault();
-      const projectId = event.target.projectId.value;
       const time = event.target.time.value;
       const date = event.target.date.value;
       const comments = event.target.comments.value;
+
+      const params = {
+        comments,
+        project_id: projectId,
+        reporting_date: moment(date).format('DD/MM/YYYY'),
+        spent_time: time,
+        user_id: userId
+      };
+
+      createRecordApi(params)
+        .then(() => handleOnClose())
+        .catch(() => {});
     }
   }),
 
