@@ -1,5 +1,3 @@
-import {LOCATION_CHANGE} from 'connected-react-router';
-
 import {createReducer} from 'shared/utils/createReducer';
 import requestsStatuses from 'shared/utils/requestsStatuses';
 
@@ -68,9 +66,7 @@ const signUp = createReducer(defaultState, {
     ...state,
     status: requestsStatuses.success,
     user
-  }),
-
-  [LOCATION_CHANGE]: () => defaultState
+  })
 });
 
 export default signUp;

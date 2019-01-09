@@ -1,16 +1,15 @@
 import * as React from 'react';
 import {Redirect, Route} from 'react-router-dom';
 
-const isAuth = true;
-
 const PrivatePage: React.FunctionComponent<any> = ({
   component: Component,
+  id,
   ...rest
 }) => (
   <Route
     {...rest}
     render={(props: Object) =>
-      isAuth ? <Component {...props} /> : <Redirect to="/" />
+      id ? <Component {...props} /> : <Redirect to="/sign-in" />
     }
   />
 );
