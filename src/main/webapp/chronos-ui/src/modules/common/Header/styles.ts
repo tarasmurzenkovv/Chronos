@@ -12,6 +12,10 @@ const styles = createStyles({
     paddingTop: '5px',
     fontSize: '20px '
   },
+  navTitleName: {
+    fontWeight: 'bold'
+  },
+
   navButton: {
     width: '40px',
     height: '36px',
