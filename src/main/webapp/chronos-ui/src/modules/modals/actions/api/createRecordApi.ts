@@ -3,7 +3,7 @@ import errorAction from 'shared/utils/errorAction';
 import {CREATE_RECORD_URL} from '../../services';
 import {CREATE_TIMESHEET_RECORD} from '../../constants';
 
-export default (params) => (dispatch) => {
+export const createRecordApi = (params) => (dispatch) => {
   const apiCallParams = {
     method: 'POST',
     body: JSON.stringify({
