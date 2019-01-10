@@ -5,12 +5,12 @@ import {
   Toolbar,
   Typography,
   withStyles,
-  WithStyles
+  WithStyles,
+  IconButton
 } from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu';
 import SettingsIcon from '@material-ui/icons/Settings';
 import CalendarIcon from '@material-ui/icons/CalendarToday';
-import IconButton from '@material-ui/core/IconButton';
 import * as theme from './Header.scss';
 import mainLogo from 'shared/assets/img/syngentaLogo.svg';
 import styles from './styles';
