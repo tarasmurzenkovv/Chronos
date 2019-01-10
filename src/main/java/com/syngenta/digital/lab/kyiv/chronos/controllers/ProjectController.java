@@ -51,7 +51,7 @@ public class ProjectController {
                 .body(GeneralResponse.buildResponse(foundProjects));
     }
 
-    @PutMapping("/project/")
+    @PutMapping("/project")
     public ResponseEntity<GeneralResponse<ProjectDto>> update(@RequestBody ProjectDto projectDto) {
         log.info("About to register the following project '{}'", projectDto);
         ProjectDto savedProjectDto = projectService.update(projectDto);

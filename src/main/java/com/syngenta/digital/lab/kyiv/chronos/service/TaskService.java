@@ -42,9 +42,9 @@ public class TaskService {
                 .orElseThrow(() -> new RuntimeException("Cannot find task for id " + id));
     }
 
+    @Transactional(readOnly = true)
     public List<TaskDto> findForUserId(long id) {
         return taskRepository.findAllTasksForUserId(id)
-                .stream()
                 .map(taskMapper::mapToDto)
                 .collect(Collectors.toList());
     }
@@ -59,18 +59,11 @@ public class TaskService {
         taskRepository.deleteById(taskId);
     }
 
-    //TODO OPtimize
+    @Transactional(readOnly = true)
     public List<TaskDto> findForUserIdAndDateRange(long userId, LocalDate start, LocalDate end) {
         return taskRepository
-                .findAllTasksForUserId(userId)
-                .stream()
-                .filter(taskEntity -> isWithinRange(taskEntity.getReportingDate(), start, end))
-                .map(taskEntity -> taskMapper.mapToDto(taskEntity))
+                .findAllTasksForUserId(userId, start, end)
+                .map(taskMapper::mapToDto)
                 .collect(Collectors.toList());
-    }
-
-    private static boolean isWithinRange(LocalDate currentDate, LocalDate start, LocalDate end) {
-        return (currentDate.isAfter(start) || currentDate.isEqual(start)) &&
-                (currentDate.isBefore(end) || currentDate.isEqual(end));
     }
 }

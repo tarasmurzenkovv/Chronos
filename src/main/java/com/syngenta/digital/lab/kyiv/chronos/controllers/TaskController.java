@@ -5,6 +5,7 @@ import com.syngenta.digital.lab.kyiv.chronos.model.response.GeneralResponse;
 import com.syngenta.digital.lab.kyiv.chronos.service.TaskService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -58,8 +59,10 @@ public class TaskController {
     @GetMapping("/user/{id}")
     public ResponseEntity<GeneralResponse<List<TaskDto>>> findAllTasksForUserIdAndTimePeriod(
             @PathVariable("id") long userId,
-            @RequestParam("start") LocalDate start,
-            @RequestParam("end") LocalDate end) {
+            @RequestParam("start")
+            @DateTimeFormat(pattern = "dd/MM/yyyy") LocalDate start,
+            @RequestParam("end")
+            @DateTimeFormat(pattern = "dd/MM/yyyy") LocalDate end) {
 
         log.info("About to find tasks by user id '{}', start '{}', end '{}'", userId, start, end);
         List<TaskDto> userTasks = taskService.findForUserIdAndDateRange(userId, start, end);

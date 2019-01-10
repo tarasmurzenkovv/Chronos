@@ -4,6 +4,8 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.github.springtestdbunit.annotation.DatabaseSetup;
 import com.github.springtestdbunit.annotation.DatabaseTearDown;
 import com.github.springtestdbunit.annotation.ExpectedDatabase;
+import com.jayway.restassured.RestAssured;
+import com.jayway.restassured.http.ContentType;
 import com.jayway.restassured.response.Response;
 import com.jayway.restassured.response.ResponseBody;
 import com.syngenta.digital.lab.kyiv.chronos.model.dto.LoginRequest;
@@ -15,14 +17,9 @@ import lombok.SneakyThrows;
 import org.apache.http.HttpStatus;
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
 
 import static com.github.springtestdbunit.assertion.DatabaseAssertionMode.NON_STRICT_UNORDERED;
 
-@RunWith(SpringRunner.class)
-@SpringBootTest(classes = ChronosApplicationEntryPoint.class, webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @DatabaseTearDown("/UserControllerIntegrationTest/dbTearDown.xml")
 public class UserControllerIntegrationTest extends BaseIntegrationTest {
 
@@ -32,7 +29,9 @@ public class UserControllerIntegrationTest extends BaseIntegrationTest {
     @ExpectedDatabase(value = "/UserControllerIntegrationTest/shouldFailLoginTheExistingUserIfNoPasswordIsPresentInRequest/expectedDataBase.xml",
             assertionMode = NON_STRICT_UNORDERED)
     public void shouldFailLoginTheExistingUserIfNoPasswordIsPresentInRequest() {
-        Response response = this.getPreConfiguredRestAssured()
+        Response response = RestAssured
+                .given()
+                .contentType(ContentType.JSON)
                 .body(JsonUtils.readFromJson("/UserControllerIntegrationTest/shouldFailLoginTheExistingUserIfNoPasswordIsPresentInRequest/loginRequest.json", LoginRequest.class))
                 .post("/api/v0/user/login")
                 .then()
@@ -58,7 +57,9 @@ public class UserControllerIntegrationTest extends BaseIntegrationTest {
     @ExpectedDatabase(value = "/UserControllerIntegrationTest/shouldFailLoginTheExistingUserIfNoSuchEmailIsPresentInDb/expectedDataBase.xml",
             assertionMode = NON_STRICT_UNORDERED)
     public void shouldFailLoginTheExistingUserIfNoSuchEmailIsPresentInDb() {
-        Response response = this.getPreConfiguredRestAssured()
+        Response response = RestAssured
+                .given()
+                .contentType(ContentType.JSON)
                 .body(JsonUtils.readFromJson("/UserControllerIntegrationTest/shouldFailLoginTheExistingUserIfNoSuchEmailIsPresentInDb/loginRequest.json", LoginRequest.class))
                 .post("/api/v0/user/login")
                 .then()
@@ -84,7 +85,9 @@ public class UserControllerIntegrationTest extends BaseIntegrationTest {
     @ExpectedDatabase(value = "/UserControllerIntegrationTest/shouldSuccessfullyLoginTheExistingUser/expectedDataBase.xml",
             assertionMode = NON_STRICT_UNORDERED)
     public void shouldSuccessfullyLoginTheExistingUser() {
-        Response response = this.getPreConfiguredRestAssured()
+        Response response = RestAssured
+                .given()
+                .contentType(ContentType.JSON)
                 .body(JsonUtils.readFromJson("/UserControllerIntegrationTest/shouldSuccessfullyLoginTheExistingUser/loginRequest.json", LoginRequest.class))
                 .post("/api/v0/user/login")
                 .then()
@@ -110,7 +113,9 @@ public class UserControllerIntegrationTest extends BaseIntegrationTest {
     @ExpectedDatabase(value = "/UserControllerIntegrationTest/shouldSuccessfullyRegisterNewUser/expectedDataBase.xml",
             assertionMode = NON_STRICT_UNORDERED)
     public void shouldSuccessfullyRegisterNewUser() {
-        Response response = this.getPreConfiguredRestAssured()
+        Response response = RestAssured
+                .given()
+                .contentType(ContentType.JSON)
                 .body(JsonUtils.readFromJson("/UserControllerIntegrationTest/shouldSuccessfullyRegisterNewUser/registrationRequest.json", UserDto.class))
                 .post("/api/v0/user")
                 .then()
@@ -136,7 +141,9 @@ public class UserControllerIntegrationTest extends BaseIntegrationTest {
     @DatabaseSetup("/UserControllerIntegrationTest/shouldFailToRegisterNewUserIfEmailIsNotUnique/dbSetup.xml")
     @ExpectedDatabase("/UserControllerIntegrationTest/shouldFailToRegisterNewUserIfEmailIsNotUnique/expectedDataBase.xml")
     public void shouldFailToRegisterNewUserIfEmailIsNotUnique() {
-        Response response = this.getPreConfiguredRestAssured()
+        Response response = RestAssured
+                .given()
+                .contentType(ContentType.JSON)
                 .body(JsonUtils.readFromJson("/UserControllerIntegrationTest/shouldFailToRegisterNewUserIfEmailIsNotUnique/registrationRequest.json", UserDto.class))
                 .post("/api/v0/user")
                 .then()
@@ -162,7 +169,9 @@ public class UserControllerIntegrationTest extends BaseIntegrationTest {
     @DatabaseSetup("/UserControllerIntegrationTest/shouldFailToRegisterNewUserIfFirstNameIsNull/dbSetup.xml")
     @ExpectedDatabase("/UserControllerIntegrationTest/shouldFailToRegisterNewUserIfFirstNameIsNull/expectedDataBase.xml")
     public void shouldFailToRegisterNewUserIfFirstNameIsNull() {
-        Response response = this.getPreConfiguredRestAssured()
+        Response response = RestAssured
+                .given()
+                .contentType(ContentType.JSON)
                 .body(JsonUtils.readFromJson("/UserControllerIntegrationTest/shouldFailToRegisterNewUserIfFirstNameIsNull/registrationRequest.json", UserDto.class))
                 .post("/api/v0/user")
                 .then()
@@ -187,7 +196,9 @@ public class UserControllerIntegrationTest extends BaseIntegrationTest {
     @DatabaseSetup("/UserControllerIntegrationTest/shouldFailToRegisterNewUserIfFirstNameIsEmpty/dbSetup.xml")
     @ExpectedDatabase("/UserControllerIntegrationTest/shouldFailToRegisterNewUserIfFirstNameIsEmpty/expectedDataBase.xml")
     public void shouldFailToRegisterNewUserIfFirstNameIsEmpty() {
-        Response response = this.getPreConfiguredRestAssured()
+        Response response = RestAssured
+                .given()
+                .contentType(ContentType.JSON)
                 .body(JsonUtils.readFromJson("/UserControllerIntegrationTest/shouldFailToRegisterNewUserIfFirstNameIsEmpty/registrationRequest.json", UserDto.class))
                 .post("/api/v0/user")
                 .then()
@@ -213,7 +224,9 @@ public class UserControllerIntegrationTest extends BaseIntegrationTest {
     @DatabaseSetup("/UserControllerIntegrationTest/shouldFailToRegisterNewUserIfLastNameIsNull/dbSetup.xml")
     @ExpectedDatabase("/UserControllerIntegrationTest/shouldFailToRegisterNewUserIfLastNameIsNull/expectedDataBase.xml")
     public void shouldFailToRegisterNewUserIfLastNameIsNull() {
-        Response response = this.getPreConfiguredRestAssured()
+        Response response = RestAssured
+                .given()
+                .contentType(ContentType.JSON)
                 .body(JsonUtils.readFromJson("/UserControllerIntegrationTest/shouldFailToRegisterNewUserIfLastNameIsNull/registrationRequest.json", UserDto.class))
                 .post("/api/v0/user")
                 .then()
@@ -238,7 +251,9 @@ public class UserControllerIntegrationTest extends BaseIntegrationTest {
     @DatabaseSetup("/UserControllerIntegrationTest/shouldFailToRegisterNewUserIfLastNameIsEmpty/dbSetup.xml")
     @ExpectedDatabase("/UserControllerIntegrationTest/shouldFailToRegisterNewUserIfLastNameIsEmpty/expectedDataBase.xml")
     public void shouldFailToRegisterNewUserIfLastNameIsEmpty() {
-        Response response = this.getPreConfiguredRestAssured()
+        Response response =RestAssured
+                .given()
+                .contentType(ContentType.JSON)
                 .body(JsonUtils.readFromJson("/UserControllerIntegrationTest/shouldFailToRegisterNewUserIfLastNameIsEmpty/registrationRequest.json", UserDto.class))
                 .post("/api/v0/user")
                 .then()
@@ -263,7 +278,9 @@ public class UserControllerIntegrationTest extends BaseIntegrationTest {
     @DatabaseSetup("/UserControllerIntegrationTest/shouldFailToRegisterNewUserIfEmailHasInvalidFormat/dbSetup.xml")
     @ExpectedDatabase("/UserControllerIntegrationTest/shouldFailToRegisterNewUserIfEmailHasInvalidFormat/expectedDataBase.xml")
     public void shouldFailToRegisterNewUserIfEmailHasInvalidFormat() {
-        Response response = this.getPreConfiguredRestAssured()
+        Response response = RestAssured
+                .given()
+                .contentType(ContentType.JSON)
                 .body(JsonUtils.readFromJson("/UserControllerIntegrationTest/shouldFailToRegisterNewUserIfEmailHasInvalidFormat/registrationRequest.json", UserDto.class))
                 .post("/api/v0/user")
                 .then()
@@ -288,7 +305,9 @@ public class UserControllerIntegrationTest extends BaseIntegrationTest {
     @DatabaseSetup("/UserControllerIntegrationTest/shouldFailToRegisterNewUserIfEmailIsBlank/dbSetup.xml")
     @ExpectedDatabase("/UserControllerIntegrationTest/shouldFailToRegisterNewUserIfEmailIsBlank/expectedDataBase.xml")
     public void shouldFailToRegisterNewUserIfEmailIsBlank() {
-        Response response = this.getPreConfiguredRestAssured()
+        Response response = RestAssured
+                .given()
+                .contentType(ContentType.JSON)
                 .body(JsonUtils.readFromJson("/UserControllerIntegrationTest/shouldFailToRegisterNewUserIfEmailIsBlank/registrationRequest.json", UserDto.class))
                 .post("/api/v0/user")
                 .then()
@@ -314,7 +333,9 @@ public class UserControllerIntegrationTest extends BaseIntegrationTest {
     @DatabaseSetup("/UserControllerIntegrationTest/shouldFailToRegisterNewUserIfEmailIsNull/dbSetup.xml")
     @ExpectedDatabase("/UserControllerIntegrationTest/shouldFailToRegisterNewUserIfEmailIsNull/expectedDataBase.xml")
     public void shouldFailToRegisterNewUserIfEmailIsNull() {
-        Response response = this.getPreConfiguredRestAssured()
+        Response response = RestAssured
+                .given()
+                .contentType(ContentType.JSON)
                 .body(JsonUtils.readFromJson("/UserControllerIntegrationTest/shouldFailToRegisterNewUserIfEmailIsNull/registrationRequest.json", UserDto.class))
                 .post("/api/v0/user")
                 .then()
@@ -340,7 +361,9 @@ public class UserControllerIntegrationTest extends BaseIntegrationTest {
     @DatabaseSetup("/UserControllerIntegrationTest/shouldFailToRegisterNewUserIfPasswordHasInvalidFormat/dbSetup.xml")
     @ExpectedDatabase("/UserControllerIntegrationTest/shouldFailToRegisterNewUserIfPasswordHasInvalidFormat/expectedDataBase.xml")
     public void shouldFailToRegisterNewUserIfPasswordHasInvalidFormat() {
-        Response response = this.getPreConfiguredRestAssured()
+        Response response = RestAssured
+                .given()
+                .contentType(ContentType.JSON)
                 .body(JsonUtils.readFromJson("/UserControllerIntegrationTest/shouldFailToRegisterNewUserIfPasswordHasInvalidFormat/registrationRequest.json", UserDto.class))
                 .post("/api/v0/user")
                 .then()
@@ -366,7 +389,9 @@ public class UserControllerIntegrationTest extends BaseIntegrationTest {
     @DatabaseSetup("/UserControllerIntegrationTest/shouldFailToRegisterNewUserIfPasswordIsNull/dbSetup.xml")
     @ExpectedDatabase("/UserControllerIntegrationTest/shouldFailToRegisterNewUserIfPasswordIsNull/expectedDataBase.xml")
     public void shouldFailToRegisterNewUserIfPasswordIsNull() {
-        Response response = this.getPreConfiguredRestAssured()
+        Response response = RestAssured
+                .given()
+                .contentType(ContentType.JSON)
                 .body(JsonUtils.readFromJson("/UserControllerIntegrationTest/shouldFailToRegisterNewUserIfPasswordIsNull/registrationRequest.json", UserDto.class))
                 .post("/api/v0/user")
                 .then()
