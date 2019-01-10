@@ -7,7 +7,7 @@ import {
   withHandlers,
   withProps
 } from 'recompose';
-
+import {addModal} from 'modules/modals/actions/modalsActions';
 import getProjectsList from 'modules/modals/actions/api/getProjectsList';
 import {TIMESHEET_RECORD_MODAL} from 'modules/modals/constants';
 import fetchTimesheetListApi from '../../actions/api/fetchTimesheetListApi';
@@ -19,7 +19,7 @@ const mapStateToProps = (state) => ({
   projectsList: state.projects.list
 });
 
-const mapDispatchToProps = {fetchTimesheetListApi, getProjectsList};
+const mapDispatchToProps = {addModal, fetchTimesheetListApi, getProjectsList};
 
 interface IProps {
   userId: number;
