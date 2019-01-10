@@ -29,7 +29,7 @@ public class TaskDto {
     @JsonSerialize(using = LocalDateSerializer.class)
     private LocalDate reportingDate;
     @JsonProperty("spent_time")
-    private int spentTime;
+    private float spentTime;
     private String tags;
     private String comments;
 }

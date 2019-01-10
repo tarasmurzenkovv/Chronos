@@ -16,8 +16,6 @@ public class UserPasswordValidationService implements UserValidationService {
     private static final int ERROR_CODE_FOR_INVALID_PASSWORD_FORMAT = 6;
     private static final int ERROR_CODE_FOR_NULL_BLANK_PASSWORD = 3;
     private static final String ERROR_MESSAGE_FOR_NULL_BLANK_PASSWORD = "User password cannot be null/blank";
-    ;
-
 
     @Override
     public void validate(UserDto userDto) {

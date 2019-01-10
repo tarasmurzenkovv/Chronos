@@ -6,6 +6,7 @@ import com.github.springtestdbunit.annotation.DatabaseTearDown;
 import com.github.springtestdbunit.annotation.ExpectedDatabase;
 import com.jayway.restassured.response.Response;
 import com.jayway.restassured.response.ResponseBody;
+import com.syngenta.digital.lab.kyiv.chronos.model.dto.LoginRequest;
 import com.syngenta.digital.lab.kyiv.chronos.model.dto.UserDto;
 import com.syngenta.digital.lab.kyiv.chronos.model.response.ErrorResponsePayload;
 import com.syngenta.digital.lab.kyiv.chronos.model.response.GeneralResponse;
@@ -24,6 +25,85 @@ import static com.github.springtestdbunit.assertion.DatabaseAssertionMode.NON_ST
 @SpringBootTest(classes = ChronosApplicationEntryPoint.class, webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @DatabaseTearDown("/UserControllerIntegrationTest/dbTearDown.xml")
 public class UserControllerIntegrationTest extends BaseIntegrationTest {
+
+    @Test
+    @SneakyThrows
+    @DatabaseSetup("/UserControllerIntegrationTest/shouldFailLoginTheExistingUserIfNoPasswordIsPresentInRequest/dbSetup.xml")
+    @ExpectedDatabase(value = "/UserControllerIntegrationTest/shouldFailLoginTheExistingUserIfNoPasswordIsPresentInRequest/expectedDataBase.xml",
+            assertionMode = NON_STRICT_UNORDERED)
+    public void shouldFailLoginTheExistingUserIfNoPasswordIsPresentInRequest() {
+        Response response = this.getPreConfiguredRestAssured()
+                .body(JsonUtils.readFromJson("/UserControllerIntegrationTest/shouldFailLoginTheExistingUserIfNoPasswordIsPresentInRequest/loginRequest.json", LoginRequest.class))
+                .post("/api/v0/user/login")
+                .then()
+                .extract()
+                .response();
+
+        validateBadResponse(response);
+
+        GeneralResponse<ErrorResponsePayload> actualResponse = this.objectMapper.readValue(response.getBody().asString(),
+                new TypeReference<GeneralResponse<ErrorResponsePayload>>() {
+                });
+        GeneralResponse<ErrorResponsePayload> expectedResponse = JsonUtils.readFromJson(
+                "/UserControllerIntegrationTest/shouldFailLoginTheExistingUserIfNoPasswordIsPresentInRequest/expectedResponse.json",
+                new TypeReference<>() {
+                });
+
+        Assertions.assertThat(actualResponse).isEqualTo(expectedResponse);
+    }
+
+    @Test
+    @SneakyThrows
+    @DatabaseSetup("/UserControllerIntegrationTest/shouldFailLoginTheExistingUserIfNoSuchEmailIsPresentInDb/dbSetup.xml")
+    @ExpectedDatabase(value = "/UserControllerIntegrationTest/shouldFailLoginTheExistingUserIfNoSuchEmailIsPresentInDb/expectedDataBase.xml",
+            assertionMode = NON_STRICT_UNORDERED)
+    public void shouldFailLoginTheExistingUserIfNoSuchEmailIsPresentInDb() {
+        Response response = this.getPreConfiguredRestAssured()
+                .body(JsonUtils.readFromJson("/UserControllerIntegrationTest/shouldFailLoginTheExistingUserIfNoSuchEmailIsPresentInDb/loginRequest.json", LoginRequest.class))
+                .post("/api/v0/user/login")
+                .then()
+                .extract()
+                .response();
+
+        validateBadResponse(response);
+
+        GeneralResponse<ErrorResponsePayload> actualResponse = this.objectMapper.readValue(response.getBody().asString(),
+                new TypeReference<GeneralResponse<ErrorResponsePayload>>() {
+                });
+        GeneralResponse<ErrorResponsePayload> expectedResponse = JsonUtils.readFromJson(
+                "/UserControllerIntegrationTest/shouldFailLoginTheExistingUserIfNoSuchEmailIsPresentInDb/expectedResponse.json",
+                new TypeReference<>() {
+                });
+
+        Assertions.assertThat(actualResponse).isEqualTo(expectedResponse);
+    }
+
+    @Test
+    @SneakyThrows
+    @DatabaseSetup("/UserControllerIntegrationTest/shouldSuccessfullyLoginTheExistingUser/dbSetup.xml")
+    @ExpectedDatabase(value = "/UserControllerIntegrationTest/shouldSuccessfullyLoginTheExistingUser/expectedDataBase.xml",
+            assertionMode = NON_STRICT_UNORDERED)
+    public void shouldSuccessfullyLoginTheExistingUser() {
+        Response response = this.getPreConfiguredRestAssured()
+                .body(JsonUtils.readFromJson("/UserControllerIntegrationTest/shouldSuccessfullyLoginTheExistingUser/loginRequest.json", LoginRequest.class))
+                .post("/api/v0/user/login")
+                .then()
+                .extract()
+                .response();
+
+        String asGeneralResponseString = response.getBody().asString();
+        GeneralResponse<UserDto> actualResponse = this.objectMapper.readValue(asGeneralResponseString, new TypeReference<GeneralResponse<UserDto>>() {
+        });
+
+        Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.SC_MOVED_TEMPORARILY);
+        Assertions.assertThat(actualResponse).isNotNull();
+        Assertions.assertThat(actualResponse.getData()).isNotNull();
+        Assertions.assertThat(actualResponse.getData().getId()).isNotNull();
+        Assertions.assertThat(actualResponse.getData().getEmail()).isEqualTo("email@email.com");
+        Assertions.assertThat(actualResponse.getData().getFirstName()).isEqualTo("First_name");
+        Assertions.assertThat(actualResponse.getData().getLastName()).isEqualTo("Last_name");
+        Assertions.assertThat(actualResponse.getData().getPassword()).isEqualTo("passW3$rdd");
+    }
 
     @Test
     @SneakyThrows

@@ -1,8 +1,8 @@
 import * as React from 'react';
 import {connect} from 'react-redux';
-import {compose, withState, withHandlers} from 'recompose';
+import {compose, withHandlers, withState} from 'recompose';
 
-import {signIn, resetSignInErrorCodes} from '../../actions/signIn';
+import {resetSignInErrorCodes, signIn} from '../../actions/signIn';
 
 import SignIn from './SignIn';
 
@@ -25,10 +25,8 @@ export default compose(
   withState('showPassword', 'setShowPassword', false),
 
   withHandlers({
-    handleRememberMeValue: ({rememberMeValue, setRememberMeValue}) => (
-      event,
-      checked
-    ) => setRememberMeValue(checked),
+    handleRememberMeValue: ({setRememberMeValue}) => (event, checked) =>
+      setRememberMeValue(checked),
 
     handleShowPassword: ({showPassword, setShowPassword}) => () =>
       setShowPassword(!showPassword),

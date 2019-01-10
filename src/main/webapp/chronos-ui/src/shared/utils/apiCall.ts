@@ -8,5 +8,13 @@ export default function apiCall(endpoint: string, options?: any) {
       'Access-Control-Allow-Origin': '*'
     },
     ...options
-  }).then((res) => res.json());
+  })
+    .then((res) => res.json())
+    .then((res) => {
+      const {data} = res;
+      if (res.error) {
+        return Promise.reject(data);
+      }
+      return Promise.resolve({data});
+    });
 }

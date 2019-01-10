@@ -37,6 +37,7 @@
     "react/display-name": 0,
     "import/no-unresolved": 0,
     "object-property-newline": "error",
+    "linebreak-style": 0,
     "indent": [
       "error",
       2,

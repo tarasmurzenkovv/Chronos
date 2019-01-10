@@ -16,4 +16,12 @@ import lombok.ToString;
 public class GeneralResponse<T> {
     private boolean error;
     private T data;
+
+    public static <T> GeneralResponse<T> buildResponse(T data) {
+        return new GeneralResponse<>(false, data);
+    }
+
+    public static <T> GeneralResponse<T> buildErrorResponse(T data) {
+        return new GeneralResponse<>(true, data);
+    }
 }

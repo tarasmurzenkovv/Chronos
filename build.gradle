@@ -13,6 +13,7 @@ buildscript {
 plugins {
     id 'io.franzbecker.gradle-lombok' version '1.14'
     id "org.liquibase.gradle" version "2.0.1"
+    id 'org.hidetake.ssh' version '2.9.0'
     id 'java'
 }
 
@@ -23,6 +24,17 @@ apply plugin: 'io.spring.dependency-management'
 apply plugin: 'checkstyle'
 apply plugin: 'com.moowork.node'
 apply plugin: 'liquibase'
+apply plugin: "org.hidetake.ssh"
+
+remotes {
+    webServer {
+    	def pathToRsa = project.findProperty("host.id_rsa.file.path")
+        host = project.findProperty("host")
+        user = project.findProperty("host.user")
+        password = project.findProperty("host.password")
+        identity = pathToRsa == null ? null : file(pathToRsa)
+    }
+}
 
 node {
     version = '10.14.2'
@@ -55,10 +67,6 @@ checkstyle {
 
 checkstyleMain {
     source = 'src/main/java'
-}
-
-checkstyleTest {
-    source = 'src/test/java'
 }
 
 task applyDbChanges() {
@@ -94,12 +102,41 @@ task createDotEnvFileFe(type: Copy) {
     rename '.env.production.example', '.env.production'
 }
 
-task buildFe(type: NpmTask) {
-    args = ['install', 'run', 'build']
+task installFeDependencies(type: NpmTask) {
+    args = ['install']
+    dependsOn createDotEnvFileFe
 }
 
-build.dependsOn buildFe
-clean.dependsOn deletFeArtifacts
+task buildFe(type: NpmTask) {
+    args = ['run', 'build']
+    dependsOn installFeDependencies
+}
+
+compileJava {
+    dependsOn buildFe
+}
+
+clean {
+	dependsOn deletFeArtifacts
+}
+
+task deploy {
+    doLast {
+        ssh.settings {
+            knownHosts = allowAnyHosts
+        }
+        ssh.run {
+            session(remotes.webServer) {
+                executeSudo('systemctl stop chronos_web_app', pty: true)
+
+                put from: "${project.projectDir}/build/libs/chronos-0.1.0.jar",
+                    into: '/home/syngenta/deployed_applications/chronos_app'
+
+                executeSudo('systemctl start chronos_web_app', pty: true)
+            }
+        }
+    }
+}
 
 repositories {
     mavenCentral()
