@@ -9,6 +9,7 @@ import SignInPage from './SignInPage';
 import ForgotPasswordPage from './ForgotPasswordPage';
 import TimesheetPage from './TimesheetPage';
 import PrivatePage from './PrivatePage';
+import SettingsPage from './SettingsPage';
 
 const Pages = ({history}) => (
   <ConnectedRouter history={history}>
@@ -19,6 +20,7 @@ const Pages = ({history}) => (
         <Route path="/forgot-password" component={ForgotPasswordPage} />
 
         <PrivatePage exact path="/" component={() => <TimesheetPage />} />
+        <PrivatePage path="/settings" component={() => <SettingsPage />} />
       </Switch>
       <CurrentModal />
     </div>
