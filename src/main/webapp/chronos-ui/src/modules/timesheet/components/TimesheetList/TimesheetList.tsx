@@ -13,7 +13,7 @@ import {
 } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import {IListItem as IListItemProject} from 'modules/modals/reducers/projects';
-import Header from 'modules/header';
+import Header from 'modules/common/Header';
 import styles from './styles';
 import {IListItem as IListItemTimesheet} from '../../reducers/timesheet';
 
@@ -25,7 +25,7 @@ interface IProps extends WithStyles<typeof styles> {
   handleButtonClick(): void;
 }
 
-const Timesheet: React.FunctionComponent<IProps> = ({
+const TimesheetList: React.FunctionComponent<IProps> = ({
   classes,
   handleButtonClick,
   list
@@ -52,8 +52,8 @@ const Timesheet: React.FunctionComponent<IProps> = ({
                 <TableCell align="center">{item.project_name}</TableCell>
                 <TableCell align="center">{item.comments}</TableCell>
                 <TableCell align="center">
-                  <button type="button">edit</button>
-                  <button type="button"> delete</button>
+                  {/* <button type="button">edit</button> */}
+                  {/* <button type="button"> delete</button> */}
                 </TableCell>
               </TableRow>
             ))}
@@ -69,4 +69,4 @@ const Timesheet: React.FunctionComponent<IProps> = ({
   </div>
 );
 
-export default withStyles(styles)(Timesheet);
+export default withStyles(styles)(TimesheetList);

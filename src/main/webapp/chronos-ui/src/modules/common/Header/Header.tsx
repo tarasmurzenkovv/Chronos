@@ -8,7 +8,6 @@ import {
   withStyles,
   WithStyles
 } from '@material-ui/core';
-import MenuIcon from '@material-ui/icons/Menu';
 import SettingsIcon from '@material-ui/icons/Settings';
 import CalendarIcon from '@material-ui/icons/CalendarToday';
 import mainLogo from 'shared/assets/img/syngentaLogo.svg';
@@ -16,40 +15,38 @@ import * as theme from './Header.scss';
 import styles from './styles';
 
 interface IProps extends WithStyles<typeof styles> {
-  isActive: boolean;
-  handleBtnChange(): void;
+  pathname: string;
 }
 
-const Header: React.FunctionComponent<IProps> = ({
-  isActive,
-  handleBtnChange,
-  classes
-}) => (
+const Header: React.FunctionComponent<IProps> = ({classes, pathname}) => (
   <div>
     <AppBar position="static" className={classes.navBar}>
       <Toolbar>
-        <IconButton className={theme.menuButton} aria-label="Menu">
-          <MenuIcon className={theme.iconMenu} />
-        </IconButton>
+        {/* <IconButton className={theme.menuButton} aria-label="Menu" disabled> */}
+        {/* <MenuIcon className={theme.iconMenu} /> */}
+        {/* </IconButton> */}
         <div className={theme.logo}>
-          <img src={mainLogo} alt="Syngenta logo" width="109" height="39" />
+          <a href="/">
+            <img src={mainLogo} alt="Syngenta logo" width="109" height="39" />
+          </a>
         </div>
         <Typography variant="h6" color="inherit" className={classes.navTitle}>
           Calendar
         </Typography>
         <IconButton
           aria-label="Calendar"
-          className={`${classes.navButton} ${!isActive ? classes.active : ''}`}
-          onClick={handleBtnChange}
+          className={`${classes.navButton} ${
+            pathname === '/' ? classes.active : ''
+          }`}
         >
           <CalendarIcon className={classes.iconCalendar} />
         </IconButton>
         <IconButton
           aria-label="Settings"
           className={`${classes.navButton} ${classes.navSettings} ${
-            isActive ? classes.active : ''
+            pathname === '/settings' ? classes.active : ''
           }`}
-          onClick={handleBtnChange}
+          disabled
         >
           <SettingsIcon className={classes.iconSettings} />
         </IconButton>

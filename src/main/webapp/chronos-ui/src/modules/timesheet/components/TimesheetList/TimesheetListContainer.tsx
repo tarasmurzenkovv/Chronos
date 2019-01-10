@@ -11,7 +11,7 @@ import {addModal} from 'modules/modals/actions/modalsActions';
 import getProjectsList from 'modules/modals/actions/api/getProjectsList';
 import {TIMESHEET_RECORD_MODAL} from 'modules/modals/constants';
 import {fetchTimesheetListApi} from '../../actions/api/fetchTimesheetListApi';
-import Timesheet from './Timesheet';
+import TimesheetList from './TimesheetList';
 
 const mapStateToProps = (state) => ({
   userId: state.auth.signIn.user.id,
@@ -33,7 +33,7 @@ export default compose<any, any>(
     mapDispatchToProps
   ),
 
-  setDisplayName('TimesheetComponent'),
+  setDisplayName('TimesheetList'),
 
   withProps(({projectsList, timesheetList}) => {
     const list = timesheetList.map((timesheetItem) => ({
@@ -57,4 +57,4 @@ export default compose<any, any>(
   }),
 
   React.memo
-)(Timesheet);
+)(TimesheetList);

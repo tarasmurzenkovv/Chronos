@@ -1,1 +1,1 @@
-export {default as Timesheet} from './Timesheet';
+export {default as Timesheet} from './TimesheetList';
