@@ -2,11 +2,11 @@ import * as React from 'react';
 
 import {
   AppBar,
+  IconButton,
   Toolbar,
   Typography,
   withStyles,
-  WithStyles,
-  IconButton
+  WithStyles
 } from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu';
 import SettingsIcon from '@material-ui/icons/Settings';
