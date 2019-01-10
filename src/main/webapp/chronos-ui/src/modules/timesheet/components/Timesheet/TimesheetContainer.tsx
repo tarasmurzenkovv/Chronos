@@ -10,7 +10,7 @@ import {
 import {addModal} from 'modules/modals/actions/modalsActions';
 import getProjectsList from 'modules/modals/actions/api/getProjectsList';
 import {TIMESHEET_RECORD_MODAL} from 'modules/modals/constants';
-import fetchTimesheetListApi from '../../actions/api/fetchTimesheetListApi';
+import {fetchTimesheetListApi} from '../../actions/api/fetchTimesheetListApi';
 import Timesheet from './Timesheet';
 
 const mapStateToProps = (state) => ({

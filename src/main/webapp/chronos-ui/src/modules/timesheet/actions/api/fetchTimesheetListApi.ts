@@ -3,7 +3,7 @@ import errorAction from 'shared/utils/errorAction';
 import {FETCH_TIMESHEET_LIST} from '../../constants';
 import timesheetUrl from '../../services';
 
-export default (id: number) => (dispatch) => {
+export const fetchTimesheetListApi = (id: number) => (dispatch) => {
   dispatch({type: FETCH_TIMESHEET_LIST.pending});
 
   return apiCall(timesheetUrl(id))
