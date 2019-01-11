@@ -14,10 +14,8 @@ public class UserControllerAdvise {
 
     @ExceptionHandler(UserValidationException.class)
     public ResponseEntity<GeneralResponse<ErrorResponsePayload>> handleUserValidationErrors(UserValidationException userValidationException) {
-        ErrorResponsePayload errorResponsePayload = new ErrorResponsePayload(userValidationException.getErrorCode(),
-                userValidationException.getErrorMessage());
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
-                .body(GeneralResponse.buildErrorResponse(errorResponsePayload));
+                .body(GeneralResponse.buildErrorResponse(ErrorResponsePayload.from(userValidationException)));
     }
 }

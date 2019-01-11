@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class ProjectMapper {
 
-    public ProjectEntity maptToEntity(ProjectDto projectDto, ProjectTypeEntity projectTypeEntity) {
+    public ProjectEntity mapToEntity(ProjectDto projectDto, ProjectTypeEntity projectTypeEntity) {
         ProjectEntity projectEntity = new ProjectEntity();
         Long id = projectDto.getId();
         if (id != null) {

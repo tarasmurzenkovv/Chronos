@@ -4,6 +4,7 @@ import com.syngenta.digital.lab.kyiv.chronos.mappers.ProjectMapper;
 import com.syngenta.digital.lab.kyiv.chronos.model.dto.ProjectDto;
 import com.syngenta.digital.lab.kyiv.chronos.model.entities.ProjectEntity;
 import com.syngenta.digital.lab.kyiv.chronos.model.entities.ProjectTypeEntity;
+import com.syngenta.digital.lab.kyiv.chronos.model.exceptions.ProjectTypeException;
 import com.syngenta.digital.lab.kyiv.chronos.repositories.ProjectRepository;
 import com.syngenta.digital.lab.kyiv.chronos.repositories.ProjectTypeRepository;
 import lombok.RequiredArgsConstructor;
@@ -16,17 +17,15 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class ProjectService {
+    private static final int ERR_CODE_NOT_EXISTING_PROJECT_TYPE = 9;
 
     private final ProjectRepository projectRepository;
     private final ProjectTypeRepository projectTypeRepository;
     private final ProjectMapper projectMapper;
 
-    public ProjectDto registerProject(ProjectDto projectDto) {
-        ProjectTypeEntity projectTypeEntity = projectTypeRepository.findById(projectDto.getProjectTypeId())
-                .orElseThrow(() -> new RuntimeException("Cannot find project type for id" + projectDto.getProjectTypeId()));
-        ProjectEntity projectEntity = projectMapper.maptToEntity(projectDto, projectTypeEntity);
-        ProjectEntity savedProjectEntity = projectRepository.save(projectEntity);
-        return projectMapper.mapToDto(savedProjectEntity);
+    @Transactional
+    public ProjectDto save(ProjectDto projectDto) {
+        return register(projectDto);
     }
 
     public ProjectDto find(long id) {
@@ -37,11 +36,7 @@ public class ProjectService {
 
     @Transactional
     public ProjectDto update(ProjectDto projectDto) {
-        ProjectTypeEntity projectTypeEntity = projectTypeRepository.findById(projectDto.getProjectTypeId())
-                .orElseThrow(() -> new RuntimeException("Cannot find project type for id" + projectDto.getProjectTypeId()));
-        ProjectEntity projectEntity = projectMapper.maptToEntity(projectDto, projectTypeEntity);
-        ProjectEntity savedProjectEntity = projectRepository.save(projectEntity);
-        return projectMapper.mapToDto(savedProjectEntity);
+        return register(projectDto);
     }
 
     public List<ProjectDto> findAll() {
@@ -51,7 +46,16 @@ public class ProjectService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional
     public void delete(long id) {
         projectRepository.deleteById(id);
+    }
+
+    private ProjectDto register(ProjectDto projectDto) {
+        ProjectTypeEntity projectTypeEntity = projectTypeRepository.findById(projectDto.getProjectTypeId())
+                .orElseThrow(() -> new ProjectTypeException(ERR_CODE_NOT_EXISTING_PROJECT_TYPE, "Cannot find project type for id " + projectDto.getProjectTypeId()));
+        ProjectEntity projectEntity = projectMapper.mapToEntity(projectDto, projectTypeEntity);
+        ProjectEntity savedProjectEntity = projectRepository.save(projectEntity);
+        return projectMapper.mapToDto(savedProjectEntity);
     }
 }

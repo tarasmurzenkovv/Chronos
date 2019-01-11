@@ -7,7 +7,9 @@ import com.github.springtestdbunit.annotation.ExpectedDatabase;
 import com.jayway.restassured.RestAssured;
 import com.jayway.restassured.http.ContentType;
 import com.jayway.restassured.response.Response;
+import com.jayway.restassured.response.ResponseBody;
 import com.syngenta.digital.lab.kyiv.chronos.model.dto.ProjectDto;
+import com.syngenta.digital.lab.kyiv.chronos.model.response.ErrorResponsePayload;
 import com.syngenta.digital.lab.kyiv.chronos.model.response.GeneralResponse;
 import com.syngenta.digital.lab.kyiv.chronos.utils.JsonUtils;
 import lombok.SneakyThrows;
@@ -47,6 +49,34 @@ public class ProjectControllerIntegrationTest extends BaseIntegrationTest {
         Assertions.assertThat(actualResponse.getData().getProjectTypeId()).isNotNull();
         Assertions.assertThat(actualResponse.getData().getProjectName()).isEqualTo("Project name");
         Assertions.assertThat(actualResponse.getData().getProjectDescription()).isEqualTo("Some useful description");
+    }
+
+    @Test
+    @SneakyThrows
+    @DatabaseSetup(value = "/ProjectControllerIntegrationTest/shouldFailToAddNewProjectIfNoExistingProjectTypeIdIsSpecified/dbSetup.xml")
+    @ExpectedDatabase(value = "/ProjectControllerIntegrationTest/shouldFailToAddNewProjectIfNoExistingProjectTypeIdIsSpecified/expectedDataBase.xml",
+            assertionMode = NON_STRICT_UNORDERED)
+    public void shouldFailToAddNewProjectIfNoExistingProjectTypeIdIsSpecified() {
+        Response response = RestAssured
+                .given()
+                .body(JsonUtils.readFromJson("/ProjectControllerIntegrationTest/shouldFailToAddNewProjectIfNoExistingProjectTypeIdIsSpecified/failToAddNewProjectRequest.json", ProjectDto.class))
+                .contentType(ContentType.JSON)
+                .post("/api/v0/project")
+                .then()
+                .extract()
+                .response();
+
+        validateBadResponse(response);
+
+        GeneralResponse<ErrorResponsePayload> actualResponse = this.objectMapper.readValue(response.getBody().asString(), new TypeReference<GeneralResponse<ErrorResponsePayload>>() {
+        });
+
+        GeneralResponse<ErrorResponsePayload> expectedResponse = JsonUtils.readFromJson(
+                "/ProjectControllerIntegrationTest/shouldFailToAddNewProjectIfNoExistingProjectTypeIdIsSpecified/expectedResponse.json",
+                new TypeReference<>() {
+                });
+
+        Assertions.assertThat(actualResponse).isEqualTo(expectedResponse);
     }
 
     @Test
@@ -148,4 +178,15 @@ public class ProjectControllerIntegrationTest extends BaseIntegrationTest {
 
         Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.SC_OK);
     }
+
+    private static void validateBadResponse(Response response) {
+        Assertions.assertThat(response).isNotNull();
+        Assertions.assertThat(response.getStatusCode()).isNotNull();
+        Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.SC_BAD_REQUEST);
+        ResponseBody body = response.getBody();
+        Assertions.assertThat(body).isNotNull();
+        String asGeneralResponseString = body.asString();
+        Assertions.assertThat(asGeneralResponseString).isNotNull();
+    }
+
 }
