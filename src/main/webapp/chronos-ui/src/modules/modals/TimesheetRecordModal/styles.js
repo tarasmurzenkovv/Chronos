@@ -15,7 +15,6 @@ const styles = () => ({
   },
   formControl: {
     width: '100%',
-    border: '1px solid rgba(173, 181, 199, 0.87)',
     borderRadius: '5px'
   },
   textFieldLabel: {
@@ -23,6 +22,15 @@ const styles = () => ({
   },
   textFieldLabelFocused: {
     color: 'rgba(173, 181, 199, 0.87)'
+  },
+  commentsInput: {
+    width: '100%',
+    $textFieldFocusedNotchedOutline: {
+      borderColor: '#25cdda'
+    },
+    '&:hover $textFieldFocusedNotchedOutline': {
+      borderColor: 'rgba(173, 181, 199, 0.87) !important'
+    }
   },
   textFieldOutlinedInput: {
     width: '257px',
@@ -41,9 +49,7 @@ const styles = () => ({
       borderColor: 'rgba(173, 181, 199, 0.87)'
     }
   },
-  commentsInput: {
-    width: '100%'
-  },
+
   modalTitle: {
     textAlign: 'center',
     fontSize: '20px'
@@ -61,7 +67,7 @@ const styles = () => ({
     fontWeight: '400',
     textTransform: 'capitalize',
     '&:hover': {
-      color: '#25cdda'
+      backgroundColor: '#25cdda'
     }
   },
   modalContent: {

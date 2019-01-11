@@ -88,7 +88,7 @@ const TimesheetRecordModal: React.FunctionComponent<IProps> = ({
                 onChange={handleProjectChange}
                 input={
                   <OutlinedInput
-                    labelWidth={0}
+                    labelWidth={60}
                     name="projectId"
                     id="outlined-projectId"
                   />
@@ -130,7 +130,6 @@ const TimesheetRecordModal: React.FunctionComponent<IProps> = ({
               }}
               onChange={handleTimeChange}
               className={classes.textField}
-              // required
             />
 
             <TextField

@@ -48,7 +48,7 @@ public class UserController {
     }
 
     @GetMapping("/user/{id}/task")
-    public ResponseEntity<GeneralResponse<List<TaskDto>>> findAllTasks(@PathVariable("id") long userId) {
+    public ResponseEntity<GeneralResponse<List<TaskDto>>> find(@PathVariable("id") long userId) {
         log.info("About to find task by id '{}'", userId);
         List<TaskDto> userTasks = userService.find(userId);
         return ResponseEntity
@@ -57,7 +57,7 @@ public class UserController {
     }
 
     @GetMapping("/user/{id}")
-    public ResponseEntity<GeneralResponse<List<TaskDto>>> findAllTasks(
+    public ResponseEntity<GeneralResponse<List<TaskDto>>> find(
             @PathVariable("id") long userId,
             @RequestParam("start")
             @DateTimeFormat(pattern = "dd/MM/yyyy") LocalDate start,
