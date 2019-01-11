@@ -34,6 +34,9 @@ export default compose(
   withState('projectId', 'setProjectId', ''),
   withState('date', 'setDate', new Date().toISOString().slice(0, 10)),
   withState('comments', 'setComments', ''),
+  withState('hasError', 'handleError', false),
+  withState('isSelected', 'handleSelection', null),
+  withState('isTimeEmpty', 'handleTimeInput', null),
 
   withHandlers({
     handleOnClose: ({isOpen, setIsOpen, removeCurrentModal}) => () => {
@@ -43,10 +46,29 @@ export default compose(
       }
     },
 
-    handleProjectChange: ({projectId, setProjectId}) => (event) => {
+    handleProjectChange: ({
+      projectId,
+      setProjectId,
+      isSelected,
+      hasError,
+      handleSelection,
+      handleError
+    }) => (event) => {
       const {value} = event.target;
+      handleSelection(value);
+      if (hasError) {
+        handleError(!hasError);
+      }
       if (projectId !== value) {
         setProjectId(value);
+      }
+    },
+
+    handleTimeChange: ({hasError, handleError, handleTimeInput}) => (event) => {
+      const {value} = event.target;
+      handleTimeInput(value);
+      if (hasError) {
+        handleError(!hasError);
       }
     },
 
@@ -71,7 +93,11 @@ export default compose(
       fetchTimesheetListApi,
       handleOnClose,
       projectId,
-      userId
+      userId,
+      isSelected,
+      hasError,
+      handleError,
+      isTimeEmpty
     }) => (event) => {
       event.preventDefault();
       const time = event.target.time.value;
@@ -85,6 +111,10 @@ export default compose(
         spent_time: time,
         user_id: userId
       };
+
+      if (isSelected === null || isTimeEmpty === null) {
+        handleError(!hasError);
+      }
 
       createRecordApi(params)
         .then(() => {
