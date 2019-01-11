@@ -7,9 +7,11 @@ import {
   withHandlers,
   withProps
 } from 'recompose';
+
 import {addModal} from 'modules/modals/actions/modalsActions';
 import getProjectsList from 'modules/modals/actions/api/getProjectsList';
 import {TIMESHEET_RECORD_MODAL} from 'modules/modals/constants';
+
 import {fetchTimesheetListApi} from '../../actions/api/fetchTimesheetListApi';
 import TimesheetList from './TimesheetList';
 
@@ -27,25 +29,27 @@ interface IProps {
   fetchTimesheetListApi: (id: number) => void;
 }
 
-export default compose<any, any>(
+export default compose(
+  setDisplayName('TimesheetList'),
+
   connect(
     mapStateToProps,
     mapDispatchToProps
   ),
 
-  setDisplayName('TimesheetList'),
-
   withProps(({projectsList, timesheetList}) => {
     const list = timesheetList.map((timesheetItem) => ({
       ...timesheetItem,
-      ...projectsList.find(
+      project_name: projectsList.find(
         (projectItem) => projectItem.id === timesheetItem.project_id
-      )
+      ).project_name
     }));
+
     return {list};
   }),
 
   withHandlers({
+    /* eslint-disable no-shadow */
     handleButtonClick: ({addModal}) => () =>
       addModal({id: TIMESHEET_RECORD_MODAL})
   }),
