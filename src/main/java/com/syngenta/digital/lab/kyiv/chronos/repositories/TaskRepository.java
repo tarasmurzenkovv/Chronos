@@ -11,12 +11,12 @@ import java.util.stream.Stream;
 public interface TaskRepository extends JpaRepository<TaskEntity, Long> {
 
     @Query("select task from TaskEntity task " +
-            "where task.userEntity.id=:id ")
-    Stream<TaskEntity> findAllTasksForUserId(@Param("id") Long id);
+            "where task.userEntity.id=:userId ")
+    Stream<TaskEntity> find(@Param("userId") Long userId);
 
     @Query("select task from TaskEntity task " +
-            "where task.userEntity.id=:id and task.reportingDate>=:startDate and task.reportingDate<=:endDate ")
-    Stream<TaskEntity> findAllTasksForUserId(@Param("id") Long id,
-                                             @Param("startDate") LocalDate startDate,
-                                             @Param("endDate") LocalDate endDate);
+            "where task.userEntity.id=:userId and task.reportingDate>=:startDate and task.reportingDate<=:endDate ")
+    Stream<TaskEntity> find(@Param("userId") Long userId,
+                            @Param("startDate") LocalDate startDate,
+                            @Param("endDate") LocalDate endDate);
 }

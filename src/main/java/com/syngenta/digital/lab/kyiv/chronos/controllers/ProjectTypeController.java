@@ -26,18 +26,18 @@ public class ProjectTypeController {
     private final ProjectTypeService projectTypeService;
 
     @PostMapping("/project-type")
-    public ResponseEntity<GeneralResponse<ProjectTypeDto>> addNewProjectType(@RequestBody ProjectTypeDto projectTypeDto) {
+    public ResponseEntity<GeneralResponse<ProjectTypeDto>> save(@RequestBody ProjectTypeDto projectTypeDto) {
         log.info("About to register the following project type '{}'", projectTypeDto);
-        ProjectTypeDto savedProjectTypeDto = projectTypeService.saveNew(projectTypeDto);
+        ProjectTypeDto savedProjectTypeDto = projectTypeService.register(projectTypeDto);
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(GeneralResponse.buildResponse(savedProjectTypeDto));
     }
 
     @GetMapping("/project-type")
-    public ResponseEntity<GeneralResponse<List<ProjectTypeDto>>> findAll() {
+    public ResponseEntity<GeneralResponse<List<ProjectTypeDto>>> find() {
         log.info("About to find all project types");
-        List<ProjectTypeDto> allProjectTypes = projectTypeService.findAll();
+        List<ProjectTypeDto> allProjectTypes = projectTypeService.find();
         return ResponseEntity
                 .status(HttpStatus.FOUND)
                 .body(GeneralResponse.buildResponse(allProjectTypes));
@@ -46,7 +46,7 @@ public class ProjectTypeController {
     @GetMapping("/project-type/{id}")
     public ResponseEntity<GeneralResponse<ProjectTypeDto>> find(@PathVariable("id") long id) {
         log.info("About to find for project type id " + id);
-        ProjectTypeDto projectType = projectTypeService.findById(id);
+        ProjectTypeDto projectType = projectTypeService.find(id);
         return ResponseEntity
                 .status(HttpStatus.FOUND)
                 .body(GeneralResponse.buildResponse(projectType));
@@ -55,7 +55,7 @@ public class ProjectTypeController {
     @PutMapping("/project-type")
     public ResponseEntity<GeneralResponse<ProjectTypeDto>> update(@RequestBody ProjectTypeDto projectTypeDto) {
         log.info("About to register the following project type '{}'", projectTypeDto);
-        ProjectTypeDto projectType = projectTypeService.update(projectTypeDto);
+        ProjectTypeDto projectType = projectTypeService.register(projectTypeDto);
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(GeneralResponse.buildResponse(projectType));

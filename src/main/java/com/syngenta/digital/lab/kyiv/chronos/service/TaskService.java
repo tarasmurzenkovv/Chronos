@@ -21,7 +21,7 @@ public class TaskService {
     private final TaskMapper taskMapper;
 
     @Transactional
-    public TaskDto registerTask(TaskDto taskDto) {
+    public TaskDto register(TaskDto taskDto) {
         UserEntity userEntity = userRepository.findById(taskDto.getUserId())
                 .orElseThrow(() -> new RuntimeException("Cannot find user for id" + taskDto.getUserId()));
         ProjectEntity projectEntity = projectRepository.findById(taskDto.getProjectId())
@@ -32,15 +32,10 @@ public class TaskService {
         return taskMapper.mapToDto(savedTaskEntity);
     }
 
-    public TaskDto find(long id) {
-        return taskRepository.findById(id)
+    public TaskDto find(long taskId) {
+        return taskRepository.findById(taskId)
                 .map(taskMapper::mapToDto)
-                .orElseThrow(() -> new RuntimeException("Cannot find task for id " + id));
-    }
-
-    @Transactional
-    public TaskDto update(TaskDto taskDto) {
-        return registerTask(taskDto);
+                .orElseThrow(() -> new RuntimeException("Cannot find task for id " + taskId));
     }
 
     @Transactional

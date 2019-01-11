@@ -26,26 +26,26 @@ public class ProjectController {
     private final ProjectService projectService;
 
     @PostMapping("/project")
-    public ResponseEntity<GeneralResponse<ProjectDto>> addNewProject(@RequestBody ProjectDto projectDto) {
+    public ResponseEntity<GeneralResponse<ProjectDto>> save(@RequestBody ProjectDto projectDto) {
         log.info("About to register the following project '{}'", projectDto);
-        ProjectDto savedProjectDto = projectService.save(projectDto);
+        ProjectDto savedProjectDto = projectService.register(projectDto);
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(GeneralResponse.buildResponse(savedProjectDto));
     }
 
     @GetMapping("/project/{id}")
-    public ResponseEntity<GeneralResponse<ProjectDto>> find(@PathVariable("id") long id) {
-        log.info("About to find by id '{}'", id);
-        ProjectDto foundProject = projectService.find(id);
+    public ResponseEntity<GeneralResponse<ProjectDto>> find(@PathVariable("id") long projectId) {
+        log.info("About to find by id '{}'", projectId);
+        ProjectDto foundProject = projectService.find(projectId);
         return ResponseEntity
                 .status(HttpStatus.FOUND)
                 .body(GeneralResponse.buildResponse(foundProject));
     }
 
     @GetMapping("/project")
-    public ResponseEntity<GeneralResponse<List<ProjectDto>>> findAll() {
-        List<ProjectDto> foundProjects = projectService.findAll();
+    public ResponseEntity<GeneralResponse<List<ProjectDto>>> find() {
+        List<ProjectDto> foundProjects = projectService.find();
         return ResponseEntity
                 .status(HttpStatus.FOUND)
                 .body(GeneralResponse.buildResponse(foundProjects));
@@ -54,16 +54,16 @@ public class ProjectController {
     @PutMapping("/project")
     public ResponseEntity<GeneralResponse<ProjectDto>> update(@RequestBody ProjectDto projectDto) {
         log.info("About to register the following project '{}'", projectDto);
-        ProjectDto savedProjectDto = projectService.update(projectDto);
+        ProjectDto savedProjectDto = projectService.register(projectDto);
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(GeneralResponse.buildResponse(savedProjectDto));
     }
 
     @DeleteMapping("/project/{id}")
-    public ResponseEntity<Void> delete(@PathVariable("id") long id) {
-        log.info("About to delete project by id '{}'", id);
-        projectService.delete(id);
+    public ResponseEntity<Void> delete(@PathVariable("id") long projectId) {
+        log.info("About to delete project by id '{}'", projectId);
+        projectService.delete(projectId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }

@@ -24,16 +24,16 @@ public class TaskController {
     private final TaskService taskService;
 
     @PostMapping("/task")
-    public ResponseEntity<GeneralResponse<TaskDto>> addNewTask(@RequestBody TaskDto taskDto) {
+    public ResponseEntity<GeneralResponse<TaskDto>> save(@RequestBody TaskDto taskDto) {
         log.info("About to register the following task '{}'", taskDto);
-        TaskDto savedTaskDto = taskService.registerTask(taskDto);
+        TaskDto savedTaskDto = taskService.register(taskDto);
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(GeneralResponse.buildResponse(savedTaskDto));
     }
 
     @GetMapping("/task/{id}")
-    public ResponseEntity<GeneralResponse<TaskDto>> findTask(@PathVariable("id") long id) {
+    public ResponseEntity<GeneralResponse<TaskDto>> find(@PathVariable("id") long id) {
         log.info("About to find task by id '{}'", id);
         TaskDto foundTask = taskService.find(id);
         return ResponseEntity
@@ -42,16 +42,16 @@ public class TaskController {
     }
 
     @PutMapping("/task")
-    public ResponseEntity<GeneralResponse<TaskDto>> updateTask(@RequestBody TaskDto taskDto) {
+    public ResponseEntity<GeneralResponse<TaskDto>> update(@RequestBody TaskDto taskDto) {
         log.info("About to update task for request '{}'", taskDto);
-        TaskDto updatedTask = taskService.update(taskDto);
+        TaskDto updatedTask = taskService.register(taskDto);
         return ResponseEntity
                 .status(HttpStatus.FOUND)
                 .body(GeneralResponse.buildResponse(updatedTask));
     }
 
     @DeleteMapping("/task/{id}")
-    public ResponseEntity<Void> deleteTask(@PathVariable("id") long id) {
+    public ResponseEntity<Void> delete(@PathVariable("id") long id) {
         log.info("About to delete task for id '{}'", id);
         taskService.delete(id);
         return new ResponseEntity<>(HttpStatus.OK);
