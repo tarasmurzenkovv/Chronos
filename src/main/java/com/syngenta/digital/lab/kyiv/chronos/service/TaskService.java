@@ -12,10 +12,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
-import java.util.List;
-import java.util.stream.Collectors;
-
 @Service
 @RequiredArgsConstructor
 public class TaskService {
@@ -42,13 +38,6 @@ public class TaskService {
                 .orElseThrow(() -> new RuntimeException("Cannot find task for id " + id));
     }
 
-    @Transactional(readOnly = true)
-    public List<TaskDto> findForUserId(long id) {
-        return taskRepository.findAllTasksForUserId(id)
-                .map(taskMapper::mapToDto)
-                .collect(Collectors.toList());
-    }
-
     @Transactional
     public TaskDto update(TaskDto taskDto) {
         return registerTask(taskDto);
@@ -59,11 +48,4 @@ public class TaskService {
         taskRepository.deleteById(taskId);
     }
 
-    @Transactional(readOnly = true)
-    public List<TaskDto> findForUserIdAndDateRange(long userId, LocalDate start, LocalDate end) {
-        return taskRepository
-                .findAllTasksForUserId(userId, start, end)
-                .map(taskMapper::mapToDto)
-                .collect(Collectors.toList());
-    }
 }
