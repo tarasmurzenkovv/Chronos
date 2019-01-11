@@ -17,32 +17,24 @@ public class ProjectTypeService {
     private final ProjectTypeRepository projectTypeRepository;
     private final ProjectTypeMapper projectTypeMapper;
 
-    public ProjectTypeDto saveNew(ProjectTypeDto projectTypeDto) {
+    @Transactional
+    public ProjectTypeDto register(ProjectTypeDto projectTypeDto) {
         ProjectTypeEntity projectTypeEntity = projectTypeMapper.mapToEntity(projectTypeDto);
         ProjectTypeEntity savedProjectTypeEntity = projectTypeRepository.save(projectTypeEntity);
-
         return projectTypeMapper.mapToDto(savedProjectTypeEntity);
     }
 
-    public List<ProjectTypeDto> findAll() {
+    public List<ProjectTypeDto> find() {
         return projectTypeRepository.findAll()
                 .stream()
                 .map(projectTypeMapper::mapToDto)
                 .collect(Collectors.toList());
     }
 
-    public ProjectTypeDto findById(long id) {
+    public ProjectTypeDto find(long id) {
         return projectTypeRepository.findById(id)
                 .map(projectTypeMapper::mapToDto)
                 .orElseThrow(() -> new RuntimeException("Cannot find for id " + id));
-    }
-
-    @Transactional
-    public ProjectTypeDto update(ProjectTypeDto projectTypeDto) {
-        ProjectTypeEntity projectTypeEntity = projectTypeMapper.mapToEntity(projectTypeDto);
-        ProjectTypeEntity savedProjectTypeEntity = projectTypeRepository.save(projectTypeEntity);
-
-        return projectTypeMapper.mapToDto(savedProjectTypeEntity);
     }
 
     @Transactional

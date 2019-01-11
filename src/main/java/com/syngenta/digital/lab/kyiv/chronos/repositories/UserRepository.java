@@ -12,5 +12,5 @@ public interface UserRepository extends JpaRepository<UserEntity, Long> {
     Long countEmails(@Param("email") String email);
 
     @Query("select user from UserEntity user where user.userEmail=:email")
-    Optional<UserEntity> findByEmail(@Param("email") String email);
+    Optional<UserEntity> find(@Param("email") String email);
 }

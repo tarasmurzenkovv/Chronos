@@ -30,34 +30,34 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping("/user")
-    public ResponseEntity<GeneralResponse<UserDto>> registerUser(@Valid @RequestBody UserDto userDto) {
+    public ResponseEntity<GeneralResponse<UserDto>> register(@Valid @RequestBody UserDto userDto) {
         log.info("About to register the following user '{}'", userDto);
-        UserDto savedUserDto = userService.registerUser(userDto);
+        UserDto savedUserDto = userService.register(userDto);
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(GeneralResponse.buildResponse(savedUserDto));
     }
 
     @PostMapping("/user/login")
-    public ResponseEntity<GeneralResponse<UserDto>> loginUser(@Valid @RequestBody LoginRequest loginRequest) {
+    public ResponseEntity<GeneralResponse<UserDto>> login(@Valid @RequestBody LoginRequest loginRequest) {
         log.info("About to login the following user '{}'", loginRequest);
-        UserDto foundUserInformation = userService.loginRequest(loginRequest);
+        UserDto foundUserInformation = userService.login(loginRequest);
         return ResponseEntity
                 .status(HttpStatus.FOUND)
                 .body(GeneralResponse.buildResponse(foundUserInformation));
     }
 
     @GetMapping("/user/{id}/task")
-    public ResponseEntity<GeneralResponse<List<TaskDto>>> findAllTasksForUserId(@PathVariable("id") long id) {
-        log.info("About to find task by id '{}'", id);
-        List<TaskDto> userTasks = userService.findForUserId(id);
+    public ResponseEntity<GeneralResponse<List<TaskDto>>> findAllTasks(@PathVariable("id") long userId) {
+        log.info("About to find task by id '{}'", userId);
+        List<TaskDto> userTasks = userService.find(userId);
         return ResponseEntity
                 .status(HttpStatus.FOUND)
                 .body(GeneralResponse.buildResponse(userTasks));
     }
 
     @GetMapping("/user/{id}")
-    public ResponseEntity<GeneralResponse<List<TaskDto>>> findAllTasksForUserIdAndTimePeriod(
+    public ResponseEntity<GeneralResponse<List<TaskDto>>> findAllTasks(
             @PathVariable("id") long userId,
             @RequestParam("start")
             @DateTimeFormat(pattern = "dd/MM/yyyy") LocalDate start,
@@ -65,7 +65,7 @@ public class UserController {
             @DateTimeFormat(pattern = "dd/MM/yyyy") LocalDate end) {
 
         log.info("About to find tasks by user id '{}', start '{}', end '{}'", userId, start, end);
-        List<TaskDto> userTasks = userService.findForUserIdAndDateRange(userId, start, end);
+        List<TaskDto> userTasks = userService.find(userId, start, end);
         return ResponseEntity
                 .status(HttpStatus.FOUND)
                 .body(GeneralResponse.buildResponse(userTasks));

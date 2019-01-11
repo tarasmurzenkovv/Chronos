@@ -24,22 +24,21 @@ public class ProjectService {
     private final ProjectMapper projectMapper;
 
     @Transactional
-    public ProjectDto save(ProjectDto projectDto) {
-        return register(projectDto);
+    public ProjectDto register(ProjectDto projectDto) {
+        ProjectTypeEntity projectTypeEntity = projectTypeRepository.findById(projectDto.getProjectTypeId())
+                .orElseThrow(() -> new ProjectTypeException(ERR_CODE_NOT_EXISTING_PROJECT_TYPE, "Cannot find project type for id " + projectDto.getProjectTypeId()));
+        ProjectEntity projectEntity = projectMapper.mapToEntity(projectDto, projectTypeEntity);
+        ProjectEntity savedProjectEntity = projectRepository.save(projectEntity);
+        return projectMapper.mapToDto(savedProjectEntity);
     }
 
-    public ProjectDto find(long id) {
-        return projectRepository.findById(id)
+    public ProjectDto find(long projectId) {
+        return projectRepository.findById(projectId)
                 .map(projectMapper::mapToDto)
-                .orElseThrow(() -> new RuntimeException("Cannot find project for id " + id));
+                .orElseThrow(() -> new RuntimeException("Cannot find project for id " + projectId));
     }
 
-    @Transactional
-    public ProjectDto update(ProjectDto projectDto) {
-        return register(projectDto);
-    }
-
-    public List<ProjectDto> findAll() {
+    public List<ProjectDto> find() {
         return projectRepository.findAll()
                 .stream()
                 .map(projectMapper::mapToDto)
@@ -49,13 +48,5 @@ public class ProjectService {
     @Transactional
     public void delete(long id) {
         projectRepository.deleteById(id);
-    }
-
-    private ProjectDto register(ProjectDto projectDto) {
-        ProjectTypeEntity projectTypeEntity = projectTypeRepository.findById(projectDto.getProjectTypeId())
-                .orElseThrow(() -> new ProjectTypeException(ERR_CODE_NOT_EXISTING_PROJECT_TYPE, "Cannot find project type for id " + projectDto.getProjectTypeId()));
-        ProjectEntity projectEntity = projectMapper.mapToEntity(projectDto, projectTypeEntity);
-        ProjectEntity savedProjectEntity = projectRepository.save(projectEntity);
-        return projectMapper.mapToDto(savedProjectEntity);
     }
 }

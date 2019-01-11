@@ -28,8 +28,8 @@ const Header: React.FunctionComponent<IProps> = ({
   <div>
     <AppBar position="static" className={classes.navBar}>
       <Toolbar>
-        <IconButton className={theme.menuButton} aria-label="Menu" disabled>
-          <MenuIcon className={theme.iconMenu} />
+        <IconButton className={classes.menuButton} aria-label="Menu" disabled>
+          <MenuIcon className={classes.iconMenu} />
         </IconButton>
         <div className={theme.logo}>
           <a href="/">
