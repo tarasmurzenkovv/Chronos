@@ -12,17 +12,6 @@
     "test:lint:scss": "stylelint --config=.stylelintrc '**/*.scss'",
     "test:unit": "react-scripts test --env=jsdom"
   },
-  "lint-staged": {
-    "src/**/*.{js,jsx,ts,tsx,json}": [
-      "pretty-quick --staged",
-      "git add"
-    ],
-    "src/**/*.{scss,css}": [
-      "stylelint --config .stylelintrc --fix",
-      "prettier --config .prettierrc --write",
-      "git add"
-    ]
-  },
   "babel": {
     "presets": [
       "react-app"
@@ -34,11 +23,6 @@
     "not ie <= 11",
     "not op_mini all"
   ],
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
-  },
   "jest": {
     "collectCoverageFrom": [
       "src/**/*.{js,jsx,ts,tsx}",
@@ -141,12 +125,10 @@
     "fork-ts-checker-webpack-plugin-alt": "0.4.14",
     "fs-extra": "7.0.0",
     "html-webpack-plugin": "4.0.0-alpha.2",
-    "husky": "^1.2.0",
     "identity-obj-proxy": "3.0.0",
     "jest": "23.6.0",
     "jest-pnp-resolver": "1.0.1",
     "jest-resolve": "23.6.0",
-    "lint-staged": "^8.1.0",
     "mini-css-extract-plugin": "0.4.3",
     "node-sass": "^4.11.0",
     "optimize-css-assets-webpack-plugin": "5.0.1",

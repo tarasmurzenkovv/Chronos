@@ -15,17 +15,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
-
-import java.time.LocalDate;
-import java.util.List;
 
 @Slf4j
 @RestController
 @RequestMapping("/api/v0")
 @RequiredArgsConstructor
 public class TaskController {
-
     private final TaskService taskService;
 
     @PostMapping("/task")
@@ -44,28 +39,6 @@ public class TaskController {
         return ResponseEntity
                 .status(HttpStatus.FOUND)
                 .body(GeneralResponse.buildResponse(foundTask));
-    }
-
-    @GetMapping("/user/{id}/task")
-    public ResponseEntity<GeneralResponse<List<TaskDto>>> findAllTasksForUserId(@PathVariable("id") long id) {
-        log.info("About to find task by id '{}'", id);
-        List<TaskDto> userTasks = taskService.findForUserId(id);
-        return ResponseEntity
-                .status(HttpStatus.FOUND)
-                .body(GeneralResponse.buildResponse(userTasks));
-    }
-
-    @GetMapping("/user/{id}")
-    public ResponseEntity<GeneralResponse<List<TaskDto>>> findAllTasksForUserIdAndTimePeriod(
-            @PathVariable("id") long userId,
-            @RequestParam("start") LocalDate start,
-            @RequestParam("end") LocalDate end) {
-
-        log.info("About to find tasks by user id '{}', start '{}', end '{}'", userId, start, end);
-        List<TaskDto> userTasks = taskService.findForUserIdAndDateRange(userId, start, end);
-        return ResponseEntity
-                .status(HttpStatus.FOUND)
-                .body(GeneralResponse.buildResponse(userTasks));
     }
 
     @PutMapping("/task")

@@ -1,0 +1,7 @@
+{
+  "error": true,
+  "data": {
+    "error_code": 9,
+    "error_message": "Cannot find project type for id 666"
+  }
+}

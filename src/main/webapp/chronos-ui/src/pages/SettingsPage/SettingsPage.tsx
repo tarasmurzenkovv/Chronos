@@ -1,5 +1,5 @@
 import * as React from 'react';
-import Header from 'modules/header';
+import Header from 'modules/common/Header';
 
 const SettingsPage: React.FunctionComponent = () => (
   <div>

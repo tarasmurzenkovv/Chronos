@@ -6,16 +6,19 @@ import {
   DialogTitle,
   FormControl,
   InputLabel,
+  IconButton,
   MenuItem,
   OutlinedInput,
   Select,
   TextField,
+  FormHelperText,
   withStyles,
   WithStyles
 } from '@material-ui/core';
 
+import CloseIcon from '@material-ui/icons/Close';
 import {IListItem} from '../reducers/projects';
-
+import * as theme from './TimesheetRecordModal.scss';
 import styles from './styles';
 
 interface IProps extends WithStyles<typeof styles> {
@@ -24,12 +27,15 @@ interface IProps extends WithStyles<typeof styles> {
   projectId: string;
   date: string;
   comments: string;
+  isSelected: boolean;
+  hasError: boolean;
 
   handleProjectChange(): void;
   handleDateChange(): void;
   handleCommentsChange(): void;
 
   handleFormSubmit(): void;
+  handleTimeChange(): void;
   handleOnClose(): void;
 }
 
@@ -40,27 +46,48 @@ const TimesheetRecordModal: React.FunctionComponent<IProps> = ({
   list,
   projectId,
   date,
+  isSelected,
+  hasError,
 
   handleProjectChange,
   handleDateChange,
   handleCommentsChange,
   handleFormSubmit,
-  handleOnClose
+  handleOnClose,
+  handleTimeChange
 }) => (
   <div>
-    <Dialog open={isOpen} onClose={handleOnClose}>
-      <DialogTitle>Add new time Report</DialogTitle>
+    <Dialog
+      open={isOpen}
+      onClose={handleOnClose}
+      PaperProps={{classes: {root: classes.root}}}
+    >
+      <DialogTitle className={classes.modalTitle}>
+        Add new time Report
+      </DialogTitle>
+      <IconButton
+        color="inherit"
+        onClick={handleOnClose}
+        aria-label="Close"
+        className={classes.closeBtn}
+      >
+        <CloseIcon />
+      </IconButton>
       <form className={classes.container} onSubmit={handleFormSubmit}>
-        <DialogContent>
+        <DialogContent className={classes.modalContent}>
           <div>
             <FormControl variant="outlined" className={classes.formControl}>
-              <InputLabel htmlFor="outlined-projectId">Project</InputLabel>
+              <InputLabel
+                htmlFor="outlined-projectId"
+                className={classes.labelText}
+              >
+                Project
+              </InputLabel>
               <Select
                 value={projectId}
                 onChange={handleProjectChange}
                 input={
                   <OutlinedInput
-                    required
                     labelWidth={0}
                     name="projectId"
                     id="outlined-projectId"
@@ -74,9 +101,14 @@ const TimesheetRecordModal: React.FunctionComponent<IProps> = ({
                 ))}
               </Select>
             </FormControl>
+            {hasError && (
+              <FormHelperText className={classes.errorText}>
+                Please, select your project
+              </FormHelperText>
+            )}
           </div>
 
-          <div>
+          <div className={theme.timeInputBlock}>
             <TextField
               id="time"
               name="time"
@@ -96,8 +128,9 @@ const TimesheetRecordModal: React.FunctionComponent<IProps> = ({
                   notchedOutline: classes.textFieldFocusedNotchedOutline
                 }
               }}
+              onChange={handleTimeChange}
               className={classes.textField}
-              required
+              // required
             />
 
             <TextField
@@ -126,8 +159,13 @@ const TimesheetRecordModal: React.FunctionComponent<IProps> = ({
               onChange={handleDateChange}
             />
           </div>
+          {hasError && (
+            <FormHelperText className={classes.errorText}>
+              Please, fill out your spent time
+            </FormHelperText>
+          )}
 
-          <div>Comments</div>
+          <div className={theme.labelText}>Comments:</div>
           <div>
             <TextField
               id="comments"
@@ -144,19 +182,20 @@ const TimesheetRecordModal: React.FunctionComponent<IProps> = ({
               }}
               InputProps={{
                 classes: {
-                  root: classes.textFieldOutlinedInput,
+                  root: classes.commentsInput,
                   notchedOutline: classes.textFieldFocusedNotchedOutline
                 }
               }}
               className={classes.textField}
               multiline
-              rows={2}
-              rowsMax={4}
+              rows={3}
+              rowsMax={6}
               onChange={handleCommentsChange}
+              fullWidth
             />
           </div>
           <div>
-            <Button type="submit" color="primary">
+            <Button type="submit" color="primary" className={classes.saveBtn}>
               Save Report
             </Button>
           </div>

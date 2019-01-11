@@ -4,8 +4,8 @@ import * as moment from 'moment';
 
 import getProjectsList from 'modules/modals/actions/api/getProjectsList';
 import {removeCurrentModal} from 'modules/modals/actions/modalsActions';
-import createRecordApi from 'modules/modals/actions/api/createRecordApi';
-
+import {createRecordApi} from 'modules/modals/actions/api/createRecordApi';
+import {fetchTimesheetListApi} from 'modules/timesheet/actions/api/fetchTimesheetListApi';
 import TimesheetRecordModal from './TimesheetRecordModal';
 
 const mapStateToProps = (state) => ({
@@ -14,9 +14,10 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = {
-  removeCurrentModal,
+  createRecordApi,
+  fetchTimesheetListApi,
   getProjectsList,
-  createRecordApi
+  removeCurrentModal
 };
 
 interface IProps {
@@ -33,6 +34,9 @@ export default compose(
   withState('projectId', 'setProjectId', ''),
   withState('date', 'setDate', new Date().toISOString().slice(0, 10)),
   withState('comments', 'setComments', ''),
+  withState('hasError', 'handleError', false),
+  withState('isSelected', 'handleSelection', null),
+  withState('isTimeEmpty', 'handleTimeInput', null),
 
   withHandlers({
     handleOnClose: ({isOpen, setIsOpen, removeCurrentModal}) => () => {
@@ -42,10 +46,29 @@ export default compose(
       }
     },
 
-    handleProjectChange: ({projectId, setProjectId}) => (event) => {
+    handleProjectChange: ({
+      projectId,
+      setProjectId,
+      isSelected,
+      hasError,
+      handleSelection,
+      handleError
+    }) => (event) => {
       const {value} = event.target;
+      handleSelection(value);
+      if (hasError) {
+        handleError(!hasError);
+      }
       if (projectId !== value) {
         setProjectId(value);
+      }
+    },
+
+    handleTimeChange: ({hasError, handleError, handleTimeInput}) => (event) => {
+      const {value} = event.target;
+      handleTimeInput(value);
+      if (hasError) {
+        handleError(!hasError);
       }
     },
 
@@ -65,9 +88,17 @@ export default compose(
   }),
 
   withHandlers({
-    handleFormSubmit: ({createRecordApi, handleOnClose, userId, projectId}) => (
-      event
-    ) => {
+    handleFormSubmit: ({
+      createRecordApi,
+      fetchTimesheetListApi,
+      handleOnClose,
+      projectId,
+      userId,
+      isSelected,
+      hasError,
+      handleError,
+      isTimeEmpty
+    }) => (event) => {
       event.preventDefault();
       const time = event.target.time.value;
       const date = event.target.date.value;
@@ -81,8 +112,15 @@ export default compose(
         user_id: userId
       };
 
+      if (isSelected === null || isTimeEmpty === null) {
+        handleError(!hasError);
+      }
+
       createRecordApi(params)
-        .then(() => handleOnClose())
+        .then(() => {
+          handleOnClose();
+          fetchTimesheetListApi(userId);
+        })
         .catch(() => {});
     }
   }),
