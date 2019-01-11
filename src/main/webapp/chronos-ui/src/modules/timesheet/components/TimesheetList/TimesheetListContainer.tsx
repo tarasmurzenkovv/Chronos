@@ -40,9 +40,9 @@ export default compose(
   withProps(({projectsList, timesheetList}) => {
     const list = timesheetList.map((timesheetItem) => ({
       ...timesheetItem,
-      project_name: projectsList.find(
-        (projectItem) => projectItem.id === timesheetItem.project_id
-      ).project_name
+      project_name: projectsList.length
+        ? projectsList.find((projectItem) => projectItem.id === timesheetItem.project_id).project_name
+        : ''
     }));
 
     return {list};
