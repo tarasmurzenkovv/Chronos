@@ -95,11 +95,11 @@ const SignIn: React.FunctionComponent<IProps> = ({
           error={!!emailErrorCodes.length}
           helperText={emailErrorMessage}
           FormHelperTextProps={{
+            shrink: true,
             classes: {
               root: classes.formHelperTextProps
             }
           }}
-          autoFocus
         />
         <TextField
           id="password"
@@ -108,6 +108,7 @@ const SignIn: React.FunctionComponent<IProps> = ({
           margin="normal"
           variant="outlined"
           InputLabelProps={{
+            shrink: true,
             classes: {
               root: classes.textFieldLabel,
               focused: classes.textFieldLabelFocused
