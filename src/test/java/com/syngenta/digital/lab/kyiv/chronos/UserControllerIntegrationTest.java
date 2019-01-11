@@ -9,6 +9,7 @@ import com.jayway.restassured.http.ContentType;
 import com.jayway.restassured.response.Response;
 import com.jayway.restassured.response.ResponseBody;
 import com.syngenta.digital.lab.kyiv.chronos.model.dto.LoginRequest;
+import com.syngenta.digital.lab.kyiv.chronos.model.dto.TaskDto;
 import com.syngenta.digital.lab.kyiv.chronos.model.dto.UserDto;
 import com.syngenta.digital.lab.kyiv.chronos.model.response.ErrorResponsePayload;
 import com.syngenta.digital.lab.kyiv.chronos.model.response.GeneralResponse;
@@ -18,10 +19,104 @@ import org.apache.http.HttpStatus;
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
 
+import java.time.LocalDate;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import static com.github.springtestdbunit.assertion.DatabaseAssertionMode.NON_STRICT_UNORDERED;
 
 @DatabaseTearDown("/UserControllerIntegrationTest/dbTearDown.xml")
 public class UserControllerIntegrationTest extends BaseIntegrationTest {
+
+    @Test
+    @SneakyThrows
+    @DatabaseSetup(value = "/UserControllerIntegrationTest/shouldFindAllTasksForUserIdAndTimePeriod/dbSetup.xml")
+    @ExpectedDatabase(value = "/UserControllerIntegrationTest/shouldFindAllTasksForUserIdAndTimePeriod/expectedDataBase.xml",
+            assertionMode = NON_STRICT_UNORDERED)
+    public void shouldFindAllTasksForUserIdAndTimePeriod() {
+        Response response = RestAssured
+                .given()
+                .contentType(ContentType.JSON)
+                .param("start", "01/01/2019")
+                .param("end", "01/02/2019")
+                .get("/api/v0/user/1")
+                .then()
+                .extract()
+                .response();
+
+        String asGeneralResponseString = response.getBody().asString();
+        GeneralResponse<List<TaskDto>> actualResponse = this.objectMapper.readValue(asGeneralResponseString, new TypeReference<GeneralResponse<List<TaskDto>>>() {
+        });
+
+        Assertions.assertThat(response.getStatusCode()).isEqualTo(302);
+        Assertions.assertThat(actualResponse).isNotNull();
+        Assertions.assertThat(actualResponse.getData()).isNotNull();
+        Assertions.assertThat(actualResponse.getData()).isNotEmpty();
+
+        Assertions.assertThat(actualResponse.getData().get(0).getTaskId()).isNotNull();
+        Assertions.assertThat(actualResponse.getData().get(0).getProjectId()).isEqualTo(1);
+        Assertions.assertThat(actualResponse.getData().get(0).getUserId()).isEqualTo(1);
+        Assertions.assertThat(actualResponse.getData().get(0).getComments()).isEqualTo("comments");
+        Assertions.assertThat(actualResponse.getData().get(0).getSpentTime()).isEqualTo(0.8f);
+        Assertions.assertThat(actualResponse.getData().get(0).getTags()).isEqualTo("tag");
+
+        Assertions.assertThat(actualResponse.getData().get(1).getTaskId()).isNotNull();
+        Assertions.assertThat(actualResponse.getData().get(1).getProjectId()).isEqualTo(1);
+        Assertions.assertThat(actualResponse.getData().get(1).getUserId()).isEqualTo(1);
+        Assertions.assertThat(actualResponse.getData().get(1).getComments()).isEqualTo("comments");
+        Assertions.assertThat(actualResponse.getData().get(1).getSpentTime()).isEqualTo(0.8f);
+        Assertions.assertThat(actualResponse.getData().get(1).getTags()).isEqualTo("tag");
+
+        List<LocalDate> reportingDates = actualResponse.getData()
+                .stream()
+                .map(TaskDto::getReportingDate)
+                .collect(Collectors.toList());
+
+        Assertions.assertThat(reportingDates).isNotEmpty();
+        Assertions.assertThat(reportingDates)
+                .isEqualTo(List.of(LocalDate.of(2019,1,1),LocalDate.of(2019,2,1)));
+    }
+
+
+    @Test
+    @SneakyThrows
+    @DatabaseSetup(value = "/UserControllerIntegrationTest/shouldGetTasksByUserId/dbSetup.xml")
+    @ExpectedDatabase(value = "/UserControllerIntegrationTest/shouldGetTasksByUserId/expectedDataBase.xml",
+            assertionMode = NON_STRICT_UNORDERED)
+    public void shouldGetTasksByUserId() {
+        Response response = RestAssured
+                .given()
+                .contentType(ContentType.JSON)
+                .get("/api/v0/user/1/task")
+                .then()
+                .extract()
+                .response();
+
+        String asGeneralResponseString = response.getBody().asString();
+        GeneralResponse<List<TaskDto>> actualResponse = this.objectMapper.readValue(asGeneralResponseString, new TypeReference<GeneralResponse<List<TaskDto>>>() {
+        });
+
+        Assertions.assertThat(response.getStatusCode()).isEqualTo(302);
+        Assertions.assertThat(actualResponse).isNotNull();
+        Assertions.assertThat(actualResponse.getData()).isNotNull();
+        Assertions.assertThat(actualResponse.getData()).isNotEmpty();
+
+        Assertions.assertThat(actualResponse.getData().get(0).getTaskId()).isNotNull();
+        Assertions.assertThat(actualResponse.getData().get(0).getProjectId()).isEqualTo(1);
+        Assertions.assertThat(actualResponse.getData().get(0).getUserId()).isEqualTo(1);
+        Assertions.assertThat(actualResponse.getData().get(0).getComments()).isEqualTo("comments");
+        Assertions.assertThat(actualResponse.getData().get(0).getReportingDate()).isEqualTo(LocalDate.of(2019,1,1));
+        Assertions.assertThat(actualResponse.getData().get(0).getSpentTime()).isEqualTo(0.8f);
+        Assertions.assertThat(actualResponse.getData().get(0).getTags()).isEqualTo("tag");
+
+        Assertions.assertThat(actualResponse.getData().get(1).getTaskId()).isNotNull();
+        Assertions.assertThat(actualResponse.getData().get(1).getProjectId()).isEqualTo(1);
+        Assertions.assertThat(actualResponse.getData().get(1).getUserId()).isEqualTo(1);
+        Assertions.assertThat(actualResponse.getData().get(1).getComments()).isEqualTo("comments");
+        Assertions.assertThat(actualResponse.getData().get(1).getReportingDate()).isEqualTo(LocalDate.of(2019,1,1));
+        Assertions.assertThat(actualResponse.getData().get(1).getSpentTime()).isEqualTo(0.8f);
+        Assertions.assertThat(actualResponse.getData().get(1).getTags()).isEqualTo("tag");
+    }
 
     @Test
     @SneakyThrows
