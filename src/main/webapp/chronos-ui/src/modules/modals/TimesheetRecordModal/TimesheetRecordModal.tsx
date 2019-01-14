@@ -5,16 +5,18 @@ import {
   DialogContent,
   DialogTitle,
   FormControl,
-  InputLabel,
+  FormHelperText,
   IconButton,
+  InputLabel,
   MenuItem,
   OutlinedInput,
   Select,
   TextField,
-  FormHelperText,
   withStyles,
   WithStyles
 } from '@material-ui/core';
+
+import classnames from 'classnames';
 
 import CloseIcon from '@material-ui/icons/Close';
 import {IListItem} from '../reducers/projects';
@@ -27,12 +29,11 @@ interface IProps extends WithStyles<typeof styles> {
   projectId: string;
   date: string;
   comments: string;
-  isSelected: boolean;
-  hasError: boolean;
+  selectProjectError: boolean;
+  timeError: boolean;
 
   handleProjectChange(): void;
   handleDateChange(): void;
-  handleCommentsChange(): void;
 
   handleFormSubmit(): void;
   handleTimeChange(): void;
@@ -41,17 +42,15 @@ interface IProps extends WithStyles<typeof styles> {
 
 const TimesheetRecordModal: React.FunctionComponent<IProps> = ({
   classes,
-
-  isOpen,
+  date,
   list,
   projectId,
-  date,
-  // isSelected,
-  hasError,
+  isOpen,
+  selectProjectError,
+  timeError,
 
   handleProjectChange,
   handleDateChange,
-  handleCommentsChange,
   handleFormSubmit,
   handleOnClose,
   handleTimeChange
@@ -75,95 +74,111 @@ const TimesheetRecordModal: React.FunctionComponent<IProps> = ({
       </IconButton>
       <form className={classes.container} onSubmit={handleFormSubmit}>
         <DialogContent className={classes.modalContent}>
-          <div>
-            <FormControl variant="outlined" className={classes.formControl}>
-              <InputLabel
-                htmlFor="outlined-projectId"
-                className={classes.labelText}
-              >
-                Project
-              </InputLabel>
-              <Select
-                value={projectId}
-                onChange={handleProjectChange}
-                className={classes.labelProjectSelect}
-                input={
-                  <OutlinedInput
-                    labelWidth={60}
-                    name="projectId"
-                    id="outlined-projectId"
-                  />
-                }
-              >
-                {list.map((item) => (
-                  <MenuItem key={item.id} value={item.id}>
-                    {item.project_name}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-            {hasError && (
+          <FormControl
+            variant="outlined"
+            required
+            className={classes.formControl}
+            error={selectProjectError}
+          >
+            <InputLabel
+              htmlFor="outlined-projectId"
+              className={classes.labelText}
+            >
+              Project
+            </InputLabel>
+            <Select
+              value={projectId}
+              onChange={handleProjectChange}
+              input={
+                <OutlinedInput
+                  labelWidth={70}
+                  name="projectId"
+                  id="outlined-projectId"
+                  classes={{
+                    root: classnames(classes.selectOutlinedInput, {
+                      [classes.selectOutlinedInputError]: selectProjectError
+                    }),
+                    notchedOutline: classes.textFieldFocusedNotchedOutline
+                  }}
+                />
+              }
+            >
+              {list.map((item) => (
+                <MenuItem key={item.id} value={item.id}>
+                  {item.project_name}
+                </MenuItem>
+              ))}
+            </Select>
+
+            {selectProjectError && (
               <FormHelperText className={classes.errorText}>
                 Please, select your project
               </FormHelperText>
             )}
-          </div>
+          </FormControl>
 
-          <div className={theme.timeInputBlock}>
-            <TextField
-              id="time"
-              name="time"
-              label="Spent time, h."
-              margin="normal"
-              variant="outlined"
-              type="number"
-              InputLabelProps={{
-                classes: {
-                  root: classes.textFieldLabel,
-                  focused: classes.textFieldLabelFocused
-                }
-              }}
-              InputProps={{
-                classes: {
-                  root: classes.textFieldOutlinedInput,
-                  notchedOutline: classes.textFieldFocusedNotchedOutline
-                }
-              }}
-              onChange={handleTimeChange}
-              className={classes.textField}
-            />
-
-            <TextField
-              id="date"
-              name="date"
-              label="Date"
-              margin="normal"
-              variant="outlined"
-              type="date"
-              defaultValue={date}
-              InputLabelProps={{
-                shrink: true,
-                classes: {
-                  root: classes.textFieldLabel,
-                  focused: classes.textFieldLabelFocused
-                }
-              }}
-              InputProps={{
-                classes: {
-                  root: classes.textFieldOutlinedInput,
-                  notchedOutline: classes.textFieldFocusedNotchedOutline
-                }
-              }}
-              className={classes.textField}
-              required
-              onChange={handleDateChange}
-            />
+          <div className={theme.timeAndDateBlock}>
+            <FormControl className={classes.formControlTime}>
+              <TextField
+                id="time"
+                name="time"
+                label="Spent time, h."
+                margin="normal"
+                variant="outlined"
+                type="number"
+                className={classes.textField}
+                InputLabelProps={{
+                  classes: {
+                    root: classes.textFieldLabel,
+                    focused: classes.textFieldLabelFocused
+                  },
+                  required: true
+                }}
+                InputProps={{
+                  classes: {
+                    root: classnames(classes.textFieldOutlinedInput, {
+                      [classes.textFieldOutlinedInputError]: timeError
+                    }),
+                    notchedOutline: classes.textFieldFocusedNotchedOutline
+                  }
+                }}
+                error={timeError}
+                onChange={handleTimeChange}
+              />
+              {timeError && (
+                <FormHelperText className={classes.errorTime}>
+                  Please, add time value
+                </FormHelperText>
+              )}
+            </FormControl>
+            <FormControl className={classes.dateInputBlock}>
+              <TextField
+                id="date"
+                name="date"
+                label="Date"
+                margin="normal"
+                variant="outlined"
+                type="date"
+                defaultValue={date}
+                InputLabelProps={{
+                  shrink: true,
+                  classes: {
+                    root: classes.textFieldLabel,
+                    focused: classes.textFieldLabelFocused
+                  }
+                }}
+                InputProps={{
+                  classes: {
+                    root: classes.textFieldOutlinedInput,
+                    notchedOutline: classes.textFieldFocusedNotchedOutline
+                  }
+                }}
+                className={classes.textField}
+                required
+                onChange={handleDateChange}
+              />
+            </FormControl>
           </div>
-          {hasError && (
-            <FormHelperText className={classes.errorText}>
-              Please, fill out your spent time
-            </FormHelperText>
-          )}
 
           <div className={theme.labelText}>Comments:</div>
           <div>
@@ -190,7 +205,6 @@ const TimesheetRecordModal: React.FunctionComponent<IProps> = ({
               multiline
               rows={3}
               rowsMax={6}
-              onChange={handleCommentsChange}
               fullWidth
             />
           </div>
