@@ -1,7 +1,7 @@
 import apiCall from 'shared/utils/apiCall';
 import errorAction from 'shared/utils/errorAction';
 import {FETCH_TIMESHEET_LIST} from '../../constants';
-import timesheetUrl from '../../services';
+import {timesheetUrl} from '../../services';
 
 export const fetchTimesheetListApi = (id: number) => (dispatch) => {
   dispatch({type: FETCH_TIMESHEET_LIST.pending});
