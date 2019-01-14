@@ -46,7 +46,7 @@ const TimesheetRecordModal: React.FunctionComponent<IProps> = ({
   list,
   projectId,
   date,
-  isSelected,
+  // isSelected,
   hasError,
 
   handleProjectChange,
@@ -86,6 +86,7 @@ const TimesheetRecordModal: React.FunctionComponent<IProps> = ({
               <Select
                 value={projectId}
                 onChange={handleProjectChange}
+                className={classes.labelProjectSelect}
                 input={
                   <OutlinedInput
                     labelWidth={60}

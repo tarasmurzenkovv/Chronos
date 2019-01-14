@@ -17,6 +17,11 @@ const styles = () => ({
     width: '100%',
     borderRadius: '5px'
   },
+  labelProjectSelect: {
+    '&:hover $textFieldFocusedNotchedOutline': {
+      borderColor: 'rgba(173, 181, 199, 0.87) !important'
+    }
+  },
   textFieldLabel: {
     color: '#4a4a4a'
   },
@@ -49,7 +54,6 @@ const styles = () => ({
       borderColor: 'rgba(173, 181, 199, 0.87)'
     }
   },
-
   modalTitle: {
     textAlign: 'center',
     fontSize: '20px'
@@ -67,7 +71,7 @@ const styles = () => ({
     fontWeight: '400',
     textTransform: 'capitalize',
     '&:hover': {
-      backgroundColor: '#25cdda'
+      color: '#25cdda'
     }
   },
   modalContent: {
@@ -88,7 +92,9 @@ const styles = () => ({
     height: '36px'
   },
   errorText: {
-    color: '#f44336'
+    color: '#f44336',
+    position: 'absolute',
+    bottom: '-20px'
   }
 });
 
