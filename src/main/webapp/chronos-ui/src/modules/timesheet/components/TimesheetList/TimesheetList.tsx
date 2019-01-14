@@ -2,6 +2,7 @@ import * as React from 'react';
 import * as moment from 'moment';
 import {
   Fab,
+  IconButton,
   Paper,
   Table,
   TableBody,
@@ -12,6 +13,8 @@ import {
   WithStyles
 } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
+import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
+import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
 import {Comment} from '@material-ui/icons';
 
 import {IListItem as IListItemProject} from 'modules/modals/reducers/projects';
@@ -25,18 +28,33 @@ interface IList extends IListItemTimesheet, IListItemProject {}
 
 interface IProps extends WithStyles<typeof styles> {
   list: IList[];
+  monthFilter: string;
 
+  handleAddMonthFilterButtonClick(): void;
+  handleMinusMonthFilterButtonClick(): void;
   handleButtonClick(): void;
 }
 
 const TimesheetList: React.FunctionComponent<IProps> = ({
   classes,
-  handleButtonClick,
-  list
+  list,
+  monthFilter,
+  handleAddMonthFilterButtonClick,
+  handleMinusMonthFilterButtonClick,
+  handleButtonClick
 }) => (
   <React.Fragment>
     <Header />
     <div className={theme.root}>
+      <div className={theme.filterByMonth}>
+        <IconButton onClick={handleMinusMonthFilterButtonClick}>
+          <KeyboardArrowLeft />
+        </IconButton>
+        <span>{moment(monthFilter).format('MMM YYYY')}</span>
+        <IconButton onClick={handleAddMonthFilterButtonClick}>
+          <KeyboardArrowRight />
+        </IconButton>
+      </div>
       {list.length ? (
         <Paper className={classes.content}>
           <Table className={classes.table}>
