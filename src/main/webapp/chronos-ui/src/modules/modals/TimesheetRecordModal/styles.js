@@ -15,9 +15,11 @@ const styles = () => ({
   },
   formControl: {
     width: '100%',
+    border: '1px solid rgba(203, 203, 203, 0.87)',
     borderRadius: '5px'
   },
   labelProjectSelect: {
+    textAlign: 'left',
     '&:hover $textFieldFocusedNotchedOutline': {
       borderColor: 'rgba(173, 181, 199, 0.87) !important'
     }
