@@ -5,6 +5,7 @@ import com.syngenta.digital.lab.kyiv.chronos.model.dto.TaskDto;
 import com.syngenta.digital.lab.kyiv.chronos.model.entities.ProjectEntity;
 import com.syngenta.digital.lab.kyiv.chronos.model.entities.TaskEntity;
 import com.syngenta.digital.lab.kyiv.chronos.model.entities.UserEntity;
+import com.syngenta.digital.lab.kyiv.chronos.model.exceptions.TaskException;
 import com.syngenta.digital.lab.kyiv.chronos.repositories.ProjectRepository;
 import com.syngenta.digital.lab.kyiv.chronos.repositories.TaskRepository;
 import com.syngenta.digital.lab.kyiv.chronos.repositories.UserRepository;
@@ -15,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 public class TaskService {
+    private static final int ERROR_CODE = 10;
     private final UserRepository userRepository;
     private final ProjectRepository projectRepository;
     private final TaskRepository taskRepository;
@@ -35,12 +37,13 @@ public class TaskService {
     public TaskDto find(long taskId) {
         return taskRepository.findById(taskId)
                 .map(taskMapper::mapToDto)
-                .orElseThrow(() -> new RuntimeException("Cannot find task for id " + taskId));
+                .orElseThrow(() -> new TaskException(ERROR_CODE, "Cannot find task for id " + taskId));
     }
 
     @Transactional
     public void delete(long taskId) {
-        taskRepository.deleteById(taskId);
+        TaskDto taskDto = this.find(taskId);
+        taskRepository.deleteById(taskDto.getTaskId());
     }
 
 }
