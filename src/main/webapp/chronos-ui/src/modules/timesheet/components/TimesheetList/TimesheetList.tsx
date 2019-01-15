@@ -17,12 +17,14 @@ import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
 import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
 import {Comment} from '@material-ui/icons';
 
+import {defaultDateFormatApi} from 'shared/utils/constants';
+
 import {IListItem as IListItemProject} from 'modules/modals/reducers/projects';
 import Header from 'modules/common/Header';
 
-import styles from './styles';
-import * as theme from './TimesheetList.scss';
 import {IListItem as IListItemTimesheet} from '../../reducers/timesheet';
+import * as theme from './TimesheetList.scss';
+import styles from './styles';
 
 interface IList extends IListItemTimesheet, IListItemProject {}
 
@@ -103,10 +105,14 @@ const TimesheetList: React.FunctionComponent<IProps> = ({
                     className={`${classes.cell} ${classes.dateCell}`}
                   >
                     <div className={classes.dateCellDay}>
-                      {moment(item.reporting_date).format('ddd')}
+                      {moment(item.reporting_date, defaultDateFormatApi).format(
+                        'ddd'
+                      )}
                     </div>
                     <span className={classes.dateCellValue}>
-                      {moment(item.reporting_date).format('DD.MM.YYYY')}
+                      {moment(item.reporting_date, defaultDateFormatApi).format(
+                        'DD.MM.YYYY'
+                      )}
                     </span>
                   </TableCell>
                   <TableCell
