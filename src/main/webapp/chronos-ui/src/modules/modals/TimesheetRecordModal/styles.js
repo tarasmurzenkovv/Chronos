@@ -15,12 +15,8 @@ const styles = () => ({
   },
   formControl: {
     width: '100%',
-    borderRadius: '5px'
-  },
-  labelProjectSelect: {
-    '&:hover $textFieldFocusedNotchedOutline': {
-      borderColor: 'rgba(173, 181, 199, 0.87) !important'
-    }
+    borderRadius: '5px',
+    textAlign: 'left'
   },
   textFieldLabel: {
     color: '#4a4a4a'
@@ -46,6 +42,36 @@ const styles = () => ({
       borderColor: 'rgba(173, 181, 199, 0.87) !important'
     }
   },
+  textFieldOutlinedInputError: {
+    width: '257px',
+    $textFieldFocusedNotchedOutline: {
+      borderColor: '#25cdda'
+    },
+    '&:hover $textFieldFocusedNotchedOutline': {
+      borderColor: 'red !important'
+    }
+  },
+
+  selectOutlinedInput: {
+    width: '100%',
+    $textFieldFocusedNotchedOutline: {
+      borderColor: '#25cdda'
+    },
+    '&:hover $textFieldFocusedNotchedOutline': {
+      borderColor: 'rgba(173, 181, 199, 0.87) !important'
+    }
+  },
+
+  selectOutlinedInputError: {
+    width: '100%',
+    $textFieldFocusedNotchedOutline: {
+      borderColor: '#25cdda'
+    },
+    '&:hover $textFieldFocusedNotchedOutline': {
+      borderColor: 'red !important'
+    }
+  },
+
   textFieldFocusedNotchedOutline: {
     borderWidth: '2px',
     borderColor: 'rgba(173, 181, 199, 0.87)',
@@ -71,7 +97,7 @@ const styles = () => ({
     fontWeight: '400',
     textTransform: 'capitalize',
     '&:hover': {
-      color: '#25cdda'
+      backgroundColor: '#25cdda !important'
     }
   },
   modalContent: {
@@ -95,6 +121,12 @@ const styles = () => ({
     color: '#f44336',
     position: 'absolute',
     bottom: '-20px'
+  },
+  errorTime: {
+    color: '#f44336',
+    position: 'absolute',
+    bottom: '-15px',
+    left: '10px'
   }
 });
 

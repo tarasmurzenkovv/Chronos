@@ -1,32 +1,42 @@
 import * as React from 'react';
 import {connect} from 'react-redux';
-import {
-  compose,
-  lifecycle,
-  setDisplayName,
-  withHandlers,
-  withProps
-} from 'recompose';
+import {compose, lifecycle, setDisplayName, withHandlers, withState} from 'recompose';
+import * as moment from 'moment';
+
+import {defaultDateFormatApi} from 'shared/utils/constants';
 
 import {addModal} from 'modules/modals/actions/modalsActions';
 import getProjectsList from 'modules/modals/actions/api/getProjectsList';
 import {TIMESHEET_RECORD_MODAL} from 'modules/modals/constants';
 
-import {fetchTimesheetListApi} from '../../actions/api/fetchTimesheetListApi';
+import {formatTimesheetList} from '../../utils/formatTimesheetList';
+
+import {
+  fetchTimesheetListByDateApi,
+  IProps as fetchTimesheetListByDateIProps
+} from '../../actions/api/fetchTimesheetListByDateApi';
 import TimesheetList from './TimesheetList';
 
-const mapStateToProps = (state) => ({
-  userId: state.auth.signIn.user.id,
-  timesheetList: state.timesheet.list,
-  projectsList: state.projects.list
-});
+const mapStateToProps = (state) => {
+  const userId= state.auth.signIn.user.id;
+  const timesheetList= state.timesheet.list;
+  const projectsList= state.projects.list;
 
-const mapDispatchToProps = {addModal, fetchTimesheetListApi, getProjectsList};
+  const list = formatTimesheetList(timesheetList, projectsList);
+
+  return {
+    userId,
+    list
+  }
+};
+
+const mapDispatchToProps = {addModal, fetchTimesheetListByDateApi, getProjectsList};
 
 interface IProps {
   userId: number;
+  monthFilter: string;
   getProjectsList: () => void;
-  fetchTimesheetListApi: (id: number) => void;
+  fetchTimesheetListByDateApi: ({id, start, end}: fetchTimesheetListByDateIProps) => void;
 }
 
 export default compose(
@@ -37,26 +47,57 @@ export default compose(
     mapDispatchToProps
   ),
 
-  withProps(({projectsList, timesheetList}) => {
-    const list = timesheetList.map((timesheetItem) => ({
-      ...timesheetItem,
-      project_name: projectsList.length
-        ? projectsList.find((projectItem) => projectItem.id === timesheetItem.project_id).project_name
-        : ''
-    }));
+  withState('monthFilter', 'setMonthFilter', moment()),
 
-    return {list};
+  withHandlers({
+    handleMonthFilterButtonsClick: ({userId, monthFilter, fetchTimesheetListByDateApi}) => (newMonthFilter) =>{
+      const startOfMonth = moment(newMonthFilter)
+        .startOf('month')
+        .format(defaultDateFormatApi);
+
+      const endOfMonth = moment(newMonthFilter)
+        .endOf('month')
+        .format(defaultDateFormatApi);
+
+        fetchTimesheetListByDateApi({id: userId, start: startOfMonth, end: endOfMonth})
+      ;
+    }
   }),
 
   withHandlers({
+
     /* eslint-disable no-shadow */
     handleButtonClick: ({addModal}) => () =>
-      addModal({id: TIMESHEET_RECORD_MODAL})
+      addModal({id: TIMESHEET_RECORD_MODAL}),
+
+    handleAddMonthFilterButtonClick: ({monthFilter, setMonthFilter, handleMonthFilterButtonsClick}) => () => {
+      const newMonthFilter = moment(monthFilter).add(1, 'months');
+      setMonthFilter(newMonthFilter);
+      handleMonthFilterButtonsClick(newMonthFilter);
+    },
+
+    handleMinusMonthFilterButtonClick: ({monthFilter, setMonthFilter, handleMonthFilterButtonsClick}) => () =>{
+      const newMonthFilter = moment(monthFilter).subtract(1, 'months');
+      setMonthFilter(newMonthFilter);
+      handleMonthFilterButtonsClick(newMonthFilter);
+    }
   }),
   lifecycle<IProps, {}>({
     componentDidMount() {
-      const {fetchTimesheetListApi, getProjectsList, userId} = this.props;
-      Promise.all([getProjectsList(), fetchTimesheetListApi(userId)]);
+      const {fetchTimesheetListByDateApi, getProjectsList, userId, monthFilter} = this.props;
+
+      const startOfMonth = moment(monthFilter)
+        .startOf('month')
+        .format(defaultDateFormatApi);
+
+      const endOfMonth = moment(monthFilter)
+        .endOf('month')
+        .format(defaultDateFormatApi);
+
+      Promise.all([
+        getProjectsList(),
+        fetchTimesheetListByDateApi({id: userId, start: startOfMonth, end: endOfMonth})
+      ]);
     }
   }),
 

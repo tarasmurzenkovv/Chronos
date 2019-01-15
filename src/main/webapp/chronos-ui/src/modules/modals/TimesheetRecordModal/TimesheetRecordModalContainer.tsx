@@ -2,10 +2,13 @@ import {connect} from 'react-redux';
 import {compose, lifecycle, withHandlers, withState} from 'recompose';
 import * as moment from 'moment';
 
+import {defaultDateFormatApi} from 'shared/utils/constants';
+
 import getProjectsList from 'modules/modals/actions/api/getProjectsList';
 import {removeCurrentModal} from 'modules/modals/actions/modalsActions';
 import {createRecordApi} from 'modules/modals/actions/api/createRecordApi';
 import {fetchTimesheetListApi} from 'modules/timesheet/actions/api/fetchTimesheetListApi';
+
 import TimesheetRecordModal from './TimesheetRecordModal';
 
 const mapStateToProps = (state) => ({
@@ -32,12 +35,11 @@ export default compose(
 
   withState('isOpen', 'setIsOpen', true),
   withState('projectId', 'setProjectId', ''),
+  withState('selectProjectError', 'setSelectProjectError', false),
+  withState('timeError', 'setTimeError', false),
   withState('date', 'setDate', new Date().toISOString().slice(0, 10)),
-  withState('comments', 'setComments', ''),
-  withState('hasError', 'handleError', false),
-  withState('isSelected', 'handleSelection', null),
-  withState('isTimeEmpty', 'handleTimeInput', null),
 
+  /* eslint-disable no-shadow */
   withHandlers({
     handleOnClose: ({isOpen, setIsOpen, removeCurrentModal}) => () => {
       if (isOpen) {
@@ -49,26 +51,23 @@ export default compose(
     handleProjectChange: ({
       projectId,
       setProjectId,
-      isSelected,
-      hasError,
-      handleSelection,
-      handleError
+      selectProjectError,
+      setSelectProjectError
     }) => (event) => {
-      const {value} = event.target;
-      handleSelection(value);
-      if (hasError) {
-        handleError(!hasError);
+      if (selectProjectError) {
+        setSelectProjectError(false);
       }
+
+      const {value} = event.target;
+
       if (projectId !== value) {
         setProjectId(value);
       }
     },
 
-    handleTimeChange: ({hasError, handleError, handleTimeInput}) => (event) => {
-      const {value} = event.target;
-      handleTimeInput(value);
-      if (hasError) {
-        handleError(!hasError);
+    handleTimeChange: ({timeError, setTimeError}) => () => {
+      if (timeError && timeError > 0) {
+        setTimeError(false);
       }
     },
 
@@ -76,13 +75,6 @@ export default compose(
       const {value} = event.target;
       if (date !== value) {
         setDate(value);
-      }
-    },
-
-    handleCommentsChange: ({comments, setComments}) => (event) => {
-      const {value} = event.target;
-      if (comments !== value) {
-        setComments(value);
       }
     }
   }),
@@ -93,28 +85,34 @@ export default compose(
       fetchTimesheetListApi,
       handleOnClose,
       projectId,
-      userId,
-      isSelected,
-      hasError,
-      handleError,
-      isTimeEmpty
+      setSelectProjectError,
+      setTimeError,
+      userId
     }) => (event) => {
       event.preventDefault();
+
       const time = event.target.time.value;
+
+      if (!projectId) {
+        setSelectProjectError(true);
+      }
+
+      if (!time || time <= 0) {
+        setTimeError(true);
+      }
+
+      if (!projectId || !time) return;
+
       const date = event.target.date.value;
       const comments = event.target.comments.value;
 
       const params = {
         comments,
         project_id: projectId,
-        reporting_date: moment(date).format('DD/MM/YYYY'),
+        reporting_date: moment(date).format(defaultDateFormatApi),
         spent_time: time,
         user_id: userId
       };
-
-      if (isSelected === null || isTimeEmpty === null) {
-        handleError(!hasError);
-      }
 
       createRecordApi(params)
         .then(() => {

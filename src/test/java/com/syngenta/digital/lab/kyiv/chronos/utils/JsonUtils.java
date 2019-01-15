@@ -7,20 +7,22 @@ import lombok.SneakyThrows;
 
 import java.io.File;
 import java.net.URL;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 
 public class JsonUtils {
 
     @SneakyThrows
     public static <T> T readFromJson(String pathToJson, Class<T> tClass) {
         ObjectMapper objectMapper = new ObjectMapper();
-        URL resource = JsonUtils.class.getResource(pathToJson);
-        return objectMapper.readValue(new File(resource.getPath()), tClass);
+        var file = new File(URLDecoder.decode(JsonUtils.class.getResource(pathToJson).getFile(), StandardCharsets.UTF_8));
+        return objectMapper.readValue(file, tClass);
     }
 
     @SneakyThrows
     public static <T> GeneralResponse<T> readFromJson(String pathToJson, TypeReference<GeneralResponse<T>> typeReference) {
         ObjectMapper objectMapper = new ObjectMapper();
-        URL resource = JsonUtils.class.getResource(pathToJson);
-        return objectMapper.readValue(new File(resource.getPath()), typeReference);
+        var file = new File(URLDecoder.decode(JsonUtils.class.getResource(pathToJson).getFile(), StandardCharsets.UTF_8));
+        return objectMapper.readValue(file, typeReference);
     }
 }
