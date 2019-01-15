@@ -62,9 +62,11 @@ public class ProjectTypeController {
     }
 
     @DeleteMapping("/project-type/{id}")
-    public ResponseEntity<Void> delete(@PathVariable("id") long id) {
+    public ResponseEntity<GeneralResponse<ProjectTypeDto>> delete(@PathVariable("id") long id) {
         log.info("About to delete project type id " + id);
         projectTypeService.delete(id);
-        return new ResponseEntity<>(HttpStatus.OK);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(GeneralResponse.buildResponse());
     }
 }

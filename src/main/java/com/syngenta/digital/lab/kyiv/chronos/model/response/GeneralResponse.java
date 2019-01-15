@@ -17,6 +17,10 @@ public class GeneralResponse<T> {
     private boolean error;
     private T data;
 
+    public static <T> GeneralResponse<T> buildResponse() {
+        return new GeneralResponse<>(false, null);
+    }
+
     public static <T> GeneralResponse<T> buildResponse(T data) {
         return new GeneralResponse<>(false, data);
     }
