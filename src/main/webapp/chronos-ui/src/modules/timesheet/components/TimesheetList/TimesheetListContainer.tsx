@@ -83,8 +83,9 @@ export default compose(
     },
 
     handleMinusMonthFilterButtonClick: ({monthFilter, setMonthFilter, handleMonthFilterButtonsClick}) => () =>{
-      setMonthFilter(moment(monthFilter).subtract(1, 'months'));
-      handleMonthFilterButtonsClick();
+      const newMonthFilter = moment(monthFilter).subtract(1, 'months');
+      setMonthFilter(newMonthFilter);
+      handleMonthFilterButtonsClick(newMonthFilter);
     },
 
     handleDeleteButtonClick: ({addModal, selectRecord}) => (id) => {
