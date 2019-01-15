@@ -1,5 +1,7 @@
 import * as React from 'react';
 import * as moment from 'moment';
+import classnames from 'classnames';
+
 import {
   Fab,
   IconButton,
@@ -94,7 +96,14 @@ const TimesheetList: React.FunctionComponent<IProps> = ({
                         'ddd'
                       )}
                     </div>
-                    <span className={classes.dateCellValue}>
+                    <span
+                      className={classnames(classes.dateCellValue, {
+                        [classes.dateCellValueActive]: moment(
+                          item.reporting_date,
+                          defaultDateFormatApi
+                        ).isSame(moment(), 'day')
+                      })}
+                    >
                       {moment(item.reporting_date, defaultDateFormatApi).format(
                         'DD.MM.YYYY'
                       )}

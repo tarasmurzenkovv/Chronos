@@ -73,9 +73,13 @@ const SignIn: React.FunctionComponent<IProps> = ({
           id="email"
           name="email"
           label="Email"
+          type="email"
           fullWidth
           margin="normal"
           variant="outlined"
+          required
+          autoFocus
+          error={!!emailErrorCodes.length}
           InputLabelProps={{
             classes: {
               root: classes.textFieldLabel,
@@ -89,10 +93,6 @@ const SignIn: React.FunctionComponent<IProps> = ({
             }
           }}
           className={classes.textField}
-          type="email"
-          onClick={resetSignInErrorCodes}
-          required
-          error={!!emailErrorCodes.length}
           helperText={emailErrorMessage}
           FormHelperTextProps={{
             shrink: true,
@@ -100,6 +100,7 @@ const SignIn: React.FunctionComponent<IProps> = ({
               root: classes.formHelperTextProps
             }
           }}
+          onClick={resetSignInErrorCodes}
         />
         <TextField
           id="password"

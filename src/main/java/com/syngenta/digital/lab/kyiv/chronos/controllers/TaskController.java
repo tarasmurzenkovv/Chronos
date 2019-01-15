@@ -38,7 +38,7 @@ public class TaskController {
     @PutMapping("/task")
     public ResponseEntity<GeneralResponse<TaskDto>> update(@RequestBody TaskDto taskDto) {
         log.info("About to update task for request '{}'", taskDto);
-        return GeneralResponse.from(taskService.register(taskDto), HttpStatus.OK);
+        return GeneralResponse.from(taskService.register(taskDto), HttpStatus.FOUND);
     }
 
     @DeleteMapping("/task/{id}")
