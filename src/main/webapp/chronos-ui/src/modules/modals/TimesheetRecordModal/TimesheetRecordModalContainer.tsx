@@ -7,18 +7,21 @@ import {defaultDateFormatApi} from 'shared/utils/constants';
 import getProjectsList from 'modules/modals/actions/api/getProjectsList';
 import {removeCurrentModal} from 'modules/modals/actions/modalsActions';
 import {createRecordApi} from 'modules/modals/actions/api/createRecordApi';
-import {fetchTimesheetListApi} from 'modules/timesheet/actions/api/fetchTimesheetListApi';
+import {fetchTimesheetListByDateApi} from 'modules/timesheet/actions/api/fetchTimesheetListByDateApi';
 
 import TimesheetRecordModal from './TimesheetRecordModal';
 
 const mapStateToProps = (state) => ({
   list: state.projects.list,
-  userId: state.auth.signIn.user.id
+  userId: state.auth.signIn.user.id,
+
+  startOfMonth: state.timesheet.filters.date.startOfMonth,
+  endOfMonth: state.timesheet.filters.date.endOfMonth
 });
 
 const mapDispatchToProps = {
   createRecordApi,
-  fetchTimesheetListApi,
+  fetchTimesheetListByDateApi,
   getProjectsList,
   removeCurrentModal
 };
@@ -82,11 +85,14 @@ export default compose(
   withHandlers({
     handleFormSubmit: ({
       createRecordApi,
-      fetchTimesheetListApi,
+      fetchTimesheetListByDateApi,
       handleOnClose,
       projectId,
       setSelectProjectError,
       setTimeError,
+      endOfMonth,
+
+      startOfMonth,
       userId
     }) => (event) => {
       event.preventDefault();
@@ -117,7 +123,11 @@ export default compose(
       createRecordApi(params)
         .then(() => {
           handleOnClose();
-          fetchTimesheetListApi(userId);
+          fetchTimesheetListByDateApi({
+            id: userId,
+            start: startOfMonth,
+            end: endOfMonth
+          });
         })
         .catch(() => {});
     }

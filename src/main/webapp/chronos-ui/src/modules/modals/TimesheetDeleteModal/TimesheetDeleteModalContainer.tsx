@@ -1,19 +1,22 @@
 import {connect} from 'react-redux';
 import {compose, withHandlers, withState} from 'recompose';
 import {removeCurrentModal} from 'modules/modals/actions/modalsActions';
+import {fetchTimesheetListByDateApi} from 'modules/timesheet/actions/api/fetchTimesheetListByDateApi';
 import TimesheetDeleteModal from './TimesheetDeleteModal';
 import {deleteRecordApi} from '../../modals/actions/api/deleteRecordApi';
-import {fetchTimesheetListApi} from '../../timesheet/actions/api/fetchTimesheetListApi';
 
 const mapStateToProps = (state) => ({
   selectedId: state.timesheet.selectedId,
-  userId: state.auth.signIn.user.id
+  userId: state.auth.signIn.user.id,
+
+  startOfMonth: state.timesheet.filters.date.startOfMonth,
+  endOfMonth: state.timesheet.filters.date.endOfMonth
 });
 
 const mapDispatchToProps = {
-  removeCurrentModal,
-  fetchTimesheetListApi,
-  deleteRecordApi
+  deleteRecordApi,
+  fetchTimesheetListByDateApi,
+  removeCurrentModal
 };
 
 export default compose(
@@ -34,14 +37,23 @@ export default compose(
   }),
   withHandlers({
     handleDeleteItem: ({
-      selectedId,
-      handleOnClose,
-      userId,
       deleteRecordApi,
-      fetchTimesheetListApi
+      fetchTimesheetListByDateApi,
+      handleOnClose,
+      selectedId,
+      userId,
+
+      startOfMonth,
+      endOfMonth
     }) => () => {
       deleteRecordApi(selectedId)
-        .then(() => fetchTimesheetListApi(userId))
+        .then(() =>
+          fetchTimesheetListByDateApi({
+            id: userId,
+            start: startOfMonth,
+            end: endOfMonth
+          })
+        )
         .catch(() => {})
         .finally(handleOnClose());
     }
