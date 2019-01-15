@@ -35,6 +35,9 @@ const styles = () =>
       color: '#ffffff',
       padding: '2px 10px'
     },
+    dateCellValueActive: {
+      backgroundColor: '#25cdda'
+    },
     timeCell: {
       fontSize: '24px',
       paddingRight: '24px',
