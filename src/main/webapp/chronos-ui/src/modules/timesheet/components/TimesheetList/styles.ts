@@ -10,14 +10,15 @@ const styles = () =>
     },
     tableHeadCell: {
       height: '20px',
+      paddingRight: '24px',
       color: 'rgba(173, 181, 199, 0.87)',
       borderRight: '1px solid rgb(224, 224, 224)'
     },
     row: {
-      padding: 0
-    },
-    cell: {
-      padding: 0
+      padding: 0,
+      '&:hover': {
+        backgroundColor: 'rgba(25, 25, 100, 0.07)'
+      }
     },
     dateCell: {
       padding: '10px 0',
@@ -36,6 +37,7 @@ const styles = () =>
     },
     timeCell: {
       fontSize: '24px',
+      paddingRight: '24px',
       color: 'rgba(0, 0, 0, 0.87)'
     },
     nameCell: {
@@ -50,7 +52,8 @@ const styles = () =>
       maxWidth: '400px',
       padding: '10px',
       paddingLeft: '10px',
-      color: 'rgba(173, 181, 199, 0.87)'
+      color: 'rgba(173, 181, 199, 0.87)',
+      wordWrap: 'break-word'
     },
     commentCellIcon: {
       marginRight: '10px'
@@ -61,6 +64,18 @@ const styles = () =>
       bottom: 0,
       right: 0,
       transform: 'translate(-25%, -25%)'
+    },
+    deleteBtn: {
+      '&:hover': {
+        backgroundColor: 'transparent'
+      }
+    },
+    deleteIcon: {
+      color: 'rgba(173, 181, 199, 0.87)',
+      '&:hover': {
+        color: '#e32657',
+        backgroundColor: 'transparent'
+      }
     }
   });
 
