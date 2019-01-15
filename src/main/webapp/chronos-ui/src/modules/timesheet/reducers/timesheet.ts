@@ -6,7 +6,8 @@ import requestsStatuses from 'shared/utils/requestsStatuses';
 import {
   FETCH_TIMESHEET_LIST,
   FETCH_TIMESHEET_LIST_BY_DATE,
-  SELECT_RECORD
+  SELECT_RECORD,
+  SET_MONTH_FILTER
 } from '../constants';
 
 export interface IListItem {
@@ -22,12 +23,26 @@ export type TState = Readonly<{
   status: string;
   selectedId: number | null;
   list: IListItem[];
+  filters: {
+    date: {
+      month: string | null;
+      startOfMonth: string | null;
+      endOfMonth: string | null;
+    };
+  };
 }>;
 
 const defaultState: TState = {
   status: requestsStatuses.default,
   selectedId: null,
-  list: []
+  list: [],
+  filters: {
+    date: {
+      month: null,
+      startOfMonth: null,
+      endOfMonth: null
+    }
+  }
 };
 
 const timesheet = createReducer(defaultState, {
@@ -69,6 +84,21 @@ const timesheet = createReducer(defaultState, {
   [SELECT_RECORD]: (state: TState, {payload: {id}}) => ({
     ...state,
     selectedId: id
+  }),
+
+  [SET_MONTH_FILTER]: (
+    state: TState,
+    {payload: {month, startOfMonth, endOfMonth}}
+  ) => ({
+    ...state,
+    filters: {
+      date: {
+        ...state.filters.date,
+        month,
+        startOfMonth,
+        endOfMonth
+      }
+    }
   }),
 
   [LOCATION_CHANGE]: () => defaultState

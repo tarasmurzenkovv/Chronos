@@ -33,7 +33,7 @@ interface IList extends IListItemTimesheet, IListItemProject {}
 
 interface IProps extends WithStyles<typeof styles> {
   list: IList[];
-  monthFilter: string;
+  month: string;
 
   handleAddMonthFilterButtonClick(): void;
   handleMinusMonthFilterButtonClick(): void;
@@ -46,7 +46,7 @@ const TimesheetList: React.FunctionComponent<IProps> = ({
   handleButtonClick,
   handleDeleteButtonClick,
   list,
-  monthFilter,
+  month,
   handleAddMonthFilterButtonClick,
   handleMinusMonthFilterButtonClick
 }) => (
@@ -57,7 +57,7 @@ const TimesheetList: React.FunctionComponent<IProps> = ({
         <IconButton onClick={handleMinusMonthFilterButtonClick}>
           <KeyboardArrowLeft />
         </IconButton>
-        <span>{moment(monthFilter).format('MMM YYYY')}</span>
+        <span>{month}</span>
         <IconButton onClick={handleAddMonthFilterButtonClick}>
           <KeyboardArrowRight />
         </IconButton>
