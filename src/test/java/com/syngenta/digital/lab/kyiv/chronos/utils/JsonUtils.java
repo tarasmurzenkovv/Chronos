@@ -6,11 +6,11 @@ import com.syngenta.digital.lab.kyiv.chronos.model.response.GeneralResponse;
 import lombok.SneakyThrows;
 
 import java.io.File;
-import java.net.URL;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 
-public class JsonUtils {
+public final class JsonUtils {
+    private JsonUtils() {}
 
     @SneakyThrows
     public static <T> T readFromJson(String pathToJson, Class<T> tClass) {

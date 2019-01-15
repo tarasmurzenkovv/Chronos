@@ -32,28 +32,19 @@ public class UserController {
     @PostMapping("/user")
     public ResponseEntity<GeneralResponse<UserDto>> register(@Valid @RequestBody UserDto userDto) {
         log.info("About to register the following user '{}'", userDto);
-        UserDto savedUserDto = userService.register(userDto);
-        return ResponseEntity
-                .status(HttpStatus.CREATED)
-                .body(GeneralResponse.buildResponse(savedUserDto));
+        return GeneralResponse.from(userService.register(userDto), HttpStatus.CREATED);
     }
 
     @PostMapping("/user/login")
     public ResponseEntity<GeneralResponse<UserDto>> login(@Valid @RequestBody LoginRequest loginRequest) {
         log.info("About to login the following user '{}'", loginRequest);
-        UserDto foundUserInformation = userService.login(loginRequest);
-        return ResponseEntity
-                .status(HttpStatus.FOUND)
-                .body(GeneralResponse.buildResponse(foundUserInformation));
+        return GeneralResponse.from(userService.login(loginRequest), HttpStatus.FOUND);
     }
 
     @GetMapping("/user/{id}/task")
     public ResponseEntity<GeneralResponse<List<TaskDto>>> find(@PathVariable("id") long userId) {
         log.info("About to find task by id '{}'", userId);
-        List<TaskDto> userTasks = userService.find(userId);
-        return ResponseEntity
-                .status(HttpStatus.FOUND)
-                .body(GeneralResponse.buildResponse(userTasks));
+        return GeneralResponse.from(userService.find(userId), HttpStatus.FOUND);
     }
 
     @GetMapping("/user/{id}")
@@ -65,9 +56,6 @@ public class UserController {
             @DateTimeFormat(pattern = "dd/MM/yyyy") LocalDate end) {
 
         log.info("About to find tasks by user id '{}', start '{}', end '{}'", userId, start, end);
-        List<TaskDto> userTasks = userService.find(userId, start, end);
-        return ResponseEntity
-                .status(HttpStatus.FOUND)
-                .body(GeneralResponse.buildResponse(userTasks));
+        return GeneralResponse.from(userService.find(userId, start, end), HttpStatus.FOUND);
     }
 }

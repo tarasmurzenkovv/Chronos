@@ -7,7 +7,8 @@ import {defaultDateFormatApi} from 'shared/utils/constants';
 
 import {addModal} from 'modules/modals/actions/modalsActions';
 import getProjectsList from 'modules/modals/actions/api/getProjectsList';
-import {TIMESHEET_RECORD_MODAL} from 'modules/modals/constants';
+import {TIMESHEET_RECORD_DELETE_MODAL, TIMESHEET_RECORD_MODAL} from 'modules/modals/constants';
+import {selectRecord} from '../../actions/timesheetRecord';
 
 import {formatTimesheetList} from '../../utils/formatTimesheetList';
 
@@ -30,7 +31,12 @@ const mapStateToProps = (state) => {
   }
 };
 
-const mapDispatchToProps = {addModal, fetchTimesheetListByDateApi, getProjectsList};
+const mapDispatchToProps = {
+  addModal,
+  selectRecord,
+  fetchTimesheetListByDateApi,
+  getProjectsList
+};
 
 interface IProps {
   userId: number;
@@ -77,9 +83,13 @@ export default compose(
     },
 
     handleMinusMonthFilterButtonClick: ({monthFilter, setMonthFilter, handleMonthFilterButtonsClick}) => () =>{
-      const newMonthFilter = moment(monthFilter).subtract(1, 'months');
-      setMonthFilter(newMonthFilter);
-      handleMonthFilterButtonsClick(newMonthFilter);
+      setMonthFilter(moment(monthFilter).subtract(1, 'months'));
+      handleMonthFilterButtonsClick();
+    },
+
+    handleDeleteButtonClick: ({addModal, selectRecord}) => (id) => {
+      addModal({id: TIMESHEET_RECORD_DELETE_MODAL});
+      selectRecord(id);
     }
   }),
   lifecycle<IProps, {}>({

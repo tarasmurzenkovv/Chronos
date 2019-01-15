@@ -16,8 +16,6 @@ import org.assertj.core.api.Assertions;
 import org.junit.Test;
 
 import java.time.LocalDate;
-import java.util.List;
-import java.util.stream.Collectors;
 
 import static com.github.springtestdbunit.assertion.DatabaseAssertionMode.NON_STRICT_UNORDERED;
 

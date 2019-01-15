@@ -12,6 +12,7 @@ import {
   withStyles,
   WithStyles
 } from '@material-ui/core';
+import DeleteOutlinedIcon from '@material-ui/icons/DeleteOutlined';
 import AddIcon from '@material-ui/icons/Add';
 import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
 import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
@@ -35,15 +36,17 @@ interface IProps extends WithStyles<typeof styles> {
   handleAddMonthFilterButtonClick(): void;
   handleMinusMonthFilterButtonClick(): void;
   handleButtonClick(): void;
+  handleDeleteButtonClick(id: number): void;
 }
 
 const TimesheetList: React.FunctionComponent<IProps> = ({
   classes,
+  handleButtonClick,
+  handleDeleteButtonClick,
   list,
   monthFilter,
   handleAddMonthFilterButtonClick,
-  handleMinusMonthFilterButtonClick,
-  handleButtonClick
+  handleMinusMonthFilterButtonClick
 }) => (
   <React.Fragment>
     <Header />
@@ -62,48 +65,30 @@ const TimesheetList: React.FunctionComponent<IProps> = ({
           <Table className={classes.table}>
             <TableHead>
               <TableRow>
-                <TableCell
-                  align="center"
-                  className={`${classes.cell} ${classes.tableHeadCell}`}
-                >
+                <TableCell align="center" className={classes.tableHeadCell}>
                   Date
                 </TableCell>
-                <TableCell
-                  align="center"
-                  className={`${classes.cell} ${classes.tableHeadCell}`}
-                >
+                <TableCell align="center" className={classes.tableHeadCell}>
                   Hours
                 </TableCell>
-                <TableCell
-                  align="center"
-                  className={`${classes.cell} ${classes.tableHeadCell}`}
-                >
+                <TableCell align="center" className={classes.tableHeadCell}>
                   Name
                 </TableCell>
-                <TableCell
-                  align="center"
-                  className={`${classes.cell} ${classes.tableHeadCell}`}
-                >
+                <TableCell align="center" className={classes.tableHeadCell}>
                   <div className={classes.tableHeadCommentCell}>
                     <Comment className={classes.commentCellIcon} />
                     <span>Comments</span>
                   </div>
                 </TableCell>
-                {/* <TableCell */}
-                {/* align="center" */}
-                {/* className={`${classes.cell} ${classes.tableHeadCell}`} */}
-                {/* > */}
-                {/* Action */}
-                {/* </TableCell> */}
+                <TableCell align="center" className={classes.tableHeadCell}>
+                  Action
+                </TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
               {list.map((item) => (
                 <TableRow className={classes.row} key={item.task_id}>
-                  <TableCell
-                    align="center"
-                    className={`${classes.cell} ${classes.dateCell}`}
-                  >
+                  <TableCell align="center" className={classes.dateCell}>
                     <div className={classes.dateCellDay}>
                       {moment(item.reporting_date, defaultDateFormatApi).format(
                         'ddd'
@@ -115,28 +100,24 @@ const TimesheetList: React.FunctionComponent<IProps> = ({
                       )}
                     </span>
                   </TableCell>
-                  <TableCell
-                    align="center"
-                    className={`${classes.cell} ${classes.timeCell}`}
-                  >
+                  <TableCell align="center" className={classes.timeCell}>
                     {item.spent_time}
                   </TableCell>
-                  <TableCell
-                    align="left"
-                    className={`${classes.cell} ${classes.nameCell}`}
-                  >
+                  <TableCell align="left" className={classes.nameCell}>
                     {item.project_name}
                   </TableCell>
-                  <TableCell
-                    align="left"
-                    className={`${classes.cell} ${classes.commentCell}`}
-                  >
+                  <TableCell align="left" className={classes.commentCell}>
                     {item.comments}
                   </TableCell>
-                  {/* <TableCell align="center"> */}
-                  {/* <button type="button">edit</button> */}
-                  {/* <button type="button"> delete</button> */}
-                  {/* </TableCell> */}
+                  <TableCell align="center">
+                    <IconButton
+                      aria-label="Delete"
+                      onClick={() => handleDeleteButtonClick(item.task_id)}
+                      className={classes.deleteBtn}
+                    >
+                      <DeleteOutlinedIcon className={classes.deleteIcon} />
+                    </IconButton>
+                  </TableCell>
                 </TableRow>
               ))}
             </TableBody>

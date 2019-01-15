@@ -111,7 +111,7 @@
             <property name="maxPrivate" value="20"/>
             <property name="maxPackage" value="20"/>
             <property name="maxProtected" value="20"/>
-            <property name="maxPublic" value="3"/>
+            <property name="maxPublic" value="6"/>
         </module>
     </module>
     <module name="FileLength">

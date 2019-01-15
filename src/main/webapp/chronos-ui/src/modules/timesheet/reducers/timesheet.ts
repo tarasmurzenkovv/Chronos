@@ -3,7 +3,11 @@ import {LOCATION_CHANGE} from 'connected-react-router';
 import {createReducer} from 'shared/utils/createReducer';
 import requestsStatuses from 'shared/utils/requestsStatuses';
 
-import {FETCH_TIMESHEET_LIST, FETCH_TIMESHEET_LIST_BY_DATE} from '../constants';
+import {
+  FETCH_TIMESHEET_LIST,
+  FETCH_TIMESHEET_LIST_BY_DATE,
+  SELECT_RECORD
+} from '../constants';
 
 export interface IListItem {
   comments: string;
@@ -16,11 +20,13 @@ export interface IListItem {
 
 export type TState = Readonly<{
   status: string;
+  selectedId: number | null;
   list: IListItem[];
 }>;
 
 const defaultState: TState = {
   status: requestsStatuses.default,
+  selectedId: null,
   list: []
 };
 
@@ -58,6 +64,11 @@ const timesheet = createReducer(defaultState, {
     ...state,
     status: requestsStatuses.success,
     list
+  }),
+
+  [SELECT_RECORD]: (state: TState, {payload: {id}}) => ({
+    ...state,
+    selectedId: id
   }),
 
   [LOCATION_CHANGE]: () => defaultState
