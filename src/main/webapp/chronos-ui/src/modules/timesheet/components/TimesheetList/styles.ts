@@ -47,6 +47,8 @@ const styles = () =>
       alignItems: 'center'
     },
     commentCell: {
+      maxWidth: '400px',
+      padding: '10px',
       paddingLeft: '10px',
       color: 'rgba(173, 181, 199, 0.87)'
     },

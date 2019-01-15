@@ -2,10 +2,13 @@ import {connect} from 'react-redux';
 import {compose, lifecycle, withHandlers, withState} from 'recompose';
 import * as moment from 'moment';
 
+import {defaultDateFormatApi} from 'shared/utils/constants';
+
 import getProjectsList from 'modules/modals/actions/api/getProjectsList';
 import {removeCurrentModal} from 'modules/modals/actions/modalsActions';
 import {createRecordApi} from 'modules/modals/actions/api/createRecordApi';
 import {fetchTimesheetListApi} from 'modules/timesheet/actions/api/fetchTimesheetListApi';
+
 import TimesheetRecordModal from './TimesheetRecordModal';
 
 const mapStateToProps = (state) => ({
@@ -106,7 +109,7 @@ export default compose(
       const params = {
         comments,
         project_id: projectId,
-        reporting_date: moment(date).format('DD/MM/YYYY'),
+        reporting_date: moment(date).format(defaultDateFormatApi),
         spent_time: time,
         user_id: userId
       };

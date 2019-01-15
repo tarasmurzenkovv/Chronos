@@ -1,23 +1,34 @@
 import * as React from 'react';
 import {connect} from 'react-redux';
-import {compose, lifecycle, setDisplayName, withHandlers, withProps, withState} from 'recompose';
+import {compose, lifecycle, setDisplayName, withHandlers, withState} from 'recompose';
+import * as moment from 'moment';
+
+import {defaultDateFormatApi} from 'shared/utils/constants';
 
 import {addModal} from 'modules/modals/actions/modalsActions';
 import getProjectsList from 'modules/modals/actions/api/getProjectsList';
 import {TIMESHEET_RECORD_MODAL} from 'modules/modals/constants';
 
-import * as moment from 'moment';
+import {formatTimesheetList} from '../../utils/formatTimesheetList';
+
 import {
   fetchTimesheetListByDateApi,
   IProps as fetchTimesheetListByDateIProps
 } from '../../actions/api/fetchTimesheetListByDateApi';
 import TimesheetList from './TimesheetList';
 
-const mapStateToProps = (state) => ({
-  userId: state.auth.signIn.user.id,
-  timesheetList: state.timesheet.list,
-  projectsList: state.projects.list
-});
+const mapStateToProps = (state) => {
+  const userId= state.auth.signIn.user.id;
+  const timesheetList= state.timesheet.list;
+  const projectsList= state.projects.list;
+
+  const list = formatTimesheetList(timesheetList, projectsList);
+
+  return {
+    userId,
+    list
+  }
+};
 
 const mapDispatchToProps = {addModal, fetchTimesheetListByDateApi, getProjectsList};
 
@@ -38,28 +49,15 @@ export default compose(
 
   withState('monthFilter', 'setMonthFilter', moment()),
 
-  withProps(({projectsList, timesheetList}) => {
-    const list = timesheetList.map((timesheetItem) => ({
-      ...timesheetItem,
-      project_name: projectsList.length
-        ? projectsList.find(
-          (projectItem) => projectItem.id === timesheetItem.project_id
-        ).project_name
-        : ''
-    }));
-
-    return {list};
-  }),
-
   withHandlers({
-    handleMonthFilterButtonsClick: ({userId, monthFilter, fetchTimesheetListByDateApi}) => () =>{
-      const startOfMonth = moment(monthFilter)
+    handleMonthFilterButtonsClick: ({userId, monthFilter, fetchTimesheetListByDateApi}) => (newMonthFilter) =>{
+      const startOfMonth = moment(newMonthFilter)
         .startOf('month')
-        .format('DD/MM/YYYY');
+        .format(defaultDateFormatApi);
 
-      const endOfMonth = moment(monthFilter)
+      const endOfMonth = moment(newMonthFilter)
         .endOf('month')
-        .format('DD/MM/YYYY');
+        .format(defaultDateFormatApi);
 
         fetchTimesheetListByDateApi({id: userId, start: startOfMonth, end: endOfMonth})
       ;
@@ -73,13 +71,15 @@ export default compose(
       addModal({id: TIMESHEET_RECORD_MODAL}),
 
     handleAddMonthFilterButtonClick: ({monthFilter, setMonthFilter, handleMonthFilterButtonsClick}) => () => {
-      setMonthFilter(moment(monthFilter).add(1, 'months'));
-      handleMonthFilterButtonsClick();
+      const newMonthFilter = moment(monthFilter).add(1, 'months');
+      setMonthFilter(newMonthFilter);
+      handleMonthFilterButtonsClick(newMonthFilter);
     },
 
     handleMinusMonthFilterButtonClick: ({monthFilter, setMonthFilter, handleMonthFilterButtonsClick}) => () =>{
-      setMonthFilter(moment(monthFilter).subtract(1, 'months'));
-      handleMonthFilterButtonsClick();
+      const newMonthFilter = moment(monthFilter).subtract(1, 'months');
+      setMonthFilter(newMonthFilter);
+      handleMonthFilterButtonsClick(newMonthFilter);
     }
   }),
   lifecycle<IProps, {}>({
@@ -88,11 +88,11 @@ export default compose(
 
       const startOfMonth = moment(monthFilter)
         .startOf('month')
-        .format('DD/MM/YYYY');
+        .format(defaultDateFormatApi);
 
       const endOfMonth = moment(monthFilter)
         .endOf('month')
-        .format('DD/MM/YYYY');
+        .format(defaultDateFormatApi);
 
       Promise.all([
         getProjectsList(),

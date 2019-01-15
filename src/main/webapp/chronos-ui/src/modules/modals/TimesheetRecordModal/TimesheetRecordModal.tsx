@@ -147,7 +147,7 @@ const TimesheetRecordModal: React.FunctionComponent<IProps> = ({
               />
               {timeError && (
                 <FormHelperText className={classes.errorTime}>
-                  Please, add time value
+                  Please, add correct time value
                 </FormHelperText>
               )}
             </FormControl>
