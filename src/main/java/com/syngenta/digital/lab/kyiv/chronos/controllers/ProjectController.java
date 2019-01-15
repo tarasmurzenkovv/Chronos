@@ -28,44 +28,31 @@ public class ProjectController {
     @PostMapping("/project")
     public ResponseEntity<GeneralResponse<ProjectDto>> save(@RequestBody ProjectDto projectDto) {
         log.info("About to register the following project '{}'", projectDto);
-        ProjectDto savedProjectDto = projectService.register(projectDto);
-        return ResponseEntity
-                .status(HttpStatus.CREATED)
-                .body(GeneralResponse.buildResponse(savedProjectDto));
+        return GeneralResponse.from(projectService.register(projectDto), HttpStatus.CREATED);
     }
 
     @GetMapping("/project/{id}")
     public ResponseEntity<GeneralResponse<ProjectDto>> find(@PathVariable("id") long projectId) {
         log.info("About to find by id '{}'", projectId);
-        ProjectDto foundProject = projectService.find(projectId);
-        return ResponseEntity
-                .status(HttpStatus.FOUND)
-                .body(GeneralResponse.buildResponse(foundProject));
+        return GeneralResponse.from(projectService.find(projectId), HttpStatus.FOUND);
     }
 
     @GetMapping("/project")
     public ResponseEntity<GeneralResponse<List<ProjectDto>>> find() {
-        List<ProjectDto> foundProjects = projectService.find();
-        return ResponseEntity
-                .status(HttpStatus.FOUND)
-                .body(GeneralResponse.buildResponse(foundProjects));
+        return GeneralResponse.from( projectService.find(), HttpStatus.FOUND);
     }
 
     @PutMapping("/project")
     public ResponseEntity<GeneralResponse<ProjectDto>> update(@RequestBody ProjectDto projectDto) {
         log.info("About to register the following project '{}'", projectDto);
         ProjectDto savedProjectDto = projectService.register(projectDto);
-        return ResponseEntity
-                .status(HttpStatus.OK)
-                .body(GeneralResponse.buildResponse(savedProjectDto));
+        return GeneralResponse.from(savedProjectDto, HttpStatus.OK);
     }
 
     @DeleteMapping("/project/{id}")
     public ResponseEntity<GeneralResponse<ProjectDto>> delete(@PathVariable("id") long projectId) {
         log.info("About to delete project by id '{}'", projectId);
         projectService.delete(projectId);
-        return ResponseEntity
-                .status(HttpStatus.OK)
-                .body(GeneralResponse.buildResponse());
+        return GeneralResponse.from(HttpStatus.OK);
     }
 }

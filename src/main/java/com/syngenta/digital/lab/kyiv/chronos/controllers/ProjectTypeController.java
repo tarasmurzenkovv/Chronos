@@ -28,45 +28,31 @@ public class ProjectTypeController {
     @PostMapping("/project-type")
     public ResponseEntity<GeneralResponse<ProjectTypeDto>> save(@RequestBody ProjectTypeDto projectTypeDto) {
         log.info("About to register the following project type '{}'", projectTypeDto);
-        ProjectTypeDto savedProjectTypeDto = projectTypeService.register(projectTypeDto);
-        return ResponseEntity
-                .status(HttpStatus.CREATED)
-                .body(GeneralResponse.buildResponse(savedProjectTypeDto));
+        return GeneralResponse.from(projectTypeService.register(projectTypeDto), HttpStatus.CREATED);
     }
 
     @GetMapping("/project-type")
     public ResponseEntity<GeneralResponse<List<ProjectTypeDto>>> find() {
         log.info("About to find all project types");
-        List<ProjectTypeDto> allProjectTypes = projectTypeService.find();
-        return ResponseEntity
-                .status(HttpStatus.FOUND)
-                .body(GeneralResponse.buildResponse(allProjectTypes));
+        return GeneralResponse.from(projectTypeService.find(), HttpStatus.FOUND);
     }
 
     @GetMapping("/project-type/{id}")
     public ResponseEntity<GeneralResponse<ProjectTypeDto>> find(@PathVariable("id") long id) {
         log.info("About to find for project type id " + id);
-        ProjectTypeDto projectType = projectTypeService.find(id);
-        return ResponseEntity
-                .status(HttpStatus.FOUND)
-                .body(GeneralResponse.buildResponse(projectType));
+        return GeneralResponse.from(projectTypeService.find(id), HttpStatus.FOUND);
     }
 
     @PutMapping("/project-type")
     public ResponseEntity<GeneralResponse<ProjectTypeDto>> update(@RequestBody ProjectTypeDto projectTypeDto) {
         log.info("About to register the following project type '{}'", projectTypeDto);
-        ProjectTypeDto projectType = projectTypeService.register(projectTypeDto);
-        return ResponseEntity
-                .status(HttpStatus.OK)
-                .body(GeneralResponse.buildResponse(projectType));
+        return GeneralResponse.from(projectTypeService.register(projectTypeDto), HttpStatus.OK);
     }
 
     @DeleteMapping("/project-type/{id}")
     public ResponseEntity<GeneralResponse<ProjectTypeDto>> delete(@PathVariable("id") long id) {
         log.info("About to delete project type id " + id);
         projectTypeService.delete(id);
-        return ResponseEntity
-                .status(HttpStatus.OK)
-                .body(GeneralResponse.buildResponse());
+        return GeneralResponse.from(HttpStatus.OK);
     }
 }
