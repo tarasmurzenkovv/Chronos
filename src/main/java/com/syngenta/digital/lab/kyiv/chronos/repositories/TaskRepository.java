@@ -1,6 +1,6 @@
 package com.syngenta.digital.lab.kyiv.chronos.repositories;
 
-import com.syngenta.digital.lab.kyiv.chronos.model.entities.TaskEntity;
+import com.syngenta.digital.lab.kyiv.chronos.model.entities.task.TaskEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

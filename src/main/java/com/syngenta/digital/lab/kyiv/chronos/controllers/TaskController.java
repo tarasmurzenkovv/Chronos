@@ -1,5 +1,6 @@
 package com.syngenta.digital.lab.kyiv.chronos.controllers;
 
+import com.syngenta.digital.lab.kyiv.chronos.model.dto.TagDto;
 import com.syngenta.digital.lab.kyiv.chronos.model.dto.TaskDto;
 import com.syngenta.digital.lab.kyiv.chronos.model.response.GeneralResponse;
 import com.syngenta.digital.lab.kyiv.chronos.service.TaskService;
@@ -15,6 +16,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+
+import java.util.List;
 
 @Slf4j
 @RestController
@@ -33,6 +36,12 @@ public class TaskController {
     public ResponseEntity<GeneralResponse<TaskDto>> find(@PathVariable("id") long id) {
         log.info("About to find task by id '{}'", id);
         return GeneralResponse.from(taskService.find(id), HttpStatus.FOUND);
+    }
+
+    @GetMapping("/task/{id}/tags")
+    public ResponseEntity<GeneralResponse<List<TagDto>>> findTags(@PathVariable("id") long id) {
+        log.info("About to find task tags by task id '{}'", id);
+        return GeneralResponse.from(taskService.findTags(id), HttpStatus.FOUND);
     }
 
     @PutMapping("/task")

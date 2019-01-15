@@ -14,13 +14,46 @@ import lombok.SneakyThrows;
 import org.apache.http.HttpStatus;
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
+import org.junit.platform.commons.util.CollectionUtils;
 
 import java.time.LocalDate;
+import java.util.Collections;
 
 import static com.github.springtestdbunit.assertion.DatabaseAssertionMode.NON_STRICT_UNORDERED;
 
 @DatabaseTearDown("/TaskControllerIntegrationTest/dbTearDown.xml")
 public class TaskControllerIntegrationTest extends BaseIntegrationTest {
+
+    @Test
+    @SneakyThrows
+    @DatabaseSetup(value = "/TaskControllerIntegrationTest/shouldAddNewTaskWithNewTags/dbSetup.xml")
+    @ExpectedDatabase(value = "/TaskControllerIntegrationTest/shouldAddNewTaskWithNewTags/expectedDataBase.xml",
+            assertionMode = NON_STRICT_UNORDERED)
+    public void shouldAddNewTaskWithNewTags() {
+
+        Response response = RestAssured
+                .given()
+                .body(JsonUtils.readFromJson("/TaskControllerIntegrationTest/shouldAddNewTaskWithNewTags/addNewTaskWithNewTagsRequest.json", TaskDto.class))
+                .contentType(ContentType.JSON)
+                .post("/api/v0/task")
+                .then()
+                .extract()
+                .response();
+
+        String asGeneralResponseString = response.getBody().asString();
+        GeneralResponse<TaskDto> actualResponse = this.objectMapper.readValue(asGeneralResponseString, new TypeReference<GeneralResponse<TaskDto>>() {
+        });
+
+        Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.SC_CREATED);
+        Assertions.assertThat(actualResponse).isNotNull();
+        Assertions.assertThat(actualResponse.getData()).isNotNull();
+        Assertions.assertThat(actualResponse.getData().getTaskId()).isNotNull();
+        Assertions.assertThat(actualResponse.getData().getProjectId()).isEqualTo(1);
+        Assertions.assertThat(actualResponse.getData().getUserId()).isEqualTo(1);
+        Assertions.assertThat(actualResponse.getData().getComments()).isEqualTo("comments");
+        Assertions.assertThat(actualResponse.getData().getReportingDate()).isEqualTo(LocalDate.of(2019,1,1));
+        Assertions.assertThat(actualResponse.getData().getSpentTime()).isEqualTo(0.8f);
+    }
 
     @Test
     @SneakyThrows
@@ -51,8 +84,7 @@ public class TaskControllerIntegrationTest extends BaseIntegrationTest {
         Assertions.assertThat(actualResponse.getData().getComments()).isEqualTo("comments");
         Assertions.assertThat(actualResponse.getData().getReportingDate()).isEqualTo(LocalDate.of(2019,1,1));
         Assertions.assertThat(actualResponse.getData().getSpentTime()).isEqualTo(0.8f);
-        Assertions.assertThat(actualResponse.getData().getTags()).isEqualTo("tag");
-
+        Assertions.assertThat(actualResponse.getData().getTags()).isEqualTo(Collections.emptyList());
     }
 
     @Test
@@ -82,8 +114,37 @@ public class TaskControllerIntegrationTest extends BaseIntegrationTest {
         Assertions.assertThat(actualResponse.getData().getComments()).isEqualTo("comments");
         Assertions.assertThat(actualResponse.getData().getReportingDate()).isEqualTo(LocalDate.of(2019,1,1));
         Assertions.assertThat(actualResponse.getData().getSpentTime()).isEqualTo(0.8f);
-        Assertions.assertThat(actualResponse.getData().getTags()).isEqualTo("tag");
+    }
 
+    @Test
+    @SneakyThrows
+    @DatabaseSetup(value = "/TaskControllerIntegrationTest/shouldUpdateTheExistingTaskWithNewAndExistingTags/dbSetup.xml")
+    @ExpectedDatabase(value = "/TaskControllerIntegrationTest/shouldUpdateTheExistingTaskWithNewAndExistingTags/expectedDataBase.xml",
+            assertionMode = NON_STRICT_UNORDERED)
+    public void shouldUpdateTheExistingTaskWithNewAndExistingTags() {
+
+        Response response = RestAssured
+                .given()
+                .contentType(ContentType.JSON)
+                .body(JsonUtils.readFromJson("/TaskControllerIntegrationTest/shouldUpdateTheExistingTaskWithNewAndExistingTags/updateTheExistingTaskWithNewAndExistingTags.json", TaskDto.class))
+                .put("/api/v0/task")
+                .then()
+                .extract()
+                .response();
+
+        String asGeneralResponseString = response.getBody().asString();
+        GeneralResponse<TaskDto> actualResponse = this.objectMapper.readValue(asGeneralResponseString, new TypeReference<GeneralResponse<TaskDto>>() {
+        });
+
+        Assertions.assertThat(response.getStatusCode()).isEqualTo(302);
+        Assertions.assertThat(actualResponse).isNotNull();
+        Assertions.assertThat(actualResponse.getData()).isNotNull();
+        Assertions.assertThat(actualResponse.getData().getTaskId()).isNotNull();
+        Assertions.assertThat(actualResponse.getData().getProjectId()).isEqualTo(1);
+        Assertions.assertThat(actualResponse.getData().getUserId()).isEqualTo(1);
+        Assertions.assertThat(actualResponse.getData().getComments()).isEqualTo("new comments");
+        Assertions.assertThat(actualResponse.getData().getReportingDate()).isEqualTo(LocalDate.of(2019,1,1));
+        Assertions.assertThat(actualResponse.getData().getSpentTime()).isEqualTo(0.8f);
     }
 
     @Test
@@ -115,7 +176,7 @@ public class TaskControllerIntegrationTest extends BaseIntegrationTest {
         Assertions.assertThat(actualResponse.getData().getComments()).isEqualTo("new comments");
         Assertions.assertThat(actualResponse.getData().getReportingDate()).isEqualTo(LocalDate.of(2019,1,1));
         Assertions.assertThat(actualResponse.getData().getSpentTime()).isEqualTo(0.8f);
-        Assertions.assertThat(actualResponse.getData().getTags()).isEqualTo("tag");
+        Assertions.assertThat(actualResponse.getData().getTags()).isEqualTo(Collections.emptyList());
     }
 
     @Test

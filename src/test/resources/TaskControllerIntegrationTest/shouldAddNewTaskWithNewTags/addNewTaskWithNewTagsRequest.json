@@ -1,0 +1,16 @@
+{
+  "user_id": 1,
+  "project_id": 1,
+  "reporting_date": "01/01/2019",
+  "spent_time": 0.8,
+  "tags": [
+    {
+      "tagId": 1,
+      "tag": "#awesome_tag"
+    },
+    {
+      "tag": "#awesome_new_tag"
+    }
+  ],
+  "comments": "comments"
+}
