@@ -36,8 +36,7 @@ public class TagService {
 
     @Transactional(readOnly = true)
     public List<TagDto> findAllTagsMatching(String tagToMatch) {
-        return tagRepository.findAllMatchingRegex(tagToMatch + "%")
-                .map(tagMapper::mapToDto)
+        return tagRepository.findAllMatchingRegex(tagToMatch)
                 .collect(Collectors.toList());
     }
 

@@ -6,9 +6,11 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
          http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
-    <include file="src/main/resources/db/07_01_2019_changes.xml"/>
-    <include file="src/main/resources/db/08_01_2019_changes.xml"/>
-    <include file="src/main/resources/db/15_01_2019_changes.xml"/>
-    <include file="src/main/resources/db/16_01_2019_changes.xml"/>
-
+    <changeSet id="11" author="Taras Murzenkov">
+        <addColumn tableName="PROJECT" >
+            <column defaultValue="#ffffff" name="COLOR" type="text">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
 </databaseChangeLog>

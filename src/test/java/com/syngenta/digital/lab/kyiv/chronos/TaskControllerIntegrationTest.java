@@ -7,6 +7,7 @@ import com.github.springtestdbunit.annotation.ExpectedDatabase;
 import com.jayway.restassured.RestAssured;
 import com.jayway.restassured.http.ContentType;
 import com.jayway.restassured.response.Response;
+import com.syngenta.digital.lab.kyiv.chronos.model.dto.TagDto;
 import com.syngenta.digital.lab.kyiv.chronos.model.dto.TaskDto;
 import com.syngenta.digital.lab.kyiv.chronos.model.response.GeneralResponse;
 import com.syngenta.digital.lab.kyiv.chronos.utils.JsonUtils;
@@ -14,21 +15,43 @@ import lombok.SneakyThrows;
 import org.apache.http.HttpStatus;
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
-import org.junit.platform.commons.util.CollectionUtils;
 
 import java.time.LocalDate;
 import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.github.springtestdbunit.assertion.DatabaseAssertionMode.NON_STRICT_UNORDERED;
 
-@DatabaseTearDown("/TaskControllerIntegrationTest/dbTearDown.xml")
+@DatabaseTearDown("/dbTearDown.xml")
 public class TaskControllerIntegrationTest extends BaseIntegrationTest {
 
     @Test
     @SneakyThrows
+    @DatabaseSetup(value = "/TaskControllerIntegrationTest/shouldFindTaskTags/dbSetup.xml")
+    public void shouldFindTaskTags() {
+
+        Response response = RestAssured
+                .given()
+                .contentType(ContentType.JSON)
+                .get("/api/v0/task/1/tags")
+                .then()
+                .extract()
+                .response();
+
+        String asGeneralResponseString = response.getBody().asString();
+        GeneralResponse<List<TagDto>> actualResponse = this.objectMapper.readValue(asGeneralResponseString, new TypeReference<GeneralResponse<List<TagDto>>>() {
+        });
+        Assertions.assertThat(response.getStatusCode()).isEqualTo(302);
+        Assertions.assertThat(actualResponse).isNotNull();
+        Assertions.assertThat(actualResponse.getData()).isNotNull();
+        Assertions.assertThat(actualResponse.getData().stream().map(TagDto::getTag).collect(Collectors.toList()))
+                .containsExactlyInAnyOrderElementsOf(List.of("#awesome_tag_existing", "#awesome_new_new_tag", "#awesome_tag"));
+    }
+
+    @Test
+    @SneakyThrows
     @DatabaseSetup(value = "/TaskControllerIntegrationTest/shouldAddNewTaskWithNewTags/dbSetup.xml")
-    @ExpectedDatabase(value = "/TaskControllerIntegrationTest/shouldAddNewTaskWithNewTags/expectedDataBase.xml",
-            assertionMode = NON_STRICT_UNORDERED)
     public void shouldAddNewTaskWithNewTags() {
 
         Response response = RestAssured
@@ -119,8 +142,6 @@ public class TaskControllerIntegrationTest extends BaseIntegrationTest {
     @Test
     @SneakyThrows
     @DatabaseSetup(value = "/TaskControllerIntegrationTest/shouldUpdateTheExistingTaskWithNewAndExistingTags/dbSetup.xml")
-    @ExpectedDatabase(value = "/TaskControllerIntegrationTest/shouldUpdateTheExistingTaskWithNewAndExistingTags/expectedDataBase.xml",
-            assertionMode = NON_STRICT_UNORDERED)
     public void shouldUpdateTheExistingTaskWithNewAndExistingTags() {
 
         Response response = RestAssured

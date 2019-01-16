@@ -1,6 +1,6 @@
 package com.syngenta.digital.lab.kyiv.chronos.model.entities.task;
 
-import com.syngenta.digital.lab.kyiv.chronos.model.entities.ProjectEntity;
+import com.syngenta.digital.lab.kyiv.chronos.model.entities.project.ProjectEntity;
 import com.syngenta.digital.lab.kyiv.chronos.model.entities.UserEntity;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;

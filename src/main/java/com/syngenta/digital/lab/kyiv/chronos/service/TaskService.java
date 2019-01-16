@@ -4,20 +4,18 @@ import com.syngenta.digital.lab.kyiv.chronos.mappers.TagMapper;
 import com.syngenta.digital.lab.kyiv.chronos.mappers.TaskMapper;
 import com.syngenta.digital.lab.kyiv.chronos.model.dto.TagDto;
 import com.syngenta.digital.lab.kyiv.chronos.model.dto.TaskDto;
-import com.syngenta.digital.lab.kyiv.chronos.model.entities.ProjectEntity;
+import com.syngenta.digital.lab.kyiv.chronos.model.entities.project.ProjectEntity;
 import com.syngenta.digital.lab.kyiv.chronos.model.entities.TagEntity;
 import com.syngenta.digital.lab.kyiv.chronos.model.entities.task.TaskEntity;
 import com.syngenta.digital.lab.kyiv.chronos.model.entities.UserEntity;
-import com.syngenta.digital.lab.kyiv.chronos.model.entities.task.TaskTagEntity;
 import com.syngenta.digital.lab.kyiv.chronos.model.exceptions.TaskException;
 import com.syngenta.digital.lab.kyiv.chronos.repositories.ProjectRepository;
+import com.syngenta.digital.lab.kyiv.chronos.repositories.TagRepository;
 import com.syngenta.digital.lab.kyiv.chronos.repositories.TaskRepository;
 import com.syngenta.digital.lab.kyiv.chronos.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -31,6 +29,7 @@ public class TaskService {
     private final TaskMapper taskMapper;
     private final TagService tagService;
     private final TagMapper tagMapper;
+    private final TagRepository tagRepository;
 
     @Transactional
     public TaskDto register(TaskDto taskDto) {
@@ -43,7 +42,7 @@ public class TaskService {
         List<TagEntity> savedTagEntities = tagService.saveTags(taskDto);
         tagService.saveTaskTags(savedTaskEntity, savedTagEntities);
         TaskDto processedTaskDto = taskMapper.mapToDto(savedTaskEntity);
-        processedTaskDto.setTags(savedTagEntities.stream().map(this.tagMapper::mapToDto).collect(Collectors.toList()));
+        processedTaskDto.setTags(this.tagMapper.mapToDto(savedTagEntities));
         return processedTaskDto;
     }
 
@@ -54,17 +53,13 @@ public class TaskService {
 
     @Transactional(readOnly = true)
     public TaskDto find(long taskId) {
-        TaskDto taskDto = taskRepository.findById(taskId)
+        return taskRepository.findById(taskId)
                 .map(taskMapper::mapToDto)
+                .map(tagDto -> {
+                    tagDto.setTags(findTags(taskId));
+                    return tagDto;
+                })
                 .orElseThrow(() -> new TaskException(ERROR_CODE, "Cannot find task for id " + taskId));
-
-        TaskEntity taskEntity = taskRepository.findById(taskId).orElseThrow(() -> new TaskException(ERROR_CODE, "Cannot find task for id " + taskId));
-
-        List<TagEntity> tagEntities = taskEntity.getTaskTags().stream().map(TaskTagEntity::getTag).collect(Collectors.toList());
-        List<TagDto> tagDtos = tagEntities.stream().map(this.tagMapper::mapToDto).collect(Collectors.toList());
-
-        taskDto.setTags(tagDtos);
-        return taskDto;
     }
 
     @Transactional
@@ -74,10 +69,7 @@ public class TaskService {
     }
 
     @Transactional(readOnly = true)
-    public List<TagDto> findTags(long id) {
-        return taskRepository.findById(id)
-                .map(TaskEntity::getTaskTags)
-                .map(taskTags -> taskTags.stream().map(TaskTagEntity::getTag).map(tagMapper::mapToDto).collect(Collectors.toList()))
-                .orElse(Collections.emptyList());
+    public List<TagDto> findTags(long taskId) {
+        return tagRepository.findAllTagsForTaskId(taskId).collect(Collectors.toList());
     }
 }

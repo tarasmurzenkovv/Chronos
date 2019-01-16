@@ -1,10 +1,14 @@
-package com.syngenta.digital.lab.kyiv.chronos.model.entities;
+package com.syngenta.digital.lab.kyiv.chronos.model.entities.project;
 
+import com.syngenta.digital.lab.kyiv.chronos.model.entities.ProjectTypeEntity;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import javax.persistence.AttributeOverride;
+import javax.persistence.AttributeOverrides;
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.persistence.Id;
@@ -28,6 +32,11 @@ public class ProjectEntity {
     private String projectName;
     @Column(name = "PROJECT_DESCRIPTION")
     private String projectDescription;
+    @Embedded
+    @AttributeOverrides(value = {
+            @AttributeOverride(name = "color", column = @Column(name = "COLOR"))
+    })
+    private ProjectSettings projectSettings = new ProjectSettings();
     @ManyToOne
     @JoinColumn(name = "PROJECT_TYPE_ID")
     private ProjectTypeEntity projectTypeEntity;

@@ -14,4 +14,6 @@ public class ProjectDto {
     private String projectDescription;
     @JsonProperty("project_type_id")
     private Long projectTypeId;
+    @JsonProperty("color")
+    private String color;
 }

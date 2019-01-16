@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
 
 import static com.github.springtestdbunit.assertion.DatabaseAssertionMode.NON_STRICT_UNORDERED;
 
-@DatabaseTearDown("/UserControllerIntegrationTest/dbTearDown.xml")
+@DatabaseTearDown("/dbTearDown.xml")
 public class UserControllerIntegrationTest extends BaseIntegrationTest {
 
     @Test

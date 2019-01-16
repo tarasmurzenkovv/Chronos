@@ -6,8 +6,5 @@
     <TAG TAG="#awesome_tag_existing"/>
     <TAG TAG="#awesome_new_new_tag"/>
     <TAG TAG="#awesome_tag"/>
-    <TASK_TAGS TAG_ID="1" TASK_ID="1"/>
-    <TASK_TAGS TAG_ID="2" TASK_ID="1"/>
-    <TASK_TAGS TAG_ID="3" TASK_ID="1"/>
     <TASK PROJECT_ID="1" USER_ID="1" REPORTING_DATE="2019-01-01" SPENT_TIME="0.800000011920929" COMMENTS="new comments"/>
 </dataset>

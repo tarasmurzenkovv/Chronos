@@ -45,7 +45,7 @@ public class TagsController {
     }
 
     @GetMapping("/tag/matching")
-    public ResponseEntity<GeneralResponse<List<TagDto>>> find(@RequestParam("regex") String tag) {
+    public ResponseEntity<GeneralResponse<List<TagDto>>> find(@RequestParam("prefix") String tag) {
         log.info("About to find the tags ");
         return GeneralResponse.from(tagService.findAllTagsMatching(tag), HttpStatus.FOUND);
     }

@@ -1,14 +1,11 @@
 package com.syngenta.digital.lab.kyiv.chronos.mappers;
 
 import com.syngenta.digital.lab.kyiv.chronos.model.dto.TaskDto;
-import com.syngenta.digital.lab.kyiv.chronos.model.entities.ProjectEntity;
+import com.syngenta.digital.lab.kyiv.chronos.model.entities.project.ProjectEntity;
 import com.syngenta.digital.lab.kyiv.chronos.model.entities.task.TaskEntity;
 import com.syngenta.digital.lab.kyiv.chronos.model.entities.UserEntity;
-import com.syngenta.digital.lab.kyiv.chronos.repositories.TagRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor

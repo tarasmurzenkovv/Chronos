@@ -1,0 +1,14 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<dataset>
+    <PROJECT_TYPE ID="1" TASK_TYPE_NAME="Internal"/>
+    <PROJECT ID="1" PROJECT_NAME="Project name" PROJECT_DESCRIPTION="Some useful description" PROJECT_TYPE_ID="1"/>
+    <USER ID="1" FIRST_NAME="First_name" LAST_NAME="Last_name" USER_EMAIL="email@emial.com" USER_PASSWORD="passW3$rdd"/>
+    <TAG ID="1" TAG="#awesome_tag_existing"/>
+    <TAG ID="2" TAG="#awesome_new_new_tag"/>
+    <TAG ID="3" TAG="#awesome_tag"/>
+    <TASK ID="1" PROJECT_ID="1" USER_ID="1" REPORTING_DATE="2019-01-01" SPENT_TIME="0.800000011920929" COMMENTS="new comments"/>
+    <TASK_TAGS TAG_ID="1" TASK_ID="1"/>
+    <TASK_TAGS TAG_ID="2" TASK_ID="1"/>
+    <TASK_TAGS TAG_ID="3" TASK_ID="1"/>
+
+</dataset>
