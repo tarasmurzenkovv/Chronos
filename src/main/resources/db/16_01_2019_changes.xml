@@ -8,8 +8,8 @@
 
     <changeSet id="11" author="Taras Murzenkov">
         <addColumn tableName="PROJECT" >
-            <column defaultValue="#ffffff" name="COLOR" type="text">
-                <constraints nullable="false"/>
+            <column name="COLOR" type="text">
+                <constraints nullable="true"/>
             </column>
         </addColumn>
     </changeSet>
