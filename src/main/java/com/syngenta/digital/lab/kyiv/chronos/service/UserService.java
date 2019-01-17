@@ -64,4 +64,19 @@ public class UserService {
                 .map(taskMapper::mapToDto)
                 .collect(Collectors.toList());
     }
+
+    @Transactional(readOnly = true)
+    public List<UserDto> find() {
+        return userRepository.findAll()
+                .stream()
+                .map(this.userMapper::mapToDto)
+                .collect(Collectors.toList());
+    }
+
+    public UserDto findInformation(long userId) {
+        return userRepository.findById(userId)
+                .map(userMapper::mapToDto)
+                .orElseThrow(() -> new UserValidationException(ERROR_CODE_FOR_NON_EXISTING_EMAIL,
+                        String.format("Cannot find the given user id '%s'", userId)));
+    }
 }

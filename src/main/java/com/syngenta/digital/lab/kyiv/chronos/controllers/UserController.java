@@ -47,6 +47,18 @@ public class UserController {
         return GeneralResponse.from(userService.find(userId), HttpStatus.FOUND);
     }
 
+    @GetMapping("/user/information")
+    public ResponseEntity<GeneralResponse<List<UserDto>>> find() {
+        log.info("About to find all users ");
+        return GeneralResponse.from(userService.find(), HttpStatus.FOUND);
+    }
+
+    @GetMapping("/user/information/{id}")
+    public ResponseEntity<GeneralResponse<UserDto>> findUserInformation(@PathVariable("id") long userId) {
+        log.info("About to find users for id '{id}'", userId);
+        return GeneralResponse.from(userService.findInformation(userId), HttpStatus.FOUND);
+    }
+
     @GetMapping("/user/{id}")
     public ResponseEntity<GeneralResponse<List<TaskDto>>> find(
             @PathVariable("id") long userId,

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet id="11" author="Taras Murzenkov">
+        <renameColumn tableName="USER_ROLE" newColumnName="ROLE" oldColumnName="TASK_TYPE_NAME"/>
+    </changeSet>
+    <changeSet id="12" author="Taras Murzenkov">
+        <insert tableName="USER_ROLE">
+            <column name="ROLE">Admin</column>
+        </insert>
+        <insert tableName="USER_ROLE">
+            <column name="ROLE">Regular</column>
+        </insert>
+    </changeSet>
+</databaseChangeLog>

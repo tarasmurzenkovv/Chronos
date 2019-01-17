@@ -27,7 +27,7 @@
             <column name="ID" autoIncrement="true" type="bigint">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
-            <column name="USER_ROLE_ID" type="bigint">
+            <column name="ROLE_ID" type="bigint">
                 <constraints nullable="false"/>
             </column>
             <column name="USER_EMAIL" type="text">
