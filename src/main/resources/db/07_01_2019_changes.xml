@@ -118,9 +118,4 @@
         </addColumn>
     </changeSet>
 
-    <changeSet id="5" author="Taras Murzenkov">
-        <dropColumn tableName="USER" columnName="USER_ROLE_ID"/>
-    </changeSet>
-
-
 </databaseChangeLog>
