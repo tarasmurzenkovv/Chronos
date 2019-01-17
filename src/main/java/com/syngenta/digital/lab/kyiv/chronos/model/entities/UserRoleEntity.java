@@ -13,7 +13,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "USER_ROLE")
+@Table(name = "APPLICATION_USER_ROLE")
 @Getter
 @Setter
 @EqualsAndHashCode

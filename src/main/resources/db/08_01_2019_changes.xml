@@ -6,13 +6,13 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
          http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
-    <changeSet id="5" author="Taras Murzenkov">
+    <changeSet id="4" author="Taras Murzenkov">
         <dropNotNullConstraint tableName="TASK" columnName="TAGS" columnDataType="text"/>
     </changeSet>
-    <changeSet id="6" author="Taras Murzenkov">
+    <changeSet id="5" author="Taras Murzenkov">
         <modifyDataType tableName="TASK" columnName="SPENT_TIME" newDataType="float"/>
     </changeSet>
-    <changeSet id="7" author="Taras Murzenkov">
+    <changeSet id="6" author="Taras Murzenkov">
         <insert tableName="PROJECT_TYPE">
             <column name="TASK_TYPE_NAME">Internal</column>
         </insert>

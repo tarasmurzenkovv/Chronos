@@ -6,18 +6,18 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
          http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
-    <changeSet id="10" author="Taras Murzenkov">
+    <changeSet id="9" author="Taras Murzenkov">
         <addColumn tableName="PROJECT" >
             <column name="COLOR" type="text">
                 <constraints nullable="true"/>
             </column>
         </addColumn>
     </changeSet>
-    <changeSet id="11" author="Taras Murzenkov">
-        <insert tableName="USER_ROLE">
+    <changeSet id="10" author="Taras Murzenkov">
+        <insert tableName="APPLICATION_USER_ROLE">
             <column name="ROLE">Admin</column>
         </insert>
-        <insert tableName="USER_ROLE">
+        <insert tableName="APPLICATION_USER_ROLE">
             <column name="ROLE">Regular</column>
         </insert>
     </changeSet>
