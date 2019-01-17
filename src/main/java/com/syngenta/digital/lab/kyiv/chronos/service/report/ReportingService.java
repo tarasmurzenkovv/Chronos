@@ -21,9 +21,11 @@ public class ReportingService {
     private final ViewRenderer csvViewRenderer;
     private final ViewRenderer xlsViewRenderer;
     private final UserRepository userRepository;
+    private final ReportParameterValidationService reportParameterValidationService;
 
     @Transactional
     public ReportingResponse generateReport(String reportTypeAsString, ReportingRequest reportingRequest) {
+        reportParameterValidationService.validate(reportingRequest);
         ReportType reportType = ReportType.from(reportTypeAsString);
         List<Report> reports = reportingRequest.getUserIds()
                 .stream()

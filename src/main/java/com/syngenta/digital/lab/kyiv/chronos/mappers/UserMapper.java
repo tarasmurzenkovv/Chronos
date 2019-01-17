@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class UserMapper {
+    private static final String PASSWORD_MASK = "*****";
     private final UserRoleRepository userRoleRepository;
 
     public UserEntity mapToEntity(UserDto userDto) {
@@ -29,7 +30,7 @@ public class UserMapper {
         userDto.setEmail(userEntity.getUserEmail());
         userDto.setFirstName(userEntity.getFirstName());
         userDto.setLastName(userEntity.getLastName());
-        userDto.setPassword(userEntity.getUserPassword());
+        userDto.setPassword(PASSWORD_MASK);
         userDto.setRole(userEntity.getUserRoleEntity().getRole());
 
         return userDto;
