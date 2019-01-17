@@ -11,6 +11,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -30,6 +31,8 @@ public class TaskDto {
     private LocalDate reportingDate;
     @JsonProperty("spent_time")
     private float spentTime;
-    private String tags;
+    @JsonProperty("tags")
+    private List<TagDto> tags;
+    @JsonProperty("comments")
     private String comments;
 }

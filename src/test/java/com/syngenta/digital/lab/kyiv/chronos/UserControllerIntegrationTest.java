@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.github.springtestdbunit.annotation.DatabaseSetup;
 import com.github.springtestdbunit.annotation.DatabaseTearDown;
 import com.github.springtestdbunit.annotation.ExpectedDatabase;
+import com.github.springtestdbunit.assertion.DatabaseAssertionMode;
 import com.jayway.restassured.RestAssured;
 import com.jayway.restassured.http.ContentType;
 import com.jayway.restassured.response.Response;
@@ -25,7 +26,7 @@ import java.util.stream.Collectors;
 
 import static com.github.springtestdbunit.assertion.DatabaseAssertionMode.NON_STRICT_UNORDERED;
 
-@DatabaseTearDown("/UserControllerIntegrationTest/dbTearDown.xml")
+@DatabaseTearDown("/dbTearDown.xml")
 public class UserControllerIntegrationTest extends BaseIntegrationTest {
 
     @Test
@@ -58,14 +59,12 @@ public class UserControllerIntegrationTest extends BaseIntegrationTest {
         Assertions.assertThat(actualResponse.getData().get(0).getUserId()).isEqualTo(1);
         Assertions.assertThat(actualResponse.getData().get(0).getComments()).isEqualTo("comments");
         Assertions.assertThat(actualResponse.getData().get(0).getSpentTime()).isEqualTo(0.8f);
-        Assertions.assertThat(actualResponse.getData().get(0).getTags()).isEqualTo("tag");
 
         Assertions.assertThat(actualResponse.getData().get(1).getTaskId()).isNotNull();
         Assertions.assertThat(actualResponse.getData().get(1).getProjectId()).isEqualTo(1);
         Assertions.assertThat(actualResponse.getData().get(1).getUserId()).isEqualTo(1);
         Assertions.assertThat(actualResponse.getData().get(1).getComments()).isEqualTo("comments");
         Assertions.assertThat(actualResponse.getData().get(1).getSpentTime()).isEqualTo(0.8f);
-        Assertions.assertThat(actualResponse.getData().get(1).getTags()).isEqualTo("tag");
 
         List<LocalDate> reportingDates = actualResponse.getData()
                 .stream()
@@ -107,7 +106,6 @@ public class UserControllerIntegrationTest extends BaseIntegrationTest {
         Assertions.assertThat(actualResponse.getData().get(0).getComments()).isEqualTo("comments");
         Assertions.assertThat(actualResponse.getData().get(0).getReportingDate()).isEqualTo(LocalDate.of(2019,1,1));
         Assertions.assertThat(actualResponse.getData().get(0).getSpentTime()).isEqualTo(0.8f);
-        Assertions.assertThat(actualResponse.getData().get(0).getTags()).isEqualTo("tag");
 
         Assertions.assertThat(actualResponse.getData().get(1).getTaskId()).isNotNull();
         Assertions.assertThat(actualResponse.getData().get(1).getProjectId()).isEqualTo(1);
@@ -115,7 +113,6 @@ public class UserControllerIntegrationTest extends BaseIntegrationTest {
         Assertions.assertThat(actualResponse.getData().get(1).getComments()).isEqualTo("comments");
         Assertions.assertThat(actualResponse.getData().get(1).getReportingDate()).isEqualTo(LocalDate.of(2019,1,1));
         Assertions.assertThat(actualResponse.getData().get(1).getSpentTime()).isEqualTo(0.8f);
-        Assertions.assertThat(actualResponse.getData().get(1).getTags()).isEqualTo("tag");
     }
 
     @Test
@@ -200,7 +197,7 @@ public class UserControllerIntegrationTest extends BaseIntegrationTest {
         Assertions.assertThat(actualResponse.getData().getEmail()).isEqualTo("email@email.com");
         Assertions.assertThat(actualResponse.getData().getFirstName()).isEqualTo("First_name");
         Assertions.assertThat(actualResponse.getData().getLastName()).isEqualTo("Last_name");
-        Assertions.assertThat(actualResponse.getData().getPassword()).isEqualTo("passW3$rdd");
+        Assertions.assertThat(actualResponse.getData().getPassword()).isEqualTo("*****");
     }
 
     @Test
@@ -228,13 +225,14 @@ public class UserControllerIntegrationTest extends BaseIntegrationTest {
         Assertions.assertThat(actualResponse.getData().getEmail()).isEqualTo("email@emial.com");
         Assertions.assertThat(actualResponse.getData().getFirstName()).isEqualTo("First_name");
         Assertions.assertThat(actualResponse.getData().getLastName()).isEqualTo("Last_name");
-        Assertions.assertThat(actualResponse.getData().getPassword()).isEqualTo("passW3$rdd");
+        Assertions.assertThat(actualResponse.getData().getPassword()).isEqualTo("*****");
     }
 
     @Test
     @SneakyThrows
     @DatabaseSetup("/UserControllerIntegrationTest/shouldFailToRegisterNewUserIfEmailIsNotUnique/dbSetup.xml")
-    @ExpectedDatabase("/UserControllerIntegrationTest/shouldFailToRegisterNewUserIfEmailIsNotUnique/expectedDataBase.xml")
+    @ExpectedDatabase(value = "/UserControllerIntegrationTest/shouldFailToRegisterNewUserIfEmailIsNotUnique/expectedDataBase.xml",
+            assertionMode = NON_STRICT_UNORDERED)
     public void shouldFailToRegisterNewUserIfEmailIsNotUnique() {
         Response response = RestAssured
                 .given()
@@ -262,7 +260,8 @@ public class UserControllerIntegrationTest extends BaseIntegrationTest {
     @Test
     @SneakyThrows
     @DatabaseSetup("/UserControllerIntegrationTest/shouldFailToRegisterNewUserIfFirstNameIsNull/dbSetup.xml")
-    @ExpectedDatabase("/UserControllerIntegrationTest/shouldFailToRegisterNewUserIfFirstNameIsNull/expectedDataBase.xml")
+    @ExpectedDatabase(value = "/UserControllerIntegrationTest/shouldFailToRegisterNewUserIfFirstNameIsNull/expectedDataBase.xml",
+            assertionMode = NON_STRICT_UNORDERED)
     public void shouldFailToRegisterNewUserIfFirstNameIsNull() {
         Response response = RestAssured
                 .given()
@@ -289,7 +288,8 @@ public class UserControllerIntegrationTest extends BaseIntegrationTest {
     @Test
     @SneakyThrows
     @DatabaseSetup("/UserControllerIntegrationTest/shouldFailToRegisterNewUserIfFirstNameIsEmpty/dbSetup.xml")
-    @ExpectedDatabase("/UserControllerIntegrationTest/shouldFailToRegisterNewUserIfFirstNameIsEmpty/expectedDataBase.xml")
+    @ExpectedDatabase(value = "/UserControllerIntegrationTest/shouldFailToRegisterNewUserIfFirstNameIsEmpty/expectedDataBase.xml",
+            assertionMode = NON_STRICT_UNORDERED)
     public void shouldFailToRegisterNewUserIfFirstNameIsEmpty() {
         Response response = RestAssured
                 .given()
@@ -317,7 +317,8 @@ public class UserControllerIntegrationTest extends BaseIntegrationTest {
     @Test
     @SneakyThrows
     @DatabaseSetup("/UserControllerIntegrationTest/shouldFailToRegisterNewUserIfLastNameIsNull/dbSetup.xml")
-    @ExpectedDatabase("/UserControllerIntegrationTest/shouldFailToRegisterNewUserIfLastNameIsNull/expectedDataBase.xml")
+    @ExpectedDatabase(value = "/UserControllerIntegrationTest/shouldFailToRegisterNewUserIfLastNameIsNull/expectedDataBase.xml",
+    assertionMode = NON_STRICT_UNORDERED)
     public void shouldFailToRegisterNewUserIfLastNameIsNull() {
         Response response = RestAssured
                 .given()
@@ -344,7 +345,8 @@ public class UserControllerIntegrationTest extends BaseIntegrationTest {
     @Test
     @SneakyThrows
     @DatabaseSetup("/UserControllerIntegrationTest/shouldFailToRegisterNewUserIfLastNameIsEmpty/dbSetup.xml")
-    @ExpectedDatabase("/UserControllerIntegrationTest/shouldFailToRegisterNewUserIfLastNameIsEmpty/expectedDataBase.xml")
+    @ExpectedDatabase(value= "/UserControllerIntegrationTest/shouldFailToRegisterNewUserIfLastNameIsEmpty/expectedDataBase.xml",
+            assertionMode = NON_STRICT_UNORDERED)
     public void shouldFailToRegisterNewUserIfLastNameIsEmpty() {
         Response response =RestAssured
                 .given()
@@ -371,7 +373,8 @@ public class UserControllerIntegrationTest extends BaseIntegrationTest {
     @Test
     @SneakyThrows
     @DatabaseSetup("/UserControllerIntegrationTest/shouldFailToRegisterNewUserIfEmailHasInvalidFormat/dbSetup.xml")
-    @ExpectedDatabase("/UserControllerIntegrationTest/shouldFailToRegisterNewUserIfEmailHasInvalidFormat/expectedDataBase.xml")
+    @ExpectedDatabase(value = "/UserControllerIntegrationTest/shouldFailToRegisterNewUserIfEmailHasInvalidFormat/expectedDataBase.xml",
+            assertionMode = NON_STRICT_UNORDERED)
     public void shouldFailToRegisterNewUserIfEmailHasInvalidFormat() {
         Response response = RestAssured
                 .given()
@@ -398,7 +401,8 @@ public class UserControllerIntegrationTest extends BaseIntegrationTest {
     @Test
     @SneakyThrows
     @DatabaseSetup("/UserControllerIntegrationTest/shouldFailToRegisterNewUserIfEmailIsBlank/dbSetup.xml")
-    @ExpectedDatabase("/UserControllerIntegrationTest/shouldFailToRegisterNewUserIfEmailIsBlank/expectedDataBase.xml")
+    @ExpectedDatabase(value = "/UserControllerIntegrationTest/shouldFailToRegisterNewUserIfEmailIsBlank/expectedDataBase.xml",
+            assertionMode = NON_STRICT_UNORDERED)
     public void shouldFailToRegisterNewUserIfEmailIsBlank() {
         Response response = RestAssured
                 .given()
@@ -426,7 +430,8 @@ public class UserControllerIntegrationTest extends BaseIntegrationTest {
     @Test
     @SneakyThrows
     @DatabaseSetup("/UserControllerIntegrationTest/shouldFailToRegisterNewUserIfEmailIsNull/dbSetup.xml")
-    @ExpectedDatabase("/UserControllerIntegrationTest/shouldFailToRegisterNewUserIfEmailIsNull/expectedDataBase.xml")
+    @ExpectedDatabase(value = "/UserControllerIntegrationTest/shouldFailToRegisterNewUserIfEmailIsNull/expectedDataBase.xml",
+           assertionMode = NON_STRICT_UNORDERED)
     public void shouldFailToRegisterNewUserIfEmailIsNull() {
         Response response = RestAssured
                 .given()
@@ -454,7 +459,8 @@ public class UserControllerIntegrationTest extends BaseIntegrationTest {
     @Test
     @SneakyThrows
     @DatabaseSetup("/UserControllerIntegrationTest/shouldFailToRegisterNewUserIfPasswordHasInvalidFormat/dbSetup.xml")
-    @ExpectedDatabase("/UserControllerIntegrationTest/shouldFailToRegisterNewUserIfPasswordHasInvalidFormat/expectedDataBase.xml")
+    @ExpectedDatabase(value = "/UserControllerIntegrationTest/shouldFailToRegisterNewUserIfPasswordHasInvalidFormat/expectedDataBase.xml",
+            assertionMode = NON_STRICT_UNORDERED)
     public void shouldFailToRegisterNewUserIfPasswordHasInvalidFormat() {
         Response response = RestAssured
                 .given()
@@ -482,7 +488,8 @@ public class UserControllerIntegrationTest extends BaseIntegrationTest {
     @Test
     @SneakyThrows
     @DatabaseSetup("/UserControllerIntegrationTest/shouldFailToRegisterNewUserIfPasswordIsNull/dbSetup.xml")
-    @ExpectedDatabase("/UserControllerIntegrationTest/shouldFailToRegisterNewUserIfPasswordIsNull/expectedDataBase.xml")
+    @ExpectedDatabase(value = "/UserControllerIntegrationTest/shouldFailToRegisterNewUserIfPasswordIsNull/expectedDataBase.xml",
+    assertionMode = NON_STRICT_UNORDERED)
     public void shouldFailToRegisterNewUserIfPasswordIsNull() {
         Response response = RestAssured
                 .given()

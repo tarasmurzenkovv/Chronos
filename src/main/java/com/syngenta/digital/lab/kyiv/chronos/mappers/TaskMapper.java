@@ -1,13 +1,16 @@
 package com.syngenta.digital.lab.kyiv.chronos.mappers;
 
 import com.syngenta.digital.lab.kyiv.chronos.model.dto.TaskDto;
-import com.syngenta.digital.lab.kyiv.chronos.model.entities.ProjectEntity;
-import com.syngenta.digital.lab.kyiv.chronos.model.entities.TaskEntity;
+import com.syngenta.digital.lab.kyiv.chronos.model.entities.project.ProjectEntity;
+import com.syngenta.digital.lab.kyiv.chronos.model.entities.task.TaskEntity;
 import com.syngenta.digital.lab.kyiv.chronos.model.entities.UserEntity;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @Service
+@RequiredArgsConstructor
 public class TaskMapper {
+    private final TagMapper tagMapper;
 
     public TaskEntity mapToEntity(TaskDto taskDto, UserEntity userEntity, ProjectEntity projectEntity) {
         TaskEntity taskEntity = new TaskEntity();
@@ -20,7 +23,6 @@ public class TaskMapper {
         taskEntity.setProjectEntity(projectEntity);
         taskEntity.setReportingDate(taskDto.getReportingDate());
         taskEntity.setSpentTime(taskDto.getSpentTime());
-        taskEntity.setTags(taskDto.getTags());
         taskEntity.setComments(taskDto.getComments());
 
         return taskEntity;
@@ -35,7 +37,6 @@ public class TaskMapper {
         taskDto.setComments(taskEntity.getComments());
         taskDto.setReportingDate(taskEntity.getReportingDate());
         taskDto.setSpentTime(taskEntity.getSpentTime());
-        taskDto.setTags(taskEntity.getTags());
 
         return taskDto;
     }

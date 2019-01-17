@@ -39,7 +39,7 @@ public class ProjectController {
 
     @GetMapping("/project")
     public ResponseEntity<GeneralResponse<List<ProjectDto>>> find() {
-        return GeneralResponse.from( projectService.find(), HttpStatus.FOUND);
+        return GeneralResponse.from(projectService.find(), HttpStatus.FOUND);
     }
 
     @PutMapping("/project")

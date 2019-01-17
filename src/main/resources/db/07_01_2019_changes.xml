@@ -15,11 +15,11 @@
                 <constraints nullable="false"/>
             </column>
         </createTable>
-        <createTable tableName="USER_ROLE">
+        <createTable tableName="APPLICATION_USER_ROLE">
             <column name="ID" autoIncrement="true" type="bigint">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
-            <column name="TASK_TYPE_NAME" type="text">
+            <column name="ROLE" type="text">
                 <constraints nullable="false"/>
             </column>
         </createTable>
@@ -27,7 +27,7 @@
             <column name="ID" autoIncrement="true" type="bigint">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
-            <column name="USER_ROLE_ID" type="bigint">
+            <column name="ROLE_ID" type="bigint">
                 <constraints nullable="false"/>
             </column>
             <column name="USER_EMAIL" type="text">
@@ -78,9 +78,9 @@
 
     <changeSet id="2" author="Taras Murzenkov">
         <addForeignKeyConstraint baseTableName="USER"
-                                 baseColumnNames="USER_ROLE_ID"
+                                 baseColumnNames="ROLE_ID"
                                  constraintName="USER_ROLE_FK"
-                                 referencedTableName="USER_ROLE"
+                                 referencedTableName="APPLICATION_USER_ROLE"
                                  referencedColumnNames="ID"/>
 
         <addForeignKeyConstraint baseTableName="PROJECT"
@@ -103,11 +103,6 @@
     </changeSet>
 
     <changeSet id="3" author="Taras Murzenkov">
-        <dropForeignKeyConstraint baseTableName="USER" constraintName="USER_ROLE_FK"/>
-        <dropTable tableName="USER_ROLE"/>
-    </changeSet>
-
-    <changeSet id="4" author="Taras Murzenkov">
         <addColumn tableName="USER">
             <column name="FIRST_NAME" type="text">
                 <constraints nullable="false"/>
@@ -117,10 +112,5 @@
             </column>
         </addColumn>
     </changeSet>
-
-    <changeSet id="5" author="Taras Murzenkov">
-        <dropColumn tableName="USER" columnName="USER_ROLE_ID"/>
-    </changeSet>
-
 
 </databaseChangeLog>

@@ -1,5 +1,6 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <dataset>
+    <APPLICATION_USER_ROLE ID="1" ROLE="Regular"/>
     <USER FIRST_NAME="First_name" LAST_NAME="Last_name" USER_EMAIL="email@email.com" USER_PASSWORD="passW3$rdd"/>
     <PROJECT/>
     <PROJECT_TYPE/>

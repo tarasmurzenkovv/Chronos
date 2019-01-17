@@ -21,7 +21,7 @@ import java.util.List;
 
 import static com.github.springtestdbunit.assertion.DatabaseAssertionMode.NON_STRICT_UNORDERED;
 
-@DatabaseTearDown("/ProjectControllerIntegrationTest/dbTearDown.xml")
+@DatabaseTearDown("/dbTearDown.xml")
 public class ProjectControllerIntegrationTest extends BaseIntegrationTest {
     @Test
     @SneakyThrows
@@ -48,6 +48,7 @@ public class ProjectControllerIntegrationTest extends BaseIntegrationTest {
         Assertions.assertThat(actualResponse.getData().getId()).isNotNull();
         Assertions.assertThat(actualResponse.getData().getProjectTypeId()).isNotNull();
         Assertions.assertThat(actualResponse.getData().getProjectName()).isEqualTo("Project name");
+        Assertions.assertThat(actualResponse.getData().getColor()).isEqualTo("color");
         Assertions.assertThat(actualResponse.getData().getProjectDescription()).isEqualTo("Some useful description");
     }
 

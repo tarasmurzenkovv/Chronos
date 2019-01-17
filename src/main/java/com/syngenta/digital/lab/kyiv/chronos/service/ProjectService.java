@@ -2,7 +2,7 @@ package com.syngenta.digital.lab.kyiv.chronos.service;
 
 import com.syngenta.digital.lab.kyiv.chronos.mappers.ProjectMapper;
 import com.syngenta.digital.lab.kyiv.chronos.model.dto.ProjectDto;
-import com.syngenta.digital.lab.kyiv.chronos.model.entities.ProjectEntity;
+import com.syngenta.digital.lab.kyiv.chronos.model.entities.project.ProjectEntity;
 import com.syngenta.digital.lab.kyiv.chronos.model.entities.ProjectTypeEntity;
 import com.syngenta.digital.lab.kyiv.chronos.model.exceptions.ProjectTypeException;
 import com.syngenta.digital.lab.kyiv.chronos.repositories.ProjectRepository;

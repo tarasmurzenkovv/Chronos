@@ -1,0 +1,8 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<dataset>
+    <TAG TAG="awesome_tag"/>
+    <TAG TAG="tag_123"/>
+    <TAG TAG="tag"/>
+    <TAG TAG="tag   "/>
+    <TAG TAG="t_345_qer"/>
+</dataset>
