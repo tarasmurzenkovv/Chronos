@@ -43,7 +43,7 @@ public class XlsViewRenderer implements ViewRenderer {
         timeReporting.autoSizeColumn(0);
         timeReporting.autoSizeColumn(1);
         timeReporting.autoSizeColumn(2);
-        timeReporting.autoSizeColumn(4);
+        timeReporting.autoSizeColumn(3);
 
         try (ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream()) {
             workbook.write(byteArrayOutputStream);

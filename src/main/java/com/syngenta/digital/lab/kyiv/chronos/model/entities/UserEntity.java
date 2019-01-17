@@ -61,4 +61,6 @@ public class UserEntity {
     private String userEmail;
     @Column(name = "USER_PASSWORD")
     private String userPassword;
+    @Column(name = "JOB_TITLE")
+    private String jobTitle;
 }
