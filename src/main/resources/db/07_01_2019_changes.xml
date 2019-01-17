@@ -19,7 +19,7 @@
             <column name="ID" autoIncrement="true" type="bigint">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
-            <column name="TASK_TYPE_NAME" type="text">
+            <column name="ROLE" type="text">
                 <constraints nullable="false"/>
             </column>
         </createTable>
@@ -78,7 +78,7 @@
 
     <changeSet id="2" author="Taras Murzenkov">
         <addForeignKeyConstraint baseTableName="USER"
-                                 baseColumnNames="USER_ROLE_ID"
+                                 baseColumnNames="ROLE_ID"
                                  constraintName="USER_ROLE_FK"
                                  referencedTableName="USER_ROLE"
                                  referencedColumnNames="ID"/>
