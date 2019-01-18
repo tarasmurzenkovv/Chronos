@@ -5,7 +5,13 @@ import * as moment from 'moment';
 
 import {addModal} from 'modules/modals/actions/modalsActions';
 import getProjectsList from 'modules/modals/actions/api/getProjectsList';
-import {TIMESHEET_RECORD_DELETE_MODAL, TIMESHEET_RECORD_EDIT_MODAL, TIMESHEET_RECORD_MODAL} from 'modules/modals/constants';
+import {
+  TIMESHEET_RECORD_DELETE_MODAL,
+  TIMESHEET_RECORD_EDIT_MODAL,
+  TIMESHEET_RECORD_MODAL
+} from 'modules/modals/constants';
+
+import {isVisibleToUser} from 'shared/utils';
 
 import {selectRecord, setMonthFilter} from '../../actions/timesheetRecord';
 import {formatTimesheetList} from '../../utils/formatTimesheetList';
@@ -18,7 +24,6 @@ import TimesheetList from './TimesheetList';
 
 
 const mapStateToProps = (state) => {
-  const userId= state.auth.signIn.user.id;
   const timesheetList= state.timesheet.list;
   const projectsList= state.projects.list;
 
@@ -28,12 +33,14 @@ const mapStateToProps = (state) => {
 
   const list = formatTimesheetList(timesheetList, projectsList);
 
+  const visibleToUser = isVisibleToUser(state);
+
   return {
     endOfMonth,
     list,
     month,
     startOfMonth,
-    userId,
+    visibleToUser
   }
 };
 

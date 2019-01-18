@@ -1,6 +1,6 @@
 import {connect} from 'react-redux';
 
-import {ADMIN_ROLE} from 'shared/constatns';
+import {isUserAdmin} from 'shared/utils';
 import {setDrawerStatus} from '../../actions/drawer';
 import Header from './Header';
 
@@ -9,7 +9,7 @@ const mapStateToProps = (state) => ({
   userName: `${state.auth.signIn.user.first_name} ${
     state.auth.signIn.user.last_name
   }`,
-  isAdmin: state.auth.signIn.user.role === ADMIN_ROLE,
+  isAdmin: isUserAdmin(state),
   isDrawerOpen: state.common.drawer.isOpen
 });
 

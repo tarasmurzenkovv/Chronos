@@ -10,8 +10,8 @@ import {
   TableCell,
   TableHead,
   TableRow,
-  withStyles,
-  WithStyles
+  WithStyles,
+  withStyles
 } from '@material-ui/core';
 import DeleteOutlinedIcon from '@material-ui/icons/DeleteOutlined';
 import {Comment} from '@material-ui/icons';
@@ -29,6 +29,7 @@ interface IList extends IListItemTimesheet, IListItemProject {}
 interface IProps extends WithStyles<typeof styles> {
   list: IList[];
   hoveredRow: number;
+  visibleToUser: boolean;
 
   handleDeleteButtonClick(id: number): void;
   handleRowEnter: (id: number) => (id: React.SyntheticEvent) => void;
@@ -45,7 +46,8 @@ const TimesheetListTable: React.FunctionComponent<IProps> = ({
   handleRowEnter,
   handleRowLeave,
   hoveredRow,
-  handleEditButtonClick
+  handleEditButtonClick,
+  visibleToUser
 }) => (
   <Paper className={classes.content}>
     <Table className={classes.table}>
@@ -66,9 +68,11 @@ const TimesheetListTable: React.FunctionComponent<IProps> = ({
               <span>Comments</span>
             </div>
           </TableCell>
-          <TableCell align="center" className={classes.tableHeadCell}>
-            Action
-          </TableCell>
+          {visibleToUser && (
+            <TableCell align="center" className={classes.tableHeadCell}>
+              Action
+            </TableCell>
+          )}
         </TableRow>
       </TableHead>
       <TableBody>
@@ -109,26 +113,28 @@ const TimesheetListTable: React.FunctionComponent<IProps> = ({
               {item.comments}
             </TableCell>
 
-            <TableCell align="center" className={classes.actionCell}>
-              {hoveredRow === item.task_id && (
-                <IconButton
-                  aria-label="Edit"
-                  onClick={() => handleEditButtonClick(item)}
-                  className={classes.editBtn}
-                >
-                  <EditFilledIcon />
-                </IconButton>
-              )}
-              {hoveredRow === item.task_id && (
-                <IconButton
-                  aria-label="Delete"
-                  onClick={() => handleDeleteButtonClick(item.task_id)}
-                  className={classes.deleteBtn}
-                >
-                  <DeleteOutlinedIcon />
-                </IconButton>
-              )}
-            </TableCell>
+            {visibleToUser && (
+              <TableCell align="center" className={classes.actionCell}>
+                {hoveredRow === item.task_id && (
+                  <IconButton
+                    aria-label="Edit"
+                    onClick={() => handleEditButtonClick(item)}
+                    className={classes.editBtn}
+                  >
+                    <EditFilledIcon />
+                  </IconButton>
+                )}
+                {hoveredRow === item.task_id && (
+                  <IconButton
+                    aria-label="Delete"
+                    onClick={() => handleDeleteButtonClick(item.task_id)}
+                    className={classes.deleteBtn}
+                  >
+                    <DeleteOutlinedIcon />
+                  </IconButton>
+                )}
+              </TableCell>
+            )}
           </TableRow>
         ))}
       </TableBody>

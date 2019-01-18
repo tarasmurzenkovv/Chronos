@@ -17,6 +17,7 @@ interface IProps extends WithStyles<typeof styles> {
   month: string;
   isIconVisible: boolean;
   hoveredRow: number;
+  visibleToUser: boolean;
 
   handleAddMonthFilterButtonClick(): void;
   handleMinusMonthFilterButtonClick(): void;
@@ -40,7 +41,8 @@ const TimesheetList: React.FunctionComponent<IProps> = ({
   handleRowEnter,
   handleRowLeave,
   handleAddMonthFilterButtonClick,
-  handleMinusMonthFilterButtonClick
+  handleMinusMonthFilterButtonClick,
+  visibleToUser
 }) => (
   <div className={theme.root}>
     <FilterByMonth
@@ -57,18 +59,21 @@ const TimesheetList: React.FunctionComponent<IProps> = ({
         hoveredRow={hoveredRow}
         handleRowLeave={handleRowLeave}
         handleRowClick={handleRowClick}
+        visibleToUser={visibleToUser}
       />
     ) : (
       <EmptyList />
     )}
-    <Fab
-      color="primary"
-      aria-label="Add"
-      className={classes.button}
-      onClick={handleButtonClick}
-    >
-      <AddIcon />
-    </Fab>
+    {visibleToUser && (
+      <Fab
+        color="primary"
+        aria-label="Add"
+        className={classes.button}
+        onClick={handleButtonClick}
+      >
+        <AddIcon />
+      </Fab>
+    )}
   </div>
 );
 
