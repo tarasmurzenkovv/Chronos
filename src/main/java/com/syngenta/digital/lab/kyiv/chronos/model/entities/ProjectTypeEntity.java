@@ -1,6 +1,5 @@
 package com.syngenta.digital.lab.kyiv.chronos.model.entities;
 
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -16,7 +15,6 @@ import javax.persistence.Column;
 @Table(name = "PROJECT_TYPE")
 @Getter
 @Setter
-@EqualsAndHashCode
 @ToString
 public class ProjectTypeEntity {
     @Id

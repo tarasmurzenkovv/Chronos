@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -27,10 +26,7 @@ public class ReportingService {
     public ReportingResponse generateReport(String reportTypeAsString, ReportingRequest reportingRequest) {
         reportParameterValidationService.validate(reportingRequest);
         ReportType reportType = ReportType.from(reportTypeAsString);
-        List<Report> reports = reportingRequest.getUserIds()
-                .stream()
-                .flatMap(userId -> userRepository.generateReport(userId, reportingRequest.getRange()))
-                .collect(Collectors.toList());
+        List<Report> reports = userRepository.generateReport(reportingRequest);
 
         switch (reportType) {
             case CSV:
