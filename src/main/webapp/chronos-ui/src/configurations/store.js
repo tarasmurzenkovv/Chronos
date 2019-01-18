@@ -2,7 +2,7 @@ import React from 'react';
 import {applyMiddleware, compose, createStore} from 'redux';
 import thunk from 'redux-thunk';
 import {combineEpics, createEpicMiddleware} from 'redux-observable';
-import {persistStore, persistReducer} from 'redux-persist';
+import {persistReducer, persistStore} from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 import autoMergeLevel2 from 'redux-persist/lib/stateReconciler/autoMergeLevel2';
 import {createBrowserHistory} from 'history';
@@ -12,18 +12,18 @@ import {composeWithDevTools} from 'redux-devtools-extension';
 /* eslint import/no-extraneous-dependencies: ["error", {"devDependencies": true}] */
 import {whyDidYouUpdate} from 'why-did-you-update';
 
+import timesheetEpic from 'modules/timesheet/epics';
 import createRootReducer from './reducers';
 
 import config from './config';
 import logger from './logger';
-import templateEpic from '../modules/authorization/epics';
 
 const isDevelopment = process.env.NODE_ENV === 'development';
 const isEnableLogs = config.enable_logs;
 const isEnableDevtools = config.enable_devtools;
 const isEnableUpdateAnalytics = config.enable_update_analytics;
 
-const rootEpic = combineEpics(templateEpic);
+const rootEpic = combineEpics(timesheetEpic);
 
 const persistConfig = {
   key: 'root',

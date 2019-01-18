@@ -10,14 +10,12 @@ export const setMonthFilter = (month: any) => (dispatch) => {
   const startOfMonth = month.startOf('month').format(defaultDateFormatApi);
   const endOfMonth = month.endOf('month').format(defaultDateFormatApi);
 
-  return Promise.resolve(
-    dispatch({
-      type: SET_MONTH_FILTER,
-      payload: {
-        month: moment(month).format('MMM YYYY'),
-        startOfMonth,
-        endOfMonth
-      }
-    })
-  );
+  return dispatch({
+    type: SET_MONTH_FILTER,
+    payload: {
+      month: moment(month).format('MMM YYYY'),
+      startOfMonth,
+      endOfMonth
+    }
+  });
 };

@@ -1,5 +1,7 @@
 import requestsStatuses from './requestsStatuses';
+import {isUserAdmin} from './isUserAdmin';
+import {isVisibleToUser} from './isVisibleToUser';
 
 export * from './createReducer';
 
-export {requestsStatuses};
+export {isUserAdmin, isVisibleToUser, requestsStatuses};

@@ -14,10 +14,10 @@ export default ({email, password}) => (dispatch) => {
   dispatch({type: SIGN_IN.pending});
 
   return apiCall(SIGN_IN_URL, apiCallParams)
-    .then(({data: {id, email, first_name, last_name}}) =>
+    .then(({data}) =>
       dispatch({
         type: SIGN_IN.success,
-        payload: {user: {id, email, first_name, last_name}}
+        payload: {user: data}
       })
     )
     .catch((err) => {

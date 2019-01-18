@@ -11,24 +11,12 @@ export type TState = Readonly<{
   errorCodes: number[];
   errorMessage: string | null;
   status: string;
-  user: {
-    id: number | null;
-    email: string;
-    first_name: string;
-    last_name: string;
-  };
 }>;
 
 const defaultState: TState = {
   errorCodes: [],
   errorMessage: null,
-  status: requestsStatuses.default,
-  user: {
-    id: null,
-    email: '',
-    first_name: '',
-    last_name: ''
-  }
+  status: requestsStatuses.default
 };
 
 const signUp = createReducer(defaultState, {
@@ -62,10 +50,9 @@ const signUp = createReducer(defaultState, {
     errorMessage: error_message
   }),
 
-  [SIGN_IN.success]: (state: TState, {payload: {user}}) => ({
+  [SIGN_IN.success]: (state: TState) => ({
     ...state,
-    status: requestsStatuses.success,
-    user
+    status: requestsStatuses.success
   })
 });
 

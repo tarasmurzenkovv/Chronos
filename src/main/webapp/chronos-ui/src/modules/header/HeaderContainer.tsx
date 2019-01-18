@@ -1,4 +1,4 @@
-import {compose, withState, withHandlers} from 'recompose';
+import {compose, withHandlers, withState} from 'recompose';
 
 import Header from './Header';
 
