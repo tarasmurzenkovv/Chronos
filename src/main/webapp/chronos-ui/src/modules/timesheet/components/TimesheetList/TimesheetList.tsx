@@ -14,6 +14,7 @@ import {
   withStyles,
   WithStyles
 } from '@material-ui/core';
+import EditFilledIcon from '@material-ui/icons/Edit';
 import DeleteOutlinedIcon from '@material-ui/icons/DeleteOutlined';
 import AddIcon from '@material-ui/icons/Add';
 import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
@@ -34,19 +35,30 @@ interface IList extends IListItemTimesheet, IListItemProject {}
 interface IProps extends WithStyles<typeof styles> {
   list: IList[];
   month: string;
+  isIconVisible: boolean;
+  hoveredRow: number;
 
   handleAddMonthFilterButtonClick(): void;
   handleMinusMonthFilterButtonClick(): void;
   handleButtonClick(): void;
   handleDeleteButtonClick(id: number): void;
+  handleEditButtonClick(item: any): void;
+  handleRowEnter: (id: number) => (id: React.SyntheticEvent) => void;
+  handleRowClick: (id: number) => (id: React.SyntheticEvent) => void;
+  handleRowLeave(item: any): void;
 }
 
 const TimesheetList: React.FunctionComponent<IProps> = ({
   classes,
   handleButtonClick,
   handleDeleteButtonClick,
+  handleEditButtonClick,
+  handleRowClick,
   list,
   month,
+  hoveredRow,
+  handleRowEnter,
+  handleRowLeave,
   handleAddMonthFilterButtonClick,
   handleMinusMonthFilterButtonClick
 }) => (
@@ -89,7 +101,13 @@ const TimesheetList: React.FunctionComponent<IProps> = ({
             </TableHead>
             <TableBody>
               {list.map((item) => (
-                <TableRow className={classes.row} key={item.task_id}>
+                <TableRow
+                  className={classes.row}
+                  key={item.task_id}
+                  onMouseEnter={handleRowEnter(item.task_id)}
+                  onMouseLeave={handleRowLeave}
+                  onClick={handleRowClick(item.task_id)}
+                >
                   <TableCell align="center" className={classes.dateCell}>
                     <div className={classes.dateCellDay}>
                       {moment(item.reporting_date, defaultDateFormatApi).format(
@@ -118,14 +136,26 @@ const TimesheetList: React.FunctionComponent<IProps> = ({
                   <TableCell align="left" className={classes.commentCell}>
                     {item.comments}
                   </TableCell>
-                  <TableCell align="center">
-                    <IconButton
-                      aria-label="Delete"
-                      onClick={() => handleDeleteButtonClick(item.task_id)}
-                      className={classes.deleteBtn}
-                    >
-                      <DeleteOutlinedIcon className={classes.deleteIcon} />
-                    </IconButton>
+
+                  <TableCell align="center" className={classes.actionCell}>
+                    {hoveredRow === item.task_id && (
+                      <IconButton
+                        aria-label="Edit"
+                        onClick={() => handleEditButtonClick(item)}
+                        className={classes.editBtn}
+                      >
+                        <EditFilledIcon />
+                      </IconButton>
+                    )}
+                    {hoveredRow === item.task_id && (
+                      <IconButton
+                        aria-label="Delete"
+                        onClick={() => handleDeleteButtonClick(item.task_id)}
+                        className={classes.deleteBtn}
+                      >
+                        <DeleteOutlinedIcon />
+                      </IconButton>
+                    )}
                   </TableCell>
                 </TableRow>
               ))}

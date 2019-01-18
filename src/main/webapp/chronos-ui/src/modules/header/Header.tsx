@@ -11,8 +11,8 @@ import {
 import MenuIcon from '@material-ui/icons/Menu';
 import SettingsIcon from '@material-ui/icons/Settings';
 import CalendarIcon from '@material-ui/icons/CalendarToday';
-import mainLogo from 'shared/assets/img/syngentaLogo.svg';
 import * as theme from './Header.scss';
+import mainLogo from 'shared/assets/img/syngentaLogo.svg';
 import styles from './styles';
 
 interface IProps extends WithStyles<typeof styles> {

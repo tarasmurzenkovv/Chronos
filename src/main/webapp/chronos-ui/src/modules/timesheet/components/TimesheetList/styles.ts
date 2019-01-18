@@ -12,11 +12,14 @@ const styles = () =>
       height: '20px',
       paddingRight: '24px',
       color: 'rgba(173, 181, 199, 0.87)',
-      borderRight: '1px solid rgb(224, 224, 224)'
+      borderRight: '1px solid rgb(224, 224, 224)',
+      '&:last-child': {
+        padding: '0 32px'
+      }
     },
     row: {
       padding: 0,
-      '&:hover': {
+      '&:hover td:not(:first-child)': {
         backgroundColor: 'rgba(25, 25, 100, 0.07)'
       }
     },
@@ -69,16 +72,19 @@ const styles = () =>
       transform: 'translate(-25%, -25%)'
     },
     deleteBtn: {
+      color: '#e32657',
       '&:hover': {
         backgroundColor: 'transparent'
       }
     },
-    deleteIcon: {
+    editBtn: {
       color: 'rgba(173, 181, 199, 0.87)',
       '&:hover': {
-        color: '#e32657',
         backgroundColor: 'transparent'
       }
+    },
+    actionCell: {
+      padding: '0px!important'
     }
   });
 
