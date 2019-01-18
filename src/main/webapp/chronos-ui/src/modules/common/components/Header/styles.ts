@@ -36,12 +36,6 @@ const styles = createStyles({
   iconSettings: {
     color: '#fff',
     fontSize: '20px'
-  },
-  menuButton: {
-    cursor: 'none'
-  },
-  iconMenu: {
-    color: '#d6d6e3'
   }
 });
 

@@ -7,16 +7,19 @@ import {
   SIGN_IN
 } from '../constants';
 
+export interface IUser {
+  id: number | string;
+  email: string;
+  first_name: string;
+  last_name: string;
+  role: string;
+}
+
 export type TState = Readonly<{
   errorCodes: number[];
   errorMessage: string | null;
   status: string;
-  user: {
-    id: number | null;
-    email: string;
-    first_name: string;
-    last_name: string;
-  };
+  user: IUser;
 }>;
 
 const defaultState: TState = {
@@ -24,10 +27,11 @@ const defaultState: TState = {
   errorMessage: null,
   status: requestsStatuses.default,
   user: {
-    id: null,
+    id: '',
     email: '',
     first_name: '',
-    last_name: ''
+    last_name: '',
+    role: ''
   }
 };
 

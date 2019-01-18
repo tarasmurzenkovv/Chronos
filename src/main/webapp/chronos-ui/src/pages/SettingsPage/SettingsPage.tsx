@@ -1,10 +1,5 @@
 import * as React from 'react';
-import Header from 'modules/common/Header';
 
-const SettingsPage: React.FunctionComponent = () => (
-  <div>
-    <Header />
-  </div>
-);
+const SettingsPage: React.FunctionComponent = () => <div>Settings</div>;
 
 export default SettingsPage;
