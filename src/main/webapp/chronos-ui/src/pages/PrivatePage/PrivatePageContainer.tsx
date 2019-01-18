@@ -6,6 +6,4 @@ const mapStateToProps = (state) => ({
   id: state.auth.signIn.user.id
 });
 
-const mapDispatchToProps = {};
-
 export default connect(mapStateToProps)(PrivatePage);
