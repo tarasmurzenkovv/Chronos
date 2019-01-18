@@ -8,7 +8,9 @@ import Drawer from './Drawer';
 
 const mapStateToProps = (state) => ({
   isOpen: state.common.drawer.isOpen,
-  list: sortBy(state.common.users.list, ['first_name'])
+  list: sortBy(state.common.users.list, ['first_name', 'last_name']),
+  selectedId: state.common.users.selectedId,
+  userId: state.auth.signIn.user.id
 });
 
 const mapDispatchToProps = {
@@ -18,7 +20,9 @@ const mapDispatchToProps = {
 };
 
 interface IProps {
-  fetchUsersList: () => void;
+  fetchUsersList: () => Promise<any>;
+  selectUserInUserlist: (userId: number) => void;
+  userId: number;
 }
 
 export default compose(
@@ -38,7 +42,9 @@ export default compose(
 
   lifecycle<IProps, {}>({
     componentDidMount() {
-      this.props.fetchUsersList();
+      const {fetchUsersList, selectUserInUserlist, userId} = this.props;
+
+      fetchUsersList().then(() => selectUserInUserlist(userId));
     }
   })
 )(Drawer);
