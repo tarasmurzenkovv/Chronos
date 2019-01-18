@@ -1,7 +1,7 @@
 import {createReducer} from 'shared/utils/createReducer';
 import requestsStatuses from 'shared/utils/requestsStatuses';
 
-import {IUser} from 'modules/authorization/reducers/signIn';
+import {IUser} from './user';
 
 import {FETCH_USERS_LIST, SELECT_USER_IN_USERLIST} from '../actions/constants';
 
@@ -17,7 +17,7 @@ const defaultState: TState = {
   list: []
 };
 
-const timesheet = createReducer(defaultState, {
+const usersList = createReducer(defaultState, {
   [FETCH_USERS_LIST.pending]: (state: TState) => ({
     ...state,
     status: requestsStatuses.pending
@@ -40,4 +40,4 @@ const timesheet = createReducer(defaultState, {
   })
 });
 
-export default timesheet;
+export default usersList;

@@ -9,7 +9,7 @@ import {
   withStyles
 } from '@material-ui/core';
 import classnames from 'classnames';
-import {IUser} from 'modules/authorization/reducers/signIn';
+import {IUser} from 'modules/common/reducers/user';
 import styles from './styles';
 
 interface IProps extends WithStyles<typeof styles> {

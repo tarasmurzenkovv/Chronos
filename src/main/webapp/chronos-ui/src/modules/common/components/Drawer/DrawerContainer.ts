@@ -8,9 +8,9 @@ import Drawer from './Drawer';
 
 const mapStateToProps = (state) => ({
   isOpen: state.common.drawer.isOpen,
-  list: sortBy(state.common.users.list, ['first_name', 'last_name']),
-  selectedId: state.common.users.selectedId,
-  userId: state.auth.signIn.user.id
+  list: sortBy(state.common.usersList.list, ['first_name', 'last_name']),
+  selectedId: state.common.usersList.selectedId,
+  userId: state.common.user.id
 });
 
 const mapDispatchToProps = {

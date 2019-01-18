@@ -5,8 +5,8 @@ import {timesheetByDateUrl} from '../../services';
 
 export const fetchTimesheetListByDateApi = () => (dispatch, getState) => {
   const state = getState();
-  const userId = state.auth.signIn.user.id;
-  const selectedId = state.common.users.selectedId;
+  const userId = state.common.user.id;
+  const selectedId = state.common.usersList.selectedId;
   const startOfMonth = state.timesheet.filters.date.startOfMonth;
   const endOfMonth = state.timesheet.filters.date.endOfMonth;
 

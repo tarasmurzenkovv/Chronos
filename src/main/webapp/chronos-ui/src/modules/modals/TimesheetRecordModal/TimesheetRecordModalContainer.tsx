@@ -12,7 +12,7 @@ import TimesheetRecordModal from './TimesheetRecordModal';
 
 const mapStateToProps = (state) => ({
   list: state.projects.list,
-  userId: state.auth.signIn.user.id
+  userId: state.common.user.id
 });
 
 const mapDispatchToProps = {

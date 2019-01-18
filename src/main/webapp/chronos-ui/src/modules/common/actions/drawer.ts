@@ -10,7 +10,7 @@ export const selectUserInUserlist = (selectedId: number) => (
   dispatch,
   getState
 ) => {
-  const selectedIdStore = getState().common.users.selectedId;
+  const selectedIdStore = getState().common.usersList.selectedId;
 
   if (selectedId === selectedIdStore) {
     return null;

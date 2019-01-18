@@ -12,7 +12,7 @@ import TimesheetRecordModal from './TimesheetEditModal';
 
 const mapStateToProps = (state) => ({
   list: state.projects.list,
-  userId: state.auth.signIn.user.id,
+  userId: state.common.user.id,
 
   selectedId: state.timesheet.selectedId,
   selectedItemData: state.timesheet.list.find(

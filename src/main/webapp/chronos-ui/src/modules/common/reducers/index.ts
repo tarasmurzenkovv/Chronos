@@ -1,9 +1,11 @@
 import {combineReducers} from 'redux';
 
 import drawer from './drawer';
-import users from './users';
+import user from './user';
+import usersList from './usersList';
 
 export default combineReducers({
   drawer,
-  users
+  user,
+  usersList
 });

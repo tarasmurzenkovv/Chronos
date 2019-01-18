@@ -6,9 +6,7 @@ import Header from './Header';
 
 const mapStateToProps = (state) => ({
   pathname: state.router.location.pathname,
-  userName: `${state.auth.signIn.user.first_name} ${
-    state.auth.signIn.user.last_name
-  }`,
+  userName: `${state.common.user.first_name} ${state.common.user.last_name}`,
   isAdmin: isUserAdmin(state),
   isDrawerOpen: state.common.drawer.isOpen
 });
