@@ -197,7 +197,7 @@ public class UserControllerIntegrationTest extends BaseIntegrationTest {
         Assertions.assertThat(actualResponse.getData().getEmail()).isEqualTo("email@email.com");
         Assertions.assertThat(actualResponse.getData().getFirstName()).isEqualTo("First_name");
         Assertions.assertThat(actualResponse.getData().getLastName()).isEqualTo("Last_name");
-        Assertions.assertThat(actualResponse.getData().getPassword()).isEqualTo("*****");
+        Assertions.assertThat(actualResponse.getData().getPassword()).isNull();
     }
 
     @Test
@@ -225,7 +225,7 @@ public class UserControllerIntegrationTest extends BaseIntegrationTest {
         Assertions.assertThat(actualResponse.getData().getEmail()).isEqualTo("email@emial.com");
         Assertions.assertThat(actualResponse.getData().getFirstName()).isEqualTo("First_name");
         Assertions.assertThat(actualResponse.getData().getLastName()).isEqualTo("Last_name");
-        Assertions.assertThat(actualResponse.getData().getPassword()).isEqualTo("*****");
+        Assertions.assertThat(actualResponse.getData().getPassword()).isNull();
     }
 
     @Test

@@ -7,6 +7,8 @@ import com.syngenta.digital.lab.kyiv.chronos.model.entities.UserEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+
 @Service
 @RequiredArgsConstructor
 public class TaskMapper {
@@ -24,7 +26,6 @@ public class TaskMapper {
         taskEntity.setReportingDate(taskDto.getReportingDate());
         taskEntity.setSpentTime(taskDto.getSpentTime());
         taskEntity.setComments(taskDto.getComments());
-
         return taskEntity;
     }
 

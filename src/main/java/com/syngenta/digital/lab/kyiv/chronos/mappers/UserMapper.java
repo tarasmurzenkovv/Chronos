@@ -10,7 +10,6 @@ import org.springframework.util.StringUtils;
 @Service
 @RequiredArgsConstructor
 public class UserMapper {
-    private static final String PASSWORD_MASK = "*****";
     private static final String DEFAULT_JOB_TITLE = "Developer";
     private final UserRoleRepository userRoleRepository;
 
@@ -33,7 +32,7 @@ public class UserMapper {
         userDto.setEmail(userEntity.getUserEmail());
         userDto.setFirstName(userEntity.getFirstName());
         userDto.setLastName(userEntity.getLastName());
-        userDto.setPassword(PASSWORD_MASK);
+        userDto.setPassword(null);
         userDto.setRole(userEntity.getUserRoleEntity().getRole());
         userDto.setJobTitle(StringUtils.isEmpty(userEntity.getJobTitle())? DEFAULT_JOB_TITLE : userEntity.getJobTitle());
 

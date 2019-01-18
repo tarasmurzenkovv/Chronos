@@ -22,7 +22,6 @@ import javax.persistence.JoinColumn;
 @Table(name = "PROJECT")
 @Getter
 @Setter
-@EqualsAndHashCode
 @ToString
 public class ProjectEntity {
     @Id

@@ -31,19 +31,28 @@ public class XlsViewRenderer implements ViewRenderer {
         headerRow.createCell(0).setCellValue("Project name");
         headerRow.createCell(1).setCellValue("First name");
         headerRow.createCell(2).setCellValue("Last name");
-        headerRow.createCell(3).setCellValue("Spent time");
+        headerRow.createCell(3).setCellValue("Job Title");
+        headerRow.createCell(4).setCellValue("Spent time");
+        headerRow.createCell(5).setCellValue("Reporting date");
+        headerRow.createCell(6).setCellValue("Comments");
 
         for (final Report report : reports) {
             Row row = timeReporting.createRow(rowIndex++);
             row.createCell(0).setCellValue(report.getProjectName());
             row.createCell(1).setCellValue(report.getFirstName());
             row.createCell(2).setCellValue(report.getLastName());
-            row.createCell(3).setCellValue(report.getSpentTime());
+            row.createCell(3).setCellValue(report.getJobTitle());
+            row.createCell(4).setCellValue(report.getSpentTime());
+            row.createCell(5).setCellValue(DateTimeUtils.format(report.getReportingDate(), "dd_MM_YYYY"));
+            row.createCell(6).setCellValue(report.getComments());
         }
         timeReporting.autoSizeColumn(0);
         timeReporting.autoSizeColumn(1);
         timeReporting.autoSizeColumn(2);
         timeReporting.autoSizeColumn(3);
+        timeReporting.autoSizeColumn(4);
+        timeReporting.autoSizeColumn(5);
+        timeReporting.autoSizeColumn(6);
 
         try (ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream()) {
             workbook.write(byteArrayOutputStream);
