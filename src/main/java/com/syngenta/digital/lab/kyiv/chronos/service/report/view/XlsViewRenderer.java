@@ -13,6 +13,8 @@ import org.springframework.stereotype.Service;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -21,12 +23,24 @@ public class XlsViewRenderer implements ViewRenderer {
 
     @Override
     public synchronized ReportingResponse writeToFile(List<Report> reports, Range range) {
-        int rowIndex = 1;
+        int rowIndex = 0;
         Workbook workbook = new XSSFWorkbook();
-        String fileName = String.format("time_report_%s_%s.xlsx",
-                DateTimeUtils.format(range.getStart(), "dd_MM_yyyy"),
-                DateTimeUtils.format(range.getEnd(), "dd_MM_yyyy"));
+        String fileName = String.format("time_report_%s.xlsx",
+                DateTimeUtils.format(LocalDate.now(), "dd_MM_YYYY"));
         Sheet timeReporting = workbook.createSheet("time_reporting");
+
+        Row generationDateRow = timeReporting.createRow(rowIndex++);
+        generationDateRow.createCell(0)
+                .setCellValue(String.format("Generation Date: %s", DateTimeUtils.format(LocalDateTime.now(), "dd/MM/yyyy HH:mm")));
+
+        Row startDateRow = timeReporting.createRow(rowIndex++);
+        startDateRow.createCell(0)
+                .setCellValue(String.format("Start date: %s", DateTimeUtils.format(range.getStart(), "dd/MM/yyyy")));
+
+        Row endDateRow = timeReporting.createRow(rowIndex++);
+        endDateRow.createCell(0)
+                .setCellValue(String.format("End date: %s", DateTimeUtils.format(range.getEnd(), "dd/MM/yyyy")));
+
         Row headerRow = timeReporting.createRow(rowIndex++);
         headerRow.createCell(0).setCellValue("Project name");
         headerRow.createCell(1).setCellValue("First name");

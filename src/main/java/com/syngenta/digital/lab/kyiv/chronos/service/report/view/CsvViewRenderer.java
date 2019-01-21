@@ -12,27 +12,34 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.io.StringWriter;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
 public class CsvViewRenderer implements ViewRenderer {
     private static final int ERROR_CODE = 16;
-    private static final String[] HEADERS = new String[]{"Project name", "First name", "Last name", "Job title",
-            "Spent time", "Reporting date(YYYY-MM-DD)" , "Comments"};
 
     @Override
     public ReportingResponse writeToFile(List<Report> reports, Range range) {
-        String fileName = String.format("time_report_%s_%s.csv",
-                DateTimeUtils.format(range.getStart(), "dd_MM_yyyy"),
-                DateTimeUtils.format(range.getEnd(), "dd_MM_yyyy"));
+        String fileName = getFileName();
 
         try (StringWriter writer = new StringWriter();
-             CSVPrinter printer = new CSVPrinter(writer, CSVFormat.DEFAULT.withHeader(HEADERS))) {
+             CSVPrinter printer = new CSVPrinter(writer, CSVFormat.DEFAULT)) {
+            printer.printRecord(String.format("Generation Date: %s", DateTimeUtils.format(LocalDateTime.now(), "dd/MM/yyyy HH:mm")));
+            printer.printRecord(String.format("Start date: %s", DateTimeUtils.format(range.getStart(), "dd/MM/yyyy")));
+            printer.printRecord(String.format("End date: %s", DateTimeUtils.format(range.getEnd(), "dd/MM/yyyy")));
+            printer.printRecord("Project name", "First name", "Last name", "Job title",
+                    "Spent time", "Reporting date(YYYY-MM-DD)" , "Comments");
             reports.forEach(report -> CsvViewRenderer.printRecord(report, printer));
             return new ReportingResponse(fileName, writer.toString().getBytes());
         } catch (IOException e) {
             throw new ReportingException(ERROR_CODE, e.getMessage());
         }
+    }
+
+    private String getFileName() {
+        return String.format("time_report_%s.csv", DateTimeUtils.format(LocalDate.now(), "dd_MM_YYYY"));
     }
 
     @SneakyThrows

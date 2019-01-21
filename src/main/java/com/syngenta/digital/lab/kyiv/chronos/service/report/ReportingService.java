@@ -11,6 +11,7 @@ import com.syngenta.digital.lab.kyiv.chronos.service.report.view.ViewRenderer;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -42,6 +43,9 @@ public class ReportingService {
     }
 
     private void freezeTasks(List<Report> reports) {
+        if (CollectionUtils.isEmpty(reports)) {
+            throw new ReportingException(ERROR_CODE, "No tasks have been found for the report generations.");
+        }
         List<Long> taskIds = reports.stream().map(Report::getTaskId).collect(Collectors.toList());
         taskRepository.freezeTasks(taskIds);
     }
