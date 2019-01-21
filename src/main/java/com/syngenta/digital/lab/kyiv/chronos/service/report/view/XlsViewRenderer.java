@@ -5,7 +5,6 @@ import com.syngenta.digital.lab.kyiv.chronos.model.dto.reporting.Report;
 import com.syngenta.digital.lab.kyiv.chronos.model.dto.reporting.ReportingResponse;
 import com.syngenta.digital.lab.kyiv.chronos.model.exceptions.ReportingException;
 import com.syngenta.digital.lab.kyiv.chronos.utils.DateTimeUtils;
-import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.CreationHelper;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -17,8 +16,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.util.Date;
 import java.util.List;
 
 @Service
@@ -29,9 +26,6 @@ public class XlsViewRenderer implements ViewRenderer {
     public synchronized ReportingResponse writeToFile(List<Report> reports, Range range) {
         int rowIndex = 0;
         Workbook workbook = new XSSFWorkbook();
-        CreationHelper creationHelper = workbook.getCreationHelper();
-        CellStyle cellStyleDate = workbook.createCellStyle();
-        cellStyleDate.setDataFormat(creationHelper.createDataFormat().getFormat("dd.mm.yyyy"));
 
         String fileName = String.format("time_report_%s.xlsx",
                 DateTimeUtils.format(LocalDate.now(), "dd_MM_YYYY"));
@@ -68,9 +62,7 @@ public class XlsViewRenderer implements ViewRenderer {
             row.createCell(2).setCellValue(report.getLastName());
             row.createCell(3).setCellValue(report.getJobTitle());
             row.createCell(4).setCellValue(report.getSpentTime());
-            Date date = Date.from(report.getReportingDate().atStartOfDay(ZoneId.systemDefault()).toInstant());
-            row.createCell(5).setCellStyle(cellStyleDate);
-            row.createCell(5).setCellValue(date);
+            row.createCell(5).setCellValue(DateTimeUtils.format(report.getReportingDate(), "dd/MM/YYYY"));
             row.createCell(6).setCellValue(report.getComments());
         }
         timeReporting.autoSizeColumn(0);
