@@ -5,6 +5,7 @@ import com.syngenta.digital.lab.kyiv.chronos.model.dto.reporting.ReportingReques
 import com.syngenta.digital.lab.kyiv.chronos.model.dto.reporting.Report;
 import com.syngenta.digital.lab.kyiv.chronos.model.dto.reporting.ReportingResponse;
 import com.syngenta.digital.lab.kyiv.chronos.model.exceptions.ReportingException;
+import com.syngenta.digital.lab.kyiv.chronos.repositories.TaskRepository;
 import com.syngenta.digital.lab.kyiv.chronos.repositories.UserRepository;
 import com.syngenta.digital.lab.kyiv.chronos.service.report.view.ViewRenderer;
 import lombok.RequiredArgsConstructor;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -20,6 +22,7 @@ public class ReportingService {
     private final ViewRenderer csvViewRenderer;
     private final ViewRenderer xlsViewRenderer;
     private final UserRepository userRepository;
+    private final TaskRepository taskRepository;
     private final ReportParameterValidationService reportParameterValidationService;
 
     @Transactional
@@ -27,7 +30,7 @@ public class ReportingService {
         reportParameterValidationService.validate(reportingRequest);
         ReportType reportType = ReportType.from(reportTypeAsString);
         List<Report> reports = userRepository.generateReport(reportingRequest);
-
+        freezeTasks(reports);
         switch (reportType) {
             case CSV:
                 return csvViewRenderer.writeToFile(reports, reportingRequest.getRange());
@@ -36,5 +39,10 @@ public class ReportingService {
             default:
                 throw new ReportingException(ERROR_CODE, "No suitable report type is provided");
         }
+    }
+
+    private void freezeTasks(List<Report> reports) {
+        List<Long> taskIds = reports.stream().map(Report::getTaskId).collect(Collectors.toList());
+        taskRepository.freezeTasks(taskIds);
     }
 }

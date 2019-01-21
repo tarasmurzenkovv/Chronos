@@ -22,7 +22,10 @@ public interface TaskRepository extends JpaRepository<TaskEntity, Long> {
                             @Param("startDate") LocalDate startDate,
                             @Param("endDate") LocalDate endDate);
 
-/*    @Modifying
-    @Query("update TaskEntity task  where task.id in:taskIds")
-    void freezeTasks(@Param("taskIds") List<Long> taskIds);*/
+    @Modifying
+    @Query("update TaskEntity task set task.editable=false where task.id in :taskIds")
+    void freezeTasks(@Param("taskIds") List<Long> taskIds);
+
+    @Query("select task.editable from TaskEntity task where task.id=:taskId ")
+    boolean isEditable(@Param("taskId") Long taskId);
 }

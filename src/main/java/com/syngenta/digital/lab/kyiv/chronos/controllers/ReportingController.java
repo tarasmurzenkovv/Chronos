@@ -1,8 +1,10 @@
 package com.syngenta.digital.lab.kyiv.chronos.controllers;
 
 import com.syngenta.digital.lab.kyiv.chronos.model.dto.reporting.Range;
+import com.syngenta.digital.lab.kyiv.chronos.model.dto.reporting.ReportType;
 import com.syngenta.digital.lab.kyiv.chronos.model.dto.reporting.ReportingRequest;
 import com.syngenta.digital.lab.kyiv.chronos.model.dto.reporting.ReportingResponse;
+import com.syngenta.digital.lab.kyiv.chronos.model.exceptions.ReportingException;
 import com.syngenta.digital.lab.kyiv.chronos.service.report.ReportingService;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
@@ -39,11 +41,26 @@ public class ReportingController {
                                                       @DateTimeFormat(pattern = "dd/MM/yyyy") LocalDate end) {
         ReportingRequest reportingRequest = new ReportingRequest(new Range(start, end), userIds);
         ReportingResponse reportingResponse = reportingService.generateReport(reportType, reportingRequest);
-        HttpHeaders responseHeaders = new HttpHeaders();
-        responseHeaders.setContentType(MediaType.parseMediaType("application/csv"));
+        HttpHeaders responseHeaders = buildHeaders(reportType);
         responseHeaders.set(HttpHeaders.CONTENT_DISPOSITION, String.format("attachment; filename=%s", reportingResponse.getFileName()));
         return ResponseEntity.ok()
                 .headers(responseHeaders)
                 .body(new ByteArrayResource(reportingResponse.getContent()));
+    }
+
+    private HttpHeaders buildHeaders(String reportTypeAsString) {
+        HttpHeaders responseHeaders = new HttpHeaders();
+        ReportType reportType = ReportType.from(reportTypeAsString);
+        switch (reportType) {
+            case XLS:
+                responseHeaders.setContentType(MediaType.parseMediaType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"));
+                break;
+            case CSV:
+                responseHeaders.setContentType(MediaType.parseMediaType("application/csv"));
+                break;
+            default:
+                throw new ReportingException(10, "No suitable reporting type is provided");
+        }
+        return responseHeaders;
     }
 }

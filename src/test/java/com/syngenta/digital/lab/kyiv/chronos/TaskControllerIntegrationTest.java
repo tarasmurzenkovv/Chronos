@@ -9,6 +9,7 @@ import com.jayway.restassured.http.ContentType;
 import com.jayway.restassured.response.Response;
 import com.syngenta.digital.lab.kyiv.chronos.model.dto.TagDto;
 import com.syngenta.digital.lab.kyiv.chronos.model.dto.TaskDto;
+import com.syngenta.digital.lab.kyiv.chronos.model.response.ErrorResponsePayload;
 import com.syngenta.digital.lab.kyiv.chronos.model.response.GeneralResponse;
 import com.syngenta.digital.lab.kyiv.chronos.utils.JsonUtils;
 import lombok.SneakyThrows;
@@ -25,6 +26,32 @@ import static com.github.springtestdbunit.assertion.DatabaseAssertionMode.NON_ST
 
 @DatabaseTearDown("/dbTearDown.xml")
 public class TaskControllerIntegrationTest extends BaseIntegrationTest {
+
+    @Test
+    @SneakyThrows
+    @DatabaseSetup(value = "/TaskControllerIntegrationTest/shouldNotEditFrozenTask/dbSetup.xml")
+    public void shouldNotEditFrozenTask() {
+
+        Response response = RestAssured
+                .given()
+                .contentType(ContentType.JSON)
+                .body(JsonUtils.readFromJson("/TaskControllerIntegrationTest/shouldNotEditFrozenTask/updateTheExistingTaskRequest.json", TaskDto.class))
+                .put("/api/v0/task")
+                .then()
+                .extract()
+                .response();
+
+        GeneralResponse<ErrorResponsePayload> actualResponse = this.objectMapper.readValue(response.getBody().asString(), new TypeReference<GeneralResponse<ErrorResponsePayload>>() {
+        });
+
+
+        GeneralResponse<ErrorResponsePayload> expectedResponse = JsonUtils.readFromJson(
+                "/TaskControllerIntegrationTest/shouldNotEditFrozenTask/expectedResponse.json",
+                new TypeReference<>() {
+                });
+
+        Assertions.assertThat(actualResponse).isEqualTo(expectedResponse);
+    }
 
     @Test
     @SneakyThrows
@@ -202,8 +229,8 @@ public class TaskControllerIntegrationTest extends BaseIntegrationTest {
 
     @Test
     @SneakyThrows
-    @DatabaseSetup(value = "/TaskControllerIntegrationTest/shouldUpdateTheExistingTask/dbSetup.xml")
-    @ExpectedDatabase(value = "/TaskControllerIntegrationTest/shouldUpdateTheExistingTask/expectedDataBase.xml",
+    @DatabaseSetup(value = "/TaskControllerIntegrationTest/shouldNotEditFrozenTask/dbSetup.xml")
+    @ExpectedDatabase(value = "/TaskControllerIntegrationTest/shouldNotEditFrozenTask/expectedDataBase.xml",
             assertionMode = NON_STRICT_UNORDERED)
     public void shouldDeleteTheExistingTask() {
 

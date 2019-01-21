@@ -14,7 +14,7 @@ import java.time.LocalDate;
 @Setter
 @ToString
 public class Report {
-    private Long projectId;
+    private Long taskId;
     private String projectName;
     private String firstName;
     private String lastName;
@@ -22,6 +22,4 @@ public class Report {
     private Long spentTime;
     private LocalDate reportingDate;
     private String comments;
-
-
 }

@@ -16,6 +16,7 @@ import com.syngenta.digital.lab.kyiv.chronos.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -48,6 +49,12 @@ public class TaskService {
 
     private TaskEntity saveTask(TaskDto taskDto, UserEntity userEntity, ProjectEntity projectEntity) {
         TaskEntity taskEntity = taskMapper.mapToEntity(taskDto, userEntity, projectEntity);
+        Long taskId = taskEntity.getId();
+        if (taskId != null) {
+            if (!taskRepository.isEditable(taskId)) {
+                throw new TaskException(ERROR_CODE, String.format("The task with id '%s' is already frozen. Cannot modify it.", taskId));
+            }
+        }
         return taskRepository.save(taskEntity);
     }
 
