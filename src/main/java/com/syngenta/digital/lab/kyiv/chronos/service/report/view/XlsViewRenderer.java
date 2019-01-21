@@ -5,7 +5,6 @@ import com.syngenta.digital.lab.kyiv.chronos.model.dto.reporting.Report;
 import com.syngenta.digital.lab.kyiv.chronos.model.dto.reporting.ReportingResponse;
 import com.syngenta.digital.lab.kyiv.chronos.model.exceptions.ReportingException;
 import com.syngenta.digital.lab.kyiv.chronos.utils.DateTimeUtils;
-import org.apache.poi.ss.usermodel.CreationHelper;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;

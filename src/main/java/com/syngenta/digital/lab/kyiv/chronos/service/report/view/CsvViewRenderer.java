@@ -45,7 +45,7 @@ public class CsvViewRenderer implements ViewRenderer {
     @SneakyThrows
     private static void printRecord(Report report, CSVPrinter csvPrinter) {
         csvPrinter.printRecord(report.getProjectName(), report.getFirstName(), report.getLastName(),
-                report.getJobTitle(), report.getSpentTime(), DateTimeUtils.format(report.getReportingDate(), "dd.MM.YYYY"),
+                report.getJobTitle(), report.getSpentTime(), DateTimeUtils.format(report.getReportingDate(), "dd/MMYYYY"),
                 report.getComments());
     }
 }
