@@ -1,0 +1,7 @@
+{
+  "error": true,
+  "data": {
+    "error_code": 17,
+    "error_message": "The list of the user id cannot be empty for the report"
+  }
+}

@@ -3,7 +3,11 @@ package com.syngenta.digital.lab.kyiv.chronos;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.springtestdbunit.DbUnitTestExecutionListener;
 import com.jayway.restassured.RestAssured;
+import com.jayway.restassured.response.Response;
+import com.jayway.restassured.response.ResponseBody;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.http.HttpStatus;
+import org.assertj.core.api.Assertions;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -34,5 +38,15 @@ public class BaseIntegrationTest {
     @Test
     public void noOp() {
         log.info("No OP");
+    }
+
+    public static void validateBadResponse(Response response) {
+        Assertions.assertThat(response).isNotNull();
+        Assertions.assertThat(response.getStatusCode()).isNotNull();
+        Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.SC_BAD_REQUEST);
+        ResponseBody body = response.getBody();
+        Assertions.assertThat(body).isNotNull();
+        String asGeneralResponseString = body.asString();
+        Assertions.assertThat(asGeneralResponseString).isNotEmpty();
     }
 }

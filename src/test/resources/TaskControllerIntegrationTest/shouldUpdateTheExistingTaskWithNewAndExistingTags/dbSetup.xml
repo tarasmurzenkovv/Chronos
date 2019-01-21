@@ -6,7 +6,7 @@
     <TAG ID="1" TAG="#awesome_tag"/>
     <TAG ID="2" TAG="#awesome_new_tag"/>
 
-    <TASK ID="1" PROJECT_ID="1" USER_ID="1" REPORTING_DATE="2019-01-01" SPENT_TIME="0.800000011920929" COMMENTS="comments"/>
+    <TASK ID="1" PROJECT_ID="1" USER_ID="1" REPORTING_DATE="2019-01-01" SPENT_TIME="0.800000011920929" COMMENTS="comments" EDITABLE="true"/>
     <TASK_TAGS ID="1" TAG_ID="1" TASK_ID="1"/>
     <TASK_TAGS ID="2" TAG_ID="2" TASK_ID="1"/>
 </dataset>

@@ -44,4 +44,6 @@ public class TaskEntity {
     private String comments;
     @Column(name = "TAGS")
     private String tags;
+    @Column(name = "EDITABLE")
+    private boolean editable;
 }
