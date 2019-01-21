@@ -5,6 +5,8 @@ import com.syngenta.digital.lab.kyiv.chronos.model.dto.reporting.Report;
 import com.syngenta.digital.lab.kyiv.chronos.model.dto.reporting.ReportingResponse;
 import com.syngenta.digital.lab.kyiv.chronos.model.exceptions.ReportingException;
 import com.syngenta.digital.lab.kyiv.chronos.utils.DateTimeUtils;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.CreationHelper;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -15,6 +17,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -25,21 +29,28 @@ public class XlsViewRenderer implements ViewRenderer {
     public synchronized ReportingResponse writeToFile(List<Report> reports, Range range) {
         int rowIndex = 0;
         Workbook workbook = new XSSFWorkbook();
+        CreationHelper creationHelper = workbook.getCreationHelper();
+        CellStyle cellStyleDate = workbook.createCellStyle();
+        cellStyleDate.setDataFormat(creationHelper.createDataFormat().getFormat("dd.mm.yyyy"));
+
         String fileName = String.format("time_report_%s.xlsx",
                 DateTimeUtils.format(LocalDate.now(), "dd_MM_YYYY"));
         Sheet timeReporting = workbook.createSheet("time_reporting");
 
         Row generationDateRow = timeReporting.createRow(rowIndex++);
         generationDateRow.createCell(0)
-                .setCellValue(String.format("Generation Date: %s", DateTimeUtils.format(LocalDateTime.now(), "dd/MM/yyyy HH:mm")));
+                .setCellValue("Generation Date:");
+        generationDateRow.createCell(1).setCellValue(DateTimeUtils.format(LocalDateTime.now(), "dd/MM/yyyy HH:mm"));
 
         Row startDateRow = timeReporting.createRow(rowIndex++);
         startDateRow.createCell(0)
-                .setCellValue(String.format("Start date: %s", DateTimeUtils.format(range.getStart(), "dd/MM/yyyy")));
+                .setCellValue("Start date:");
+        startDateRow.createCell(1).setCellValue(DateTimeUtils.format(range.getStart(), "dd/MM/yyyy"));
 
         Row endDateRow = timeReporting.createRow(rowIndex++);
         endDateRow.createCell(0)
-                .setCellValue(String.format("End date: %s", DateTimeUtils.format(range.getEnd(), "dd/MM/yyyy")));
+                .setCellValue("End date:");
+        endDateRow.createCell(1).setCellValue(DateTimeUtils.format(range.getEnd(), "dd/MM/yyyy"));
 
         Row headerRow = timeReporting.createRow(rowIndex++);
         headerRow.createCell(0).setCellValue("Project name");
@@ -47,7 +58,7 @@ public class XlsViewRenderer implements ViewRenderer {
         headerRow.createCell(2).setCellValue("Last name");
         headerRow.createCell(3).setCellValue("Job Title");
         headerRow.createCell(4).setCellValue("Spent time");
-        headerRow.createCell(5).setCellValue("Reporting date");
+        headerRow.createCell(5).setCellValue("Reporting date (dd.MM.YYYY)");
         headerRow.createCell(6).setCellValue("Comments");
 
         for (final Report report : reports) {
@@ -57,7 +68,9 @@ public class XlsViewRenderer implements ViewRenderer {
             row.createCell(2).setCellValue(report.getLastName());
             row.createCell(3).setCellValue(report.getJobTitle());
             row.createCell(4).setCellValue(report.getSpentTime());
-            row.createCell(5).setCellValue(DateTimeUtils.format(report.getReportingDate(), "dd_MM_YYYY"));
+            Date date = Date.from(report.getReportingDate().atStartOfDay(ZoneId.systemDefault()).toInstant());
+            row.createCell(5).setCellStyle(cellStyleDate);
+            row.createCell(5).setCellValue(date);
             row.createCell(6).setCellValue(report.getComments());
         }
         timeReporting.autoSizeColumn(0);
@@ -70,6 +83,7 @@ public class XlsViewRenderer implements ViewRenderer {
 
         try (ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream()) {
             workbook.write(byteArrayOutputStream);
+            workbook.close();
             return new ReportingResponse(fileName, byteArrayOutputStream.toByteArray());
         } catch (IOException e) {
             throw new ReportingException(ERROR_CODE, e.getMessage());
