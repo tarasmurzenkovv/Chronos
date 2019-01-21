@@ -34,7 +34,7 @@ import java.time.LocalDate;
                 "       JOIN USER ON USER.ID = USER_ID " +
                 "WHERE REPORTING_DATE <=:endDate AND REPORTING_DATE >=:startDate AND USER.ID in :userIds " +
                 "GROUP BY PROJECT_ID, PROJECT_NAME, FIRST_NAME, LAST_NAME, JOB_TITLE, TASK_ID, SPENT_TIME, REPORTING_DATE, COMMENTS " +
-                "ORDER BY FIRST_NAME, LAST_NAME",
+                "ORDER BY PROJECT_NAME, FIRST_NAME, LAST_NAME",
         resultSetMapping = "reporting-dto-mapping"
 )
 @SqlResultSetMapping(name = "reporting-dto-mapping",

@@ -12,7 +12,6 @@
                 <constraints nullable="true"/>
             </column>
         </addColumn>
-        <addDefaultValue tableName="TASK" columnName="EDITABLE" defaultValue="true"/>
     </changeSet>
 
 </databaseChangeLog>
