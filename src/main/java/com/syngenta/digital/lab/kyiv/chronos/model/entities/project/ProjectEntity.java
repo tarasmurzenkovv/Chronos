@@ -1,7 +1,6 @@
 package com.syngenta.digital.lab.kyiv.chronos.model.entities.project;
 
 import com.syngenta.digital.lab.kyiv.chronos.model.entities.ProjectTypeEntity;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;

@@ -37,6 +37,7 @@ public class TaskMapper {
         taskDto.setComments(taskEntity.getComments());
         taskDto.setReportingDate(taskEntity.getReportingDate());
         taskDto.setSpentTime(taskEntity.getSpentTime());
+        taskDto.setEditable(taskEntity.isEditable());
 
         return taskDto;
     }

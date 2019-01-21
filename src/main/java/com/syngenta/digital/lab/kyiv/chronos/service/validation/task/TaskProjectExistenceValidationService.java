@@ -1,8 +1,6 @@
 package com.syngenta.digital.lab.kyiv.chronos.service.validation.task;
 
 import com.syngenta.digital.lab.kyiv.chronos.model.dto.TaskDto;
-import com.syngenta.digital.lab.kyiv.chronos.model.exceptions.TaskException;
-import com.syngenta.digital.lab.kyiv.chronos.repositories.ProjectRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

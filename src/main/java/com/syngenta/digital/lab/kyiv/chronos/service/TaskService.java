@@ -43,7 +43,7 @@ public class TaskService {
         List<TagEntity> savedTagEntities = tagService.saveTags(taskDto);
         tagService.saveTaskTags(savedTaskEntity, savedTagEntities);
         TaskDto processedTaskDto = taskMapper.mapToDto(savedTaskEntity);
-        processedTaskDto.setTags(this.tagMapper.mapToDto(savedTagEntities));
+        processedTaskDto.setTags(tagMapper.mapToDto(savedTagEntities));
         return processedTaskDto;
     }
 
@@ -71,7 +71,10 @@ public class TaskService {
 
     @Transactional
     public void delete(long taskId) {
-        TaskDto taskDto = this.find(taskId);
+        TaskDto taskDto = find(taskId);
+        if (!taskDto.isEditable()) {
+            throw new TaskException(ERROR_CODE, String.format("The task with id '%s' is already frozen. Cannot modify it.", taskId));
+        }
         taskRepository.deleteById(taskDto.getTaskId());
     }
 
