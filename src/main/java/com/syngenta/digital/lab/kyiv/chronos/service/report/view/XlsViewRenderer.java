@@ -53,7 +53,7 @@ public class XlsViewRenderer implements ViewRenderer {
         headerRow.createCell(2).setCellValue("Last name");
         headerRow.createCell(3).setCellValue("Job Title");
         headerRow.createCell(4).setCellValue("Spent time");
-        headerRow.createCell(5).setCellValue("Reporting date (DD.MM.YYYY)");
+        headerRow.createCell(5).setCellValue("Reporting date (DD/MM/YYYY)");
         headerRow.createCell(6).setCellValue("Comments");
 
         for (final Report report : reports) {

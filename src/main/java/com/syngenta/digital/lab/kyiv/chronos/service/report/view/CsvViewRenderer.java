@@ -32,7 +32,7 @@ public class CsvViewRenderer implements ViewRenderer {
             printer.printRecord("Start date:", DateTimeUtils.format(range.getStart(), "dd/MM/yyyy"));
             printer.printRecord("End date:", DateTimeUtils.format(range.getEnd(), "dd/MM/yyyy"));
             printer.printRecord("Project name", "First name", "Last name", "Job Title",
-                    "Spent time", "Reporting date (DD.MM.YYYY)" , "Comments");
+                    "Spent time", "Reporting date (DD/MM/YYYY)" , "Comments");
             reports.forEach(report -> CsvViewRenderer.printRecord(report, printer));
             return new ReportingResponse(fileName, writer.toString().getBytes());
         } catch (IOException e) {
