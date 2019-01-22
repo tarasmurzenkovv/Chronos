@@ -1,5 +1,6 @@
 package com.syngenta.digital.lab.kyiv.chronos.service.report.view;
 
+import com.syngenta.digital.lab.kyiv.chronos.model.dto.ReportingProperties;
 import com.syngenta.digital.lab.kyiv.chronos.model.dto.reporting.Range;
 import com.syngenta.digital.lab.kyiv.chronos.model.dto.reporting.Report;
 import com.syngenta.digital.lab.kyiv.chronos.model.dto.reporting.ReportingResponse;
@@ -22,6 +23,7 @@ import java.util.List;
 public class XlsViewRenderer implements ViewRenderer {
     private static final int ERROR_CODE = 16;
     private final ClockService clockService;
+    private final ReportingProperties reportingProperties;
 
     @Override
     public synchronized ReportingResponse writeToFile(List<Report> reports, Range range) {
@@ -29,23 +31,23 @@ public class XlsViewRenderer implements ViewRenderer {
         Workbook workbook = new XSSFWorkbook();
 
         String fileName = String.format("time_report_%s.xlsx",
-                DateTimeUtils.format(clockService.now(), "dd_MM_yyyy"));
+                DateTimeUtils.format(clockService.now(), reportingProperties.getDateFileNameFormat()));
         Sheet timeReporting = workbook.createSheet("time_reporting");
 
         Row generationDateRow = timeReporting.createRow(rowIndex++);
         generationDateRow.createCell(0)
                 .setCellValue("Generation Date:");
-        generationDateRow.createCell(1).setCellValue(DateTimeUtils.format(clockService.nowTime(), "dd/MM/yyyy HH:mm"));
+        generationDateRow.createCell(1).setCellValue(DateTimeUtils.format(clockService.nowTime(), reportingProperties.getDateTimeFormat()));
 
         Row startDateRow = timeReporting.createRow(rowIndex++);
         startDateRow.createCell(0)
                 .setCellValue("Start date:");
-        startDateRow.createCell(1).setCellValue(DateTimeUtils.format(range.getStart(), "dd/MM/yyyy"));
+        startDateRow.createCell(1).setCellValue(DateTimeUtils.format(range.getStart(), reportingProperties.getDateFormat()));
 
         Row endDateRow = timeReporting.createRow(rowIndex++);
         endDateRow.createCell(0)
                 .setCellValue("End date:");
-        endDateRow.createCell(1).setCellValue(DateTimeUtils.format(range.getEnd(), "dd/MM/yyyy"));
+        endDateRow.createCell(1).setCellValue(DateTimeUtils.format(range.getEnd(), reportingProperties.getDateFormat()));
 
         Row headerRow = timeReporting.createRow(rowIndex++);
         headerRow.createCell(0).setCellValue("Project name");
@@ -63,7 +65,7 @@ public class XlsViewRenderer implements ViewRenderer {
             row.createCell(2).setCellValue(report.getLastName());
             row.createCell(3).setCellValue(report.getJobTitle());
             row.createCell(4).setCellValue(report.getSpentTime());
-            row.createCell(5).setCellValue(DateTimeUtils.format(report.getReportingDate(), "dd/MM/YYYY"));
+            row.createCell(5).setCellValue(DateTimeUtils.format(report.getReportingDate(), reportingProperties.getDateFormat()));
             row.createCell(6).setCellValue(report.getComments());
         }
         timeReporting.autoSizeColumn(0);
