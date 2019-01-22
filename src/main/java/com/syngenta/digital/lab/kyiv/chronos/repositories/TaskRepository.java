@@ -26,6 +26,11 @@ public interface TaskRepository extends JpaRepository<TaskEntity, Long> {
     @Query("update TaskEntity task set task.editable=false where task.id in :taskIds")
     void freezeTasks(@Param("taskIds") List<Long> taskIds);
 
+    @Modifying
+    @Query("update TaskEntity task set task.editable=false where task.projectEntity.id=:projectId")
+    void freezeTasks(@Param("projectId") Long projectId);
+
     @Query("select task.editable from TaskEntity task where task.id=:taskId ")
     boolean isEditable(@Param("taskId") Long taskId);
+
 }

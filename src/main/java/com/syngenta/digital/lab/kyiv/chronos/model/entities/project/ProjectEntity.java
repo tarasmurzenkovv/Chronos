@@ -38,4 +38,6 @@ public class ProjectEntity {
     @ManyToOne
     @JoinColumn(name = "PROJECT_TYPE_ID")
     private ProjectTypeEntity projectTypeEntity;
+    @Column(name = "DELETED", columnDefinition = "bit(1)")
+    private boolean deleted;
 }
