@@ -1,5 +1,6 @@
 package com.syngenta.digital.lab.kyiv.chronos.model.dto.reporting;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.syngenta.digital.lab.kyiv.chronos.model.exceptions.ReportingException;
 
 import java.util.Arrays;
@@ -14,6 +15,7 @@ public enum ReportType {
         this.typeAsString = typeAsString;
     }
 
+    @JsonCreator
     public static ReportType from(String typeAsString) {
         int errorCode = 17;
         return Arrays.stream(ReportType.values())

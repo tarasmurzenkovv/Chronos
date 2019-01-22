@@ -1,6 +1,9 @@
 package com.syngenta.digital.lab.kyiv.chronos.configuration;
 
+import com.syngenta.digital.lab.kyiv.chronos.model.dto.reporting.ReportType;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.convert.converter.Converter;
+import org.springframework.format.FormatterRegistry;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
@@ -14,5 +17,17 @@ public class WebConfiguration implements WebMvcConfigurer {
                 .setViewName("forward:/index.html");
         registry.addViewController("/{x:^(?!api$).*$}/**/{y:[\\w\\-]+}")
                 .setViewName("forward:/index.html");
+    }
+
+    @Override
+    public void addFormatters(FormatterRegistry registry) {
+        registry.addConverter(new ReportTypeConverter());
+    }
+
+    public static class ReportTypeConverter implements Converter<String, ReportType> {
+        @Override
+        public ReportType convert(String source) {
+            return ReportType.from(source);
+        }
     }
 }

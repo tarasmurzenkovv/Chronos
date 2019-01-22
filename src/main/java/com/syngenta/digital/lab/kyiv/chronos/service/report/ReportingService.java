@@ -28,9 +28,8 @@ public class ReportingService {
     private final ReportParameterValidationService reportParameterValidationService;
 
     @Transactional
-    public ReportingResponse generateReport(String reportTypeAsString, ReportingRequest reportingRequest) {
+    public ReportingResponse generateReport(ReportType reportType, ReportingRequest reportingRequest) {
         reportParameterValidationService.validate(reportingRequest);
-        ReportType reportType = ReportType.from(reportTypeAsString);
         List<Report> reports = userRepository.generateReport(reportingRequest);
         freezeTasks(reports);
         switch (reportType) {
