@@ -39,6 +39,10 @@ public class TaskService {
         ProjectEntity projectEntity = projectRepository.findById(taskDto.getProjectId())
                 .orElseThrow(() -> new TaskException(ERROR_CODE, "Cannot find project for id" + taskDto.getProjectId()));
 
+        if (projectEntity.isDeleted()) {
+            throw new TaskException(ERROR_CODE, "Cannot modify tasks list for the deleted project with id " + taskDto.getProjectId());
+        }
+
         TaskEntity savedTaskEntity = saveTask(taskDto, userEntity, projectEntity);
         List<TagEntity> savedTagEntities = tagService.saveTags(taskDto);
         tagService.saveTaskTags(savedTaskEntity, savedTagEntities);
