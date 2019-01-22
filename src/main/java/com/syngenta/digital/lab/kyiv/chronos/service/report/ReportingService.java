@@ -8,6 +8,7 @@ import com.syngenta.digital.lab.kyiv.chronos.model.exceptions.ReportingException
 import com.syngenta.digital.lab.kyiv.chronos.repositories.TaskRepository;
 import com.syngenta.digital.lab.kyiv.chronos.repositories.UserRepository;
 import com.syngenta.digital.lab.kyiv.chronos.service.report.view.ViewRenderer;
+import com.syngenta.digital.lab.kyiv.chronos.service.validation.reporting.ReportParameterValidationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

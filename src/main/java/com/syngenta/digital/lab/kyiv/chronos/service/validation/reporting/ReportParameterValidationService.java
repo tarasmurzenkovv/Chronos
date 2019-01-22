@@ -1,4 +1,4 @@
-package com.syngenta.digital.lab.kyiv.chronos.service.report;
+package com.syngenta.digital.lab.kyiv.chronos.service.validation.reporting;
 
 import com.syngenta.digital.lab.kyiv.chronos.model.dto.reporting.ReportingRequest;
 import com.syngenta.digital.lab.kyiv.chronos.model.exceptions.ReportingException;

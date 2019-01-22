@@ -4,7 +4,9 @@ import com.syngenta.digital.lab.kyiv.chronos.model.dto.reporting.Range;
 import com.syngenta.digital.lab.kyiv.chronos.model.dto.reporting.Report;
 import com.syngenta.digital.lab.kyiv.chronos.model.dto.reporting.ReportingResponse;
 import com.syngenta.digital.lab.kyiv.chronos.model.exceptions.ReportingException;
+import com.syngenta.digital.lab.kyiv.chronos.service.ClockService;
 import com.syngenta.digital.lab.kyiv.chronos.utils.DateTimeUtils;
+import lombok.RequiredArgsConstructor;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -13,13 +15,13 @@ import org.springframework.stereotype.Service;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class XlsViewRenderer implements ViewRenderer {
     private static final int ERROR_CODE = 16;
+    private final ClockService clockService;
 
     @Override
     public synchronized ReportingResponse writeToFile(List<Report> reports, Range range) {
@@ -27,13 +29,13 @@ public class XlsViewRenderer implements ViewRenderer {
         Workbook workbook = new XSSFWorkbook();
 
         String fileName = String.format("time_report_%s.xlsx",
-                DateTimeUtils.format(LocalDate.now(), "dd_MM_YYYY"));
+                DateTimeUtils.format(clockService.now(), "dd_MM_yyyy"));
         Sheet timeReporting = workbook.createSheet("time_reporting");
 
         Row generationDateRow = timeReporting.createRow(rowIndex++);
         generationDateRow.createCell(0)
                 .setCellValue("Generation Date:");
-        generationDateRow.createCell(1).setCellValue(DateTimeUtils.format(LocalDateTime.now(), "dd/MM/yyyy HH:mm"));
+        generationDateRow.createCell(1).setCellValue(DateTimeUtils.format(clockService.nowTime(), "dd/MM/yyyy HH:mm"));
 
         Row startDateRow = timeReporting.createRow(rowIndex++);
         startDateRow.createCell(0)
@@ -51,7 +53,7 @@ public class XlsViewRenderer implements ViewRenderer {
         headerRow.createCell(2).setCellValue("Last name");
         headerRow.createCell(3).setCellValue("Job Title");
         headerRow.createCell(4).setCellValue("Spent time");
-        headerRow.createCell(5).setCellValue("Reporting date (dd.MM.YYYY)");
+        headerRow.createCell(5).setCellValue("Reporting date (DD.MM.YYYY)");
         headerRow.createCell(6).setCellValue("Comments");
 
         for (final Report report : reports) {

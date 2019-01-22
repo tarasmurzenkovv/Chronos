@@ -229,10 +229,10 @@ public class TaskControllerIntegrationTest extends BaseIntegrationTest {
 
     @Test
     @SneakyThrows
-    @DatabaseSetup(value = "/TaskControllerIntegrationTest/shouldNotEditFrozenTask/dbSetup.xml")
-    @ExpectedDatabase(value = "/TaskControllerIntegrationTest/shouldNotEditFrozenTask/expectedDataBase.xml",
+    @DatabaseSetup(value = "/TaskControllerIntegrationTest/shouldDeleteTheExistingNonFrozenTask/dbSetup.xml")
+    @ExpectedDatabase(value = "/TaskControllerIntegrationTest/shouldDeleteTheExistingNonFrozenTask/expectedDataBase.xml",
             assertionMode = NON_STRICT_UNORDERED)
-    public void shouldDeleteTheExistingTask() {
+    public void shouldDeleteTheExistingNonFrozenTask() {
 
         Response response = RestAssured
                 .given()
