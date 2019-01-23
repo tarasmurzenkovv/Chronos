@@ -115,7 +115,7 @@ const TimesheetListTable: React.FunctionComponent<IProps> = ({
 
             {visibleToUser && (
               <TableCell align="center" className={classes.actionCell}>
-                {hoveredRow === item.task_id && (
+                {hoveredRow === item.task_id && item.editable && (
                   <IconButton
                     aria-label="Edit"
                     onClick={() => handleEditButtonClick(item)}
@@ -124,7 +124,7 @@ const TimesheetListTable: React.FunctionComponent<IProps> = ({
                     <EditFilledIcon />
                   </IconButton>
                 )}
-                {hoveredRow === item.task_id && (
+                {hoveredRow === item.task_id && item.editable && (
                   <IconButton
                     aria-label="Delete"
                     onClick={() => handleDeleteButtonClick(item.task_id)}

@@ -1,5 +1,8 @@
+import sortBy from 'lodash/sortBy';
+
 import apiCall from 'shared/utils/apiCall';
 import errorAction from 'shared/utils/errorAction';
+
 import {FETCH_TIMESHEET_LIST_BY_DATE} from '../../constants';
 import {timesheetByDateUrl} from '../../services';
 
@@ -22,7 +25,7 @@ export const fetchTimesheetListByDateApi = () => (dispatch, getState) => {
     .then(({data}) =>
       dispatch({
         type: FETCH_TIMESHEET_LIST_BY_DATE.success,
-        payload: {list: data}
+        payload: {list: sortBy(data, ['reporting_date'])}
       })
     )
     .catch((err) => {

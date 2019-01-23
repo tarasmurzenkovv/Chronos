@@ -12,43 +12,18 @@ import {
   OutlinedInput,
   Select,
   TextField,
-  withStyles,
-  WithStyles
+  withStyles
 } from '@material-ui/core';
 
 import classnames from 'classnames';
 
 import CloseIcon from '@material-ui/icons/Close';
-import {IListItem} from '../reducers/projects';
+import MomentUtils from '@date-io/moment';
+import {InlineDatePicker, MuiPickersUtilsProvider} from 'material-ui-pickers';
 import * as theme from './TimesheetEditModal.scss';
 import styles from './styles';
 
-interface IProps extends WithStyles<typeof styles> {
-  isOpen: boolean;
-  list: IListItem[];
-  projectId: string;
-  date: string;
-  comments: string;
-  selectProjectError: boolean;
-  timeError: boolean;
-  selectedId: number;
-  selectedItemData: {
-    task_id: number;
-    project_id: number;
-    reporting_date: any;
-    spent_time: number;
-    comments: string;
-  };
-
-  handleProjectChange(): void;
-  handleDateChange(): void;
-
-  handleFormSubmit(): void;
-  handleTimeChange(): void;
-  handleOnClose(): void;
-}
-
-const TimesheetEditModal: React.FunctionComponent<IProps> = ({
+const TimesheetEditModal = ({
   classes,
   date,
   list,
@@ -124,49 +99,45 @@ const TimesheetEditModal: React.FunctionComponent<IProps> = ({
           </FormControl>
 
           <div className={theme.timeAndDateBlock}>
-            <FormControl className={classes.formControlTime}>
-              <TextField
-                id="time"
-                name="time"
-                label="Spent time, h."
-                margin="normal"
+            <TextField
+              id="time"
+              name="time"
+              label="Spent time, h."
+              margin="normal"
+              variant="outlined"
+              type="number"
+              className={classes.textField}
+              defaultValue={selectedItemData.spent_time}
+              InputLabelProps={{
+                classes: {
+                  root: classes.textFieldLabel,
+                  focused: classes.textFieldLabelFocused
+                },
+                required: true
+              }}
+              InputProps={{
+                classes: {
+                  root: classnames(classes.textFieldOutlinedInput, {
+                    [classes.textFieldOutlinedInputError]: timeError
+                  }),
+                  notchedOutline: classes.textFieldFocusedNotchedOutline
+                }
+              }}
+              error={timeError}
+              onChange={handleTimeChange}
+            />
+            {timeError && (
+              <FormHelperText className={classes.errorTime}>
+                Please, add correct time value
+              </FormHelperText>
+            )}
+            <MuiPickersUtilsProvider utils={MomentUtils}>
+              <InlineDatePicker
                 variant="outlined"
-                type="number"
-                className={classes.textField}
-                defaultValue={selectedItemData.spent_time}
-                InputLabelProps={{
-                  classes: {
-                    root: classes.textFieldLabel,
-                    focused: classes.textFieldLabelFocused
-                  },
-                  required: true
-                }}
-                InputProps={{
-                  classes: {
-                    root: classnames(classes.textFieldOutlinedInput, {
-                      [classes.textFieldOutlinedInputError]: timeError
-                    }),
-                    notchedOutline: classes.textFieldFocusedNotchedOutline
-                  }
-                }}
-                error={timeError}
-                onChange={handleTimeChange}
-              />
-              {timeError && (
-                <FormHelperText className={classes.errorTime}>
-                  Please, add correct time value
-                </FormHelperText>
-              )}
-            </FormControl>
-            <FormControl className={classes.dateInputBlock}>
-              <TextField
-                id="date"
-                name="date"
                 label="Date"
-                margin="normal"
-                variant="outlined"
-                type="date"
-                defaultValue={date}
+                format="DD.MM.YYYY"
+                value={date}
+                onChange={handleDateChange}
                 InputLabelProps={{
                   shrink: true,
                   classes: {
@@ -180,11 +151,9 @@ const TimesheetEditModal: React.FunctionComponent<IProps> = ({
                     notchedOutline: classes.textFieldFocusedNotchedOutline
                   }
                 }}
-                className={classes.textField}
                 required
-                onChange={handleDateChange}
               />
-            </FormControl>
+            </MuiPickersUtilsProvider>
           </div>
 
           <div className={theme.labelText}>Comments:</div>

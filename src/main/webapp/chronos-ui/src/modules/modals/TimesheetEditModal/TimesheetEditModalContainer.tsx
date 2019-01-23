@@ -80,17 +80,15 @@ export default compose(
       }
     },
 
-    handleDateChange: ({date, setDate}) => (event) => {
-      const {value} = event.target;
-      if (date !== value) {
-        setDate(value);
-      }
+    handleDateChange: ({setDate}) => (date) => {
+      setDate(date);
     }
   }),
 
   withHandlers({
     handleFormSubmit: ({
       editRecordApi,
+      date,
       handleOnClose,
       projectId,
       setSelectProjectError,
@@ -111,7 +109,6 @@ export default compose(
         return;
       }
 
-      const date = event.target.date.value;
       const comments = event.target.comments.value;
 
       const params = {

@@ -21,6 +21,9 @@ const styles = () => ({
   textFieldLabel: {
     color: '#4a4a4a'
   },
+  textFieldTime: {
+    margin: 0
+  },
   textFieldLabelFocused: {
     color: 'rgba(173, 181, 199, 0.87)'
   },

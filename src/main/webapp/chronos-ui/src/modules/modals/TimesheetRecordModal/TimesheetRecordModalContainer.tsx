@@ -11,7 +11,7 @@ import {createRecordApi} from 'modules/modals/actions/api/createRecordApi';
 import TimesheetRecordModal from './TimesheetRecordModal';
 
 const mapStateToProps = (state) => ({
-  list: state.projects.list,
+  list: state.projects.list.filter((item) => !item.deleted),
   userId: state.common.user.id
 });
 
@@ -35,7 +35,7 @@ export default compose(
   withState('projectId', 'setProjectId', ''),
   withState('selectProjectError', 'setSelectProjectError', false),
   withState('timeError', 'setTimeError', false),
-  withState('date', 'setDate', new Date().toISOString().slice(0, 10)),
+  withState('date', 'setDate', moment()),
 
   /* eslint-disable no-shadow */
   withHandlers({
@@ -69,17 +69,15 @@ export default compose(
       }
     },
 
-    handleDateChange: ({date, setDate}) => (event) => {
-      const {value} = event.target;
-      if (date !== value) {
-        setDate(value);
-      }
+    handleDateChange: ({setDate}) => (date) => {
+      setDate(date);
     }
   }),
 
   withHandlers({
     handleFormSubmit: ({
       createRecordApi,
+      date,
       handleOnClose,
       projectId,
       setSelectProjectError,
@@ -100,7 +98,6 @@ export default compose(
 
       if (!projectId || !time) return;
 
-      const date = event.target.date.value;
       const comments = event.target.comments.value;
 
       const params = {

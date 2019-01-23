@@ -18,6 +18,9 @@ const styles = () => ({
     borderRadius: '5px',
     textAlign: 'left'
   },
+  textFieldTime: {
+    margin: 0
+  },
   textFieldLabel: {
     color: '#4a4a4a'
   },
