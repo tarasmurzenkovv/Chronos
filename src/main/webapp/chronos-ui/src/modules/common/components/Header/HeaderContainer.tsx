@@ -1,6 +1,8 @@
 import {connect} from 'react-redux';
+import {compose, withHandlers} from 'recompose';
 
-import {isUserAdmin} from 'shared/utils';
+import {isUserAdmin, redirectTo} from 'shared/utils';
+
 import {setDrawerStatus} from '../../actions/drawer';
 import Header from './Header';
 
@@ -11,9 +13,17 @@ const mapStateToProps = (state) => ({
   isDrawerOpen: state.common.drawer.isOpen
 });
 
-const mapDispatchToProps = {setDrawerStatus};
+const mapDispatchToProps = {redirectTo, setDrawerStatus};
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
+export default compose(
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  ),
+  withHandlers({
+    /* eslint-disable no-shadow */
+    handleButtonClick: ({redirectTo}) => (route) => () => {
+      redirectTo(route);
+    }
+  })
 )(Header);
