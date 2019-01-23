@@ -1,3 +1,4 @@
+import * as moment from 'moment';
 import {saveAs} from 'file-saver';
 
 import config from 'configurations/config';
@@ -13,4 +14,6 @@ export const apiCallForFile = (endpoint: string, options?: any) =>
     ...options
   })
     .then((res) => res.blob())
-    .then((blob) => saveAs(blob, 'report.xlsx'));
+    .then((blob) =>
+      saveAs(blob, `Time report_${moment().format('DD_MM_YYYY')}.xlsx`)
+    );

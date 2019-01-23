@@ -8,6 +8,11 @@ const styles = (theme: Theme) =>
       textAlign: 'center',
       marginBottom: 29
     },
+    hoveredRow: {
+      '&:hover': {
+        backgroundColor: 'green'
+      }
+    },
     tableHeadCell: {
       color: 'rgba(173, 181, 199, 0.87)'
     },

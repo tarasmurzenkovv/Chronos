@@ -60,7 +60,11 @@ const Report = ({
           </TableHead>
           <TableBody>
             {list.map((item) => (
-              <TableRow key={item.id}>
+              <TableRow
+                key={item.id}
+                className={theme.tableRow}
+                onClick={handleUserlistItemClick(item.id)}
+              >
                 <TableCell
                   align="center"
                   classes={{root: classes.checkboxCell}}
@@ -68,7 +72,6 @@ const Report = ({
                   <Checkbox
                     color="primary"
                     checked={selectedUsersIds.includes(item.id)}
-                    onChange={handleUserlistItemClick(item.id)}
                   />
                 </TableCell>
                 <TableCell align="left" classes={{root: classes.fullNameCell}}>
@@ -101,7 +104,12 @@ const Report = ({
           </MuiPickersUtilsProvider>
         </div>
 
-        <Button type="submit" color="primary" classes={{root: classes.button}}>
+        <Button
+          type="submit"
+          color="primary"
+          classes={{root: classes.button}}
+          disabled={!selectedUsersIds.length}
+        >
           Export Reports
           <SaveAlt className={classes.downloadIcon} />
         </Button>

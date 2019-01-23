@@ -4,3 +4,10 @@
   justify-content: center;
   align-items: center;
 }
+
+.tableRow {
+  cursor: pointer;
+  &:hover {
+    background-color: rgba(25, 25, 100, 0.07);
+  }
+}
