@@ -1,7 +1,6 @@
 package com.syngenta.digital.lab.kyiv.chronos.model.entities.project;
 
 import com.syngenta.digital.lab.kyiv.chronos.model.entities.ProjectTypeEntity;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -22,7 +21,6 @@ import javax.persistence.JoinColumn;
 @Table(name = "PROJECT")
 @Getter
 @Setter
-@EqualsAndHashCode
 @ToString
 public class ProjectEntity {
     @Id
@@ -40,4 +38,6 @@ public class ProjectEntity {
     @ManyToOne
     @JoinColumn(name = "PROJECT_TYPE_ID")
     private ProjectTypeEntity projectTypeEntity;
+    @Column(name = "DELETED", columnDefinition = "bit(1)")
+    private boolean deleted;
 }

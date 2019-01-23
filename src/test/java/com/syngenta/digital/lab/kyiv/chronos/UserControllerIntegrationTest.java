@@ -4,11 +4,9 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.github.springtestdbunit.annotation.DatabaseSetup;
 import com.github.springtestdbunit.annotation.DatabaseTearDown;
 import com.github.springtestdbunit.annotation.ExpectedDatabase;
-import com.github.springtestdbunit.assertion.DatabaseAssertionMode;
 import com.jayway.restassured.RestAssured;
 import com.jayway.restassured.http.ContentType;
 import com.jayway.restassured.response.Response;
-import com.jayway.restassured.response.ResponseBody;
 import com.syngenta.digital.lab.kyiv.chronos.model.dto.LoginRequest;
 import com.syngenta.digital.lab.kyiv.chronos.model.dto.TaskDto;
 import com.syngenta.digital.lab.kyiv.chronos.model.dto.UserDto;
@@ -197,7 +195,7 @@ public class UserControllerIntegrationTest extends BaseIntegrationTest {
         Assertions.assertThat(actualResponse.getData().getEmail()).isEqualTo("email@email.com");
         Assertions.assertThat(actualResponse.getData().getFirstName()).isEqualTo("First_name");
         Assertions.assertThat(actualResponse.getData().getLastName()).isEqualTo("Last_name");
-        Assertions.assertThat(actualResponse.getData().getPassword()).isEqualTo("*****");
+        Assertions.assertThat(actualResponse.getData().getPassword()).isNull();
     }
 
     @Test
@@ -225,7 +223,7 @@ public class UserControllerIntegrationTest extends BaseIntegrationTest {
         Assertions.assertThat(actualResponse.getData().getEmail()).isEqualTo("email@emial.com");
         Assertions.assertThat(actualResponse.getData().getFirstName()).isEqualTo("First_name");
         Assertions.assertThat(actualResponse.getData().getLastName()).isEqualTo("Last_name");
-        Assertions.assertThat(actualResponse.getData().getPassword()).isEqualTo("*****");
+        Assertions.assertThat(actualResponse.getData().getPassword()).isNull();
     }
 
     @Test
@@ -512,15 +510,5 @@ public class UserControllerIntegrationTest extends BaseIntegrationTest {
                 });
 
         Assertions.assertThat(actualResponse).isEqualTo(expectedResponse);
-    }
-
-    private static void validateBadResponse(Response response) {
-        Assertions.assertThat(response).isNotNull();
-        Assertions.assertThat(response.getStatusCode()).isNotNull();
-        Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.SC_BAD_REQUEST);
-        ResponseBody body = response.getBody();
-        Assertions.assertThat(body).isNotNull();
-        String asGeneralResponseString = body.asString();
-        Assertions.assertThat(asGeneralResponseString).isNotNull();
     }
 }

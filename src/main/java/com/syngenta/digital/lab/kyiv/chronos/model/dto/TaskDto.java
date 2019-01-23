@@ -35,4 +35,6 @@ public class TaskDto {
     private List<TagDto> tags;
     @JsonProperty("comments")
     private String comments;
+    @JsonProperty("editable")
+    private boolean editable;
 }

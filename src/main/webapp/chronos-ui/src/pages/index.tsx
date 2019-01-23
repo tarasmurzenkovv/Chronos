@@ -9,6 +9,7 @@ import SignInPage from './SignInPage';
 import ForgotPasswordPage from './ForgotPasswordPage';
 import TimesheetPage from './TimesheetPage';
 import PrivatePage from './PrivatePage';
+import ReportsPage from './ReportsPage';
 import SettingsPage from './SettingsPage';
 
 const Pages = ({history}) => (
@@ -21,6 +22,7 @@ const Pages = ({history}) => (
 
         <PrivatePage exact path="/" component={() => <TimesheetPage />} />
         <PrivatePage path="/settings" component={() => <SettingsPage />} />
+        <PrivatePage path="/reports" component={() => <ReportsPage />} />
       </Switch>
       <CurrentModal />
     </div>

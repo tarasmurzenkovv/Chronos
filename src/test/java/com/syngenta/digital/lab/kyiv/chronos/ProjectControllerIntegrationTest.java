@@ -7,7 +7,6 @@ import com.github.springtestdbunit.annotation.ExpectedDatabase;
 import com.jayway.restassured.RestAssured;
 import com.jayway.restassured.http.ContentType;
 import com.jayway.restassured.response.Response;
-import com.jayway.restassured.response.ResponseBody;
 import com.syngenta.digital.lab.kyiv.chronos.model.dto.ProjectDto;
 import com.syngenta.digital.lab.kyiv.chronos.model.response.ErrorResponsePayload;
 import com.syngenta.digital.lab.kyiv.chronos.model.response.GeneralResponse;
@@ -23,6 +22,118 @@ import static com.github.springtestdbunit.assertion.DatabaseAssertionMode.NON_ST
 
 @DatabaseTearDown("/dbTearDown.xml")
 public class ProjectControllerIntegrationTest extends BaseIntegrationTest {
+
+    @Test
+    @SneakyThrows
+    @DatabaseSetup(value = "/ProjectControllerIntegrationTest/shouldFailToUpdateDeletedProject/dbSetup.xml")
+    @ExpectedDatabase(value = "/ProjectControllerIntegrationTest/shouldFailToUpdateDeletedProject/expectedDataBase.xml",
+            assertionMode = NON_STRICT_UNORDERED)
+    public void shouldFailToUpdateDeletedProject() {
+        Response response = RestAssured
+                .given()
+                .body(JsonUtils.readFromJson("/ProjectControllerIntegrationTest/shouldFailToUpdateDeletedProject/failRequest.json", ProjectDto.class))
+                .contentType(ContentType.JSON)
+                .put("/api/v0/project")
+                .then()
+                .extract()
+                .response();
+
+        validateBadResponse(response);
+
+        GeneralResponse<ErrorResponsePayload> actualResponse = this.objectMapper.readValue(response.getBody().asString(), new TypeReference<GeneralResponse<ErrorResponsePayload>>() {
+        });
+
+        GeneralResponse<ErrorResponsePayload> expectedResponse = JsonUtils.readFromJson(
+                "/ProjectControllerIntegrationTest/shouldFailToUpdateDeletedProject/expectedResponse.json",
+                new TypeReference<>() {
+                });
+
+        Assertions.assertThat(actualResponse).isEqualTo(expectedResponse);
+    }
+
+    @Test
+    @SneakyThrows
+    @DatabaseSetup(value = "/ProjectControllerIntegrationTest/shouldFailToUpdateProjectIfProjectWithIdDoesntExist/dbSetup.xml")
+    @ExpectedDatabase(value = "/ProjectControllerIntegrationTest/shouldFailToUpdateProjectIfProjectWithIdDoesntExist/expectedDataBase.xml",
+            assertionMode = NON_STRICT_UNORDERED)
+    public void shouldFailToUpdateProjectIfProjectWithIdDoesntExist() {
+        Response response = RestAssured
+                .given()
+                .body(JsonUtils.readFromJson("/ProjectControllerIntegrationTest/shouldFailToUpdateProjectIfProjectWithIdDoesntExist/failRequest.json", ProjectDto.class))
+                .contentType(ContentType.JSON)
+                .put("/api/v0/project")
+                .then()
+                .extract()
+                .response();
+
+        validateBadResponse(response);
+
+        GeneralResponse<ErrorResponsePayload> actualResponse = this.objectMapper.readValue(response.getBody().asString(), new TypeReference<GeneralResponse<ErrorResponsePayload>>() {
+        });
+
+        GeneralResponse<ErrorResponsePayload> expectedResponse = JsonUtils.readFromJson(
+                "/ProjectControllerIntegrationTest/shouldFailToUpdateProjectIfProjectWithIdDoesntExist/expectedResponse.json",
+                new TypeReference<>() {
+                });
+
+        Assertions.assertThat(actualResponse).isEqualTo(expectedResponse);
+    }
+
+    @Test
+    @SneakyThrows
+    @DatabaseSetup(value = "/ProjectControllerIntegrationTest/shouldFailToUpdateProjectIfDtoHasNullId/dbSetup.xml")
+    @ExpectedDatabase(value = "/ProjectControllerIntegrationTest/shouldFailToUpdateProjectIfDtoHasNullId/expectedDataBase.xml",
+            assertionMode = NON_STRICT_UNORDERED)
+    public void shouldFailToUpdateProjectIfDtoHasNullId() {
+        Response response = RestAssured
+                .given()
+                .body(JsonUtils.readFromJson("/ProjectControllerIntegrationTest/shouldFailToUpdateProjectIfDtoHasNullId/failRequest.json", ProjectDto.class))
+                .contentType(ContentType.JSON)
+                .put("/api/v0/project")
+                .then()
+                .extract()
+                .response();
+
+        validateBadResponse(response);
+
+        GeneralResponse<ErrorResponsePayload> actualResponse = this.objectMapper.readValue(response.getBody().asString(), new TypeReference<GeneralResponse<ErrorResponsePayload>>() {
+        });
+
+        GeneralResponse<ErrorResponsePayload> expectedResponse = JsonUtils.readFromJson(
+                "/ProjectControllerIntegrationTest/shouldFailToUpdateProjectIfDtoHasNullId/expectedResponse.json",
+                new TypeReference<>() {
+                });
+
+        Assertions.assertThat(actualResponse).isEqualTo(expectedResponse);
+    }
+
+    @Test
+    @SneakyThrows
+    @ExpectedDatabase(value = "/ProjectControllerIntegrationTest/shouldNotAddNewProjectWithFlagDeletedSetToTrue/expectedDataBase.xml",
+            assertionMode = NON_STRICT_UNORDERED)
+    public void shouldNotAddNewProjectWithFlagDeletedSetToTrue() {
+        Response response = RestAssured
+                .given()
+                .body(JsonUtils.readFromJson("/ProjectControllerIntegrationTest/shouldNotAddNewProjectWithFlagDeletedSetToTrue/failToAddNewProjectRequest.json", ProjectDto.class))
+                .contentType(ContentType.JSON)
+                .post("/api/v0/project")
+                .then()
+                .extract()
+                .response();
+
+        validateBadResponse(response);
+
+        GeneralResponse<ErrorResponsePayload> actualResponse = this.objectMapper.readValue(response.getBody().asString(), new TypeReference<GeneralResponse<ErrorResponsePayload>>() {
+        });
+
+        GeneralResponse<ErrorResponsePayload> expectedResponse = JsonUtils.readFromJson(
+                "/ProjectControllerIntegrationTest/shouldNotAddNewProjectWithFlagDeletedSetToTrue/expectedResponse.json",
+                new TypeReference<>() {
+                });
+
+        Assertions.assertThat(actualResponse).isEqualTo(expectedResponse);
+    }
+
     @Test
     @SneakyThrows
     @DatabaseSetup(value = "/ProjectControllerIntegrationTest/shouldSuccessfullyAddNewProject/dbSetup.xml")
@@ -87,7 +198,7 @@ public class ProjectControllerIntegrationTest extends BaseIntegrationTest {
             assertionMode = NON_STRICT_UNORDERED)
     public void shouldSuccessfullyFindProjectByItsId() {
         Response response =RestAssured.given()
-                .get("/api/v0/project/1")
+                .get("/api/v0/project/999")
                 .then()
                 .extract()
                 .response();
@@ -179,15 +290,4 @@ public class ProjectControllerIntegrationTest extends BaseIntegrationTest {
 
         Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.SC_OK);
     }
-
-    private static void validateBadResponse(Response response) {
-        Assertions.assertThat(response).isNotNull();
-        Assertions.assertThat(response.getStatusCode()).isNotNull();
-        Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.SC_BAD_REQUEST);
-        ResponseBody body = response.getBody();
-        Assertions.assertThat(body).isNotNull();
-        String asGeneralResponseString = body.asString();
-        Assertions.assertThat(asGeneralResponseString).isNotNull();
-    }
-
 }

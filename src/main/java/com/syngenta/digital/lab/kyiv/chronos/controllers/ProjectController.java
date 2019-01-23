@@ -28,7 +28,7 @@ public class ProjectController {
     @PostMapping("/project")
     public ResponseEntity<GeneralResponse<ProjectDto>> save(@RequestBody ProjectDto projectDto) {
         log.info("About to register the following project '{}'", projectDto);
-        return GeneralResponse.from(projectService.register(projectDto), HttpStatus.CREATED);
+        return GeneralResponse.from(projectService.create(projectDto), HttpStatus.CREATED);
     }
 
     @GetMapping("/project/{id}")
@@ -45,7 +45,7 @@ public class ProjectController {
     @PutMapping("/project")
     public ResponseEntity<GeneralResponse<ProjectDto>> update(@RequestBody ProjectDto projectDto) {
         log.info("About to register the following project '{}'", projectDto);
-        ProjectDto savedProjectDto = projectService.register(projectDto);
+        ProjectDto savedProjectDto = projectService.update(projectDto);
         return GeneralResponse.from(savedProjectDto, HttpStatus.OK);
     }
 

@@ -16,6 +16,7 @@ import com.syngenta.digital.lab.kyiv.chronos.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -38,16 +39,26 @@ public class TaskService {
         ProjectEntity projectEntity = projectRepository.findById(taskDto.getProjectId())
                 .orElseThrow(() -> new TaskException(ERROR_CODE, "Cannot find project for id" + taskDto.getProjectId()));
 
+        if (projectEntity.isDeleted()) {
+            throw new TaskException(ERROR_CODE, "Cannot modify tasks list for the deleted project with id " + taskDto.getProjectId());
+        }
+
         TaskEntity savedTaskEntity = saveTask(taskDto, userEntity, projectEntity);
         List<TagEntity> savedTagEntities = tagService.saveTags(taskDto);
         tagService.saveTaskTags(savedTaskEntity, savedTagEntities);
         TaskDto processedTaskDto = taskMapper.mapToDto(savedTaskEntity);
-        processedTaskDto.setTags(this.tagMapper.mapToDto(savedTagEntities));
+        processedTaskDto.setTags(tagMapper.mapToDto(savedTagEntities));
         return processedTaskDto;
     }
 
     private TaskEntity saveTask(TaskDto taskDto, UserEntity userEntity, ProjectEntity projectEntity) {
         TaskEntity taskEntity = taskMapper.mapToEntity(taskDto, userEntity, projectEntity);
+        Long taskId = taskEntity.getId();
+        if (taskId != null) {
+            if (!taskRepository.isEditable(taskId)) {
+                throw new TaskException(ERROR_CODE, String.format("The task with id '%s' is already frozen. Cannot modify it.", taskId));
+            }
+        }
         return taskRepository.save(taskEntity);
     }
 
@@ -64,7 +75,10 @@ public class TaskService {
 
     @Transactional
     public void delete(long taskId) {
-        TaskDto taskDto = this.find(taskId);
+        TaskDto taskDto = find(taskId);
+        if (!taskDto.isEditable()) {
+            throw new TaskException(ERROR_CODE, String.format("The task with id '%s' is already frozen. Cannot modify it.", taskId));
+        }
         taskRepository.deleteById(taskDto.getTaskId());
     }
 

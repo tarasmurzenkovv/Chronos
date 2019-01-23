@@ -7,16 +7,12 @@ import {defaultDateFormatApi} from 'shared/utils/constants';
 import getProjectsList from 'modules/modals/actions/api/getProjectsList';
 import {removeCurrentModal} from 'modules/modals/actions/modalsActions';
 import {editRecordApi} from 'modules/modals/actions/api/editRecordApi';
-import {fetchTimesheetListByDateApi} from 'modules/timesheet/actions/api/fetchTimesheetListByDateApi';
 
 import TimesheetRecordModal from './TimesheetEditModal';
 
 const mapStateToProps = (state) => ({
   list: state.projects.list,
-  userId: state.auth.signIn.user.id,
-
-  startOfMonth: state.timesheet.filters.date.startOfMonth,
-  endOfMonth: state.timesheet.filters.date.endOfMonth,
+  userId: state.common.user.id,
   selectedId: state.timesheet.selectedId,
   selectedItemData: state.timesheet.list.find(
     (item) => item.task_id === state.timesheet.selectedId
@@ -25,7 +21,6 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = {
   editRecordApi,
-  fetchTimesheetListByDateApi,
   getProjectsList,
   removeCurrentModal
 };
@@ -84,24 +79,19 @@ export default compose(
       }
     },
 
-    handleDateChange: ({date, setDate}) => (event) => {
-      const {value} = event.target;
-      if (date !== value) {
-        setDate(value);
-      }
+    handleDateChange: ({setDate}) => (date) => {
+      setDate(date);
     }
   }),
 
   withHandlers({
     handleFormSubmit: ({
       editRecordApi,
-      fetchTimesheetListByDateApi,
+      date,
       handleOnClose,
       projectId,
       setSelectProjectError,
       setTimeError,
-      endOfMonth,
-      startOfMonth,
       selectedItemData,
       userId
     }) => (event) => {
@@ -118,7 +108,6 @@ export default compose(
         return;
       }
 
-      const date = event.target.date.value;
       const comments = event.target.comments.value;
 
       const params = {
@@ -133,11 +122,6 @@ export default compose(
       editRecordApi(params)
         .then(() => {
           handleOnClose();
-          fetchTimesheetListByDateApi({
-            id: userId,
-            start: startOfMonth,
-            end: endOfMonth
-          });
         })
         .catch(() => {});
     }

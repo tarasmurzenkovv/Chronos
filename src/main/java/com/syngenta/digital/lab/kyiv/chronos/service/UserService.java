@@ -69,7 +69,7 @@ public class UserService {
     public List<UserDto> find() {
         return userRepository.findAll()
                 .stream()
-                .map(this.userMapper::mapToDto)
+                .map(userMapper::mapToDto)
                 .collect(Collectors.toList());
     }
 

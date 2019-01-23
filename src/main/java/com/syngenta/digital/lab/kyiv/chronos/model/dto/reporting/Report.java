@@ -1,23 +1,25 @@
 package com.syngenta.digital.lab.kyiv.chronos.model.dto.reporting;
 
-import com.opencsv.bean.CsvBindByName;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
+
+import java.time.LocalDate;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
+@ToString
 public class Report {
-    @CsvBindByName(column = "Project name")
+    private Long taskId;
     private String projectName;
-    @CsvBindByName(column = "Spent time")
-    private Long spentTime;
-    @CsvBindByName(column = "First name")
     private String firstName;
-    @CsvBindByName(column = "Last name")
     private String lastName;
-
+    private String jobTitle;
+    private Long spentTime;
+    private LocalDate reportingDate;
+    private String comments;
 }

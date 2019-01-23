@@ -16,4 +16,6 @@ public class ProjectDto {
     private Long projectTypeId;
     @JsonProperty("color")
     private String color;
+    @JsonProperty("deleted")
+    private boolean deleted;
 }

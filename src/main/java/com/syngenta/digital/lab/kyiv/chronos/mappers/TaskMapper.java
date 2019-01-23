@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class TaskMapper {
-    private final TagMapper tagMapper;
 
     public TaskEntity mapToEntity(TaskDto taskDto, UserEntity userEntity, ProjectEntity projectEntity) {
         TaskEntity taskEntity = new TaskEntity();
@@ -24,6 +23,7 @@ public class TaskMapper {
         taskEntity.setReportingDate(taskDto.getReportingDate());
         taskEntity.setSpentTime(taskDto.getSpentTime());
         taskEntity.setComments(taskDto.getComments());
+        taskEntity.setEditable(true);
 
         return taskEntity;
     }
@@ -37,6 +37,7 @@ public class TaskMapper {
         taskDto.setComments(taskEntity.getComments());
         taskDto.setReportingDate(taskEntity.getReportingDate());
         taskDto.setSpentTime(taskEntity.getSpentTime());
+        taskDto.setEditable(taskEntity.isEditable());
 
         return taskDto;
     }

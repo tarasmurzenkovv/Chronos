@@ -12,6 +12,7 @@ import {
 
 export interface IListItem {
   comments: string;
+  editable: boolean;
   project_id: number;
   reporting_date: any;
   spent_time: number;

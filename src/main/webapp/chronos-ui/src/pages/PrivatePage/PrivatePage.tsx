@@ -1,6 +1,8 @@
 import * as React from 'react';
 import {Redirect, Route} from 'react-router-dom';
 
+import {PrivateLayout} from 'modules/common/layouts';
+
 const PrivatePage: React.FunctionComponent<any> = ({
   component: Component,
   id,
@@ -9,7 +11,13 @@ const PrivatePage: React.FunctionComponent<any> = ({
   <Route
     {...rest}
     render={(props: Object) =>
-      id ? <Component {...props} /> : <Redirect to="/sign-in" />
+      id ? (
+        <PrivateLayout>
+          <Component {...props} />
+        </PrivateLayout>
+      ) : (
+        <Redirect to="/sign-in" />
+      )
     }
   />
 );

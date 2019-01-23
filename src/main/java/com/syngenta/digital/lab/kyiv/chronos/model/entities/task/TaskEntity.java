@@ -2,10 +2,8 @@ package com.syngenta.digital.lab.kyiv.chronos.model.entities.task;
 
 import com.syngenta.digital.lab.kyiv.chronos.model.entities.project.ProjectEntity;
 import com.syngenta.digital.lab.kyiv.chronos.model.entities.UserEntity;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
 
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
@@ -17,15 +15,13 @@ import javax.persistence.Column;
 import javax.persistence.ManyToOne;
 import javax.persistence.JoinColumn;
 import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "TASK")
 @Getter
 @Setter
-@EqualsAndHashCode(exclude = {"projectEntity", "userEntity"})
-@ToString
 public class TaskEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -38,7 +34,7 @@ public class TaskEntity {
     private UserEntity userEntity;
 
     @OneToMany(mappedBy = "task")
-    private Set<TaskTagEntity> taskTags = new HashSet<>();
+    private List<TaskTagEntity> taskTags = new ArrayList<>();
 
     @Column(name = "REPORTING_DATE")
     private LocalDate reportingDate;
@@ -48,4 +44,6 @@ public class TaskEntity {
     private String comments;
     @Column(name = "TAGS")
     private String tags;
+    @Column(name = "EDITABLE", columnDefinition = "bit(1)")
+    private boolean editable;
 }

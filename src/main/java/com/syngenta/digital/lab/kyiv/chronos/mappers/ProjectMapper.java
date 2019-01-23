@@ -24,6 +24,7 @@ public class ProjectMapper {
         projectEntity.setProjectDescription(projectDto.getProjectDescription());
         projectEntity.setProjectTypeEntity(projectTypeEntity);
         projectEntity.getProjectSettings().setColor(ProjectMapper.getColor(projectDto));
+        projectEntity.setDeleted(projectDto.isDeleted());
 
         return projectEntity;
     }
@@ -36,6 +37,7 @@ public class ProjectMapper {
         projectDto.setProjectName(projectEntity.getProjectName());
         projectDto.setColor(ProjectMapper.getColor(projectEntity));
         projectDto.setProjectTypeId(projectEntity.getProjectTypeEntity().getId());
+        projectDto.setDeleted(projectEntity.isDeleted());
 
         return projectDto;
     }

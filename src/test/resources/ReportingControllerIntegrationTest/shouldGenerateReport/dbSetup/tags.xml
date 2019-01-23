@@ -1,0 +1,6 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<dataset>
+    <TAG ID="1" TAG="#awesome_tag_existing"/>
+    <TAG ID="2" TAG="#awesome_new_new_tag"/>
+    <TAG ID="3" TAG="#awesome_tag"/>
+</dataset>

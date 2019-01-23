@@ -1,9 +1,9 @@
 import * as React from 'react';
-import Header from 'modules/common/Header';
+import {Settings} from 'modules/settings';
 
 const SettingsPage: React.FunctionComponent = () => (
   <div>
-    <Header />
+    <Settings />
   </div>
 );
 

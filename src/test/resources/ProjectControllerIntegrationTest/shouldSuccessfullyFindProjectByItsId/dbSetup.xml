@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <dataset>
     <PROJECT_TYPE ID="1" TASK_TYPE_NAME="Internal"/>
-    <PROJECT PROJECT_NAME="Project name" PROJECT_DESCRIPTION="Some useful description" PROJECT_TYPE_ID="1"/>
+    <PROJECT ID="999" PROJECT_NAME="Project name" PROJECT_DESCRIPTION="Some useful description" PROJECT_TYPE_ID="1" DELETED="false"/>
 </dataset>

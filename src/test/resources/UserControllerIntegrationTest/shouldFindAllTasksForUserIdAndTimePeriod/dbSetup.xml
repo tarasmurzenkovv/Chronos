@@ -1,8 +1,8 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <dataset>
     <PROJECT_TYPE ID="1" TASK_TYPE_NAME="Internal"/>
-    <PROJECT ID="1" PROJECT_NAME="Project name" PROJECT_DESCRIPTION="Some useful description" PROJECT_TYPE_ID="1"/>
-    <USER ID="1" FIRST_NAME="First_name" LAST_NAME="Last_name" USER_EMAIL="email@emial.com" USER_PASSWORD="passW3$rdd"/>
-    <TASK ID="1" PROJECT_ID="1" USER_ID="1" REPORTING_DATE="2019-01-01" SPENT_TIME="0.800000011920929" COMMENTS="comments" TAGS="tag"/>
-    <TASK ID="2" PROJECT_ID="1" USER_ID="1" REPORTING_DATE="2019-02-01" SPENT_TIME="0.800000011920929" COMMENTS="comments" TAGS="tag"/>
+    <PROJECT ID="1" PROJECT_NAME="Project name" PROJECT_DESCRIPTION="Some useful description" PROJECT_TYPE_ID="1"  DELETED="false"/>
+    <USER ID="1" FIRST_NAME="First_name" LAST_NAME="Last_name" USER_EMAIL="email@emial.com" USER_PASSWORD="passW3$rdd" JOB_TITLE="Developer"/>
+    <TASK ID="1" PROJECT_ID="1" USER_ID="1" REPORTING_DATE="2019-01-01" SPENT_TIME="0.800000011920929" COMMENTS="comments" TAGS="tag" EDITABLE="true"/>
+    <TASK ID="2" PROJECT_ID="1" USER_ID="1" REPORTING_DATE="2019-02-01" SPENT_TIME="0.800000011920929" COMMENTS="comments" TAGS="tag" EDITABLE="true"/>
 </dataset>

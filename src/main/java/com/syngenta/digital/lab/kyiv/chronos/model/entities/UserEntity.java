@@ -1,10 +1,8 @@
 package com.syngenta.digital.lab.kyiv.chronos.model.entities;
 
 import com.syngenta.digital.lab.kyiv.chronos.model.dto.reporting.Report;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
 
 import javax.persistence.Column;
 import javax.persistence.ColumnResult;
@@ -18,24 +16,38 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedNativeQuery;
 import javax.persistence.SqlResultSetMapping;
 import javax.persistence.Table;
+import java.time.LocalDate;
 
 @NamedNativeQuery(
         name = "userReportingQuery",
-        query = " SELECT PROJECT.ID, PROJECT_NAME, sum(TASK.SPENT_TIME) as SPENT_TIME, USER.FIRST_NAME, USER.LAST_NAME " +
+        query = "SELECT " +
+                "       TASK.ID AS TASK_ID,   " +
+                "       PROJECT_NAME, " +
+                "       FIRST_NAME, " +
+                "       LAST_NAME, " +
+                "       JOB_TITLE, " +
+                "       SPENT_TIME, " +
+                "       REPORTING_DATE, " +
+                "       COMMENTS " +
                 "FROM TASK " +
-                "       JOIN PROJECT ON TASK.PROJECT_ID = PROJECT.ID " +
-                "       JOIN USER ON USER.ID = TASK.USER_ID " +
-                "WHERE (TASK.REPORTING_DATE <=:endDate) and (TASK.REPORTING_DATE >=:startDate) AND USER.ID=:userId " +
-                "GROUP BY PROJECT.ID, USER.ID ",
+                "       JOIN PROJECT ON PROJECT.ID = PROJECT_ID " +
+                "       JOIN USER ON USER.ID = USER_ID " +
+                "WHERE REPORTING_DATE <=:endDate AND REPORTING_DATE >=:startDate AND USER.ID in :userIds " +
+                "GROUP BY PROJECT_ID, PROJECT_NAME, FIRST_NAME, LAST_NAME, JOB_TITLE, TASK_ID, SPENT_TIME, REPORTING_DATE, COMMENTS " +
+                "ORDER BY PROJECT_NAME, FIRST_NAME, LAST_NAME",
         resultSetMapping = "reporting-dto-mapping"
 )
 @SqlResultSetMapping(name = "reporting-dto-mapping",
         classes = {
                 @ConstructorResult(targetClass = Report.class, columns = {
+                        @ColumnResult(name = "TASK_ID", type = Long.class),
                         @ColumnResult(name = "PROJECT_NAME", type = String.class),
-                        @ColumnResult(name = "SPENT_TIME", type = Long.class),
                         @ColumnResult(name = "FIRST_NAME", type = String.class),
-                        @ColumnResult(name = "LAST_NAME", type = String.class)
+                        @ColumnResult(name = "LAST_NAME", type = String.class),
+                        @ColumnResult(name = "JOB_TITLE", type = String.class),
+                        @ColumnResult(name = "SPENT_TIME", type = Long.class),
+                        @ColumnResult(name = "REPORTING_DATE", type = LocalDate.class),
+                        @ColumnResult(name = "COMMENTS", type = String.class)
                 })
         }
 )
@@ -44,8 +56,6 @@ import javax.persistence.Table;
 @Table(name = "USER")
 @Getter
 @Setter
-@EqualsAndHashCode
-@ToString
 public class UserEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -61,4 +71,6 @@ public class UserEntity {
     private String userEmail;
     @Column(name = "USER_PASSWORD")
     private String userPassword;
+    @Column(name = "JOB_TITLE")
+    private String jobTitle;
 }

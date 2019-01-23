@@ -5,11 +5,14 @@ import com.syngenta.digital.lab.kyiv.chronos.model.dto.reporting.ReportingReques
 import com.syngenta.digital.lab.kyiv.chronos.model.dto.reporting.Report;
 import com.syngenta.digital.lab.kyiv.chronos.model.dto.reporting.ReportingResponse;
 import com.syngenta.digital.lab.kyiv.chronos.model.exceptions.ReportingException;
+import com.syngenta.digital.lab.kyiv.chronos.repositories.TaskRepository;
 import com.syngenta.digital.lab.kyiv.chronos.repositories.UserRepository;
 import com.syngenta.digital.lab.kyiv.chronos.service.report.view.ViewRenderer;
+import com.syngenta.digital.lab.kyiv.chronos.service.validation.reporting.ReportParameterValidationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -21,17 +24,14 @@ public class ReportingService {
     private final ViewRenderer csvViewRenderer;
     private final ViewRenderer xlsViewRenderer;
     private final UserRepository userRepository;
+    private final TaskRepository taskRepository;
     private final ReportParameterValidationService reportParameterValidationService;
 
     @Transactional
-    public ReportingResponse generateReport(String reportTypeAsString, ReportingRequest reportingRequest) {
+    public ReportingResponse generateReport(ReportType reportType, ReportingRequest reportingRequest) {
         reportParameterValidationService.validate(reportingRequest);
-        ReportType reportType = ReportType.from(reportTypeAsString);
-        List<Report> reports = reportingRequest.getUserIds()
-                .stream()
-                .flatMap(userId -> userRepository.generateReport(userId, reportingRequest.getRange()))
-                .collect(Collectors.toList());
-
+        List<Report> reports = userRepository.generateReport(reportingRequest);
+        freezeTasks(reports);
         switch (reportType) {
             case CSV:
                 return csvViewRenderer.writeToFile(reports, reportingRequest.getRange());
@@ -40,5 +40,13 @@ public class ReportingService {
             default:
                 throw new ReportingException(ERROR_CODE, "No suitable report type is provided");
         }
+    }
+
+    private void freezeTasks(List<Report> reports) {
+        if (CollectionUtils.isEmpty(reports)) {
+            throw new ReportingException(ERROR_CODE, "No tasks have been found for the report generations.");
+        }
+        List<Long> taskIds = reports.stream().map(Report::getTaskId).collect(Collectors.toList());
+        taskRepository.freezeTasks(taskIds);
     }
 }

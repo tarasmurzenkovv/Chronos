@@ -3,12 +3,7 @@ import {connect} from 'react-redux';
 import PrivatePage from './PrivatePage';
 
 const mapStateToProps = (state) => ({
-  id: state.auth.signIn.user.id
+  id: state.common.user.id
 });
 
-const mapDispatchToProps = {};
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(PrivatePage);
+export default connect(mapStateToProps)(PrivatePage);

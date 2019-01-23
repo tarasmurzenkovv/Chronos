@@ -1,9 +1,7 @@
 package com.syngenta.digital.lab.kyiv.chronos.model.entities;
 
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -16,8 +14,6 @@ import javax.persistence.Table;
 @Table(name = "APPLICATION_USER_ROLE")
 @Getter
 @Setter
-@EqualsAndHashCode
-@ToString
 public class UserRoleEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

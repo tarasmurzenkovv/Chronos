@@ -7,21 +7,16 @@ import {defaultDateFormatApi} from 'shared/utils/constants';
 import getProjectsList from 'modules/modals/actions/api/getProjectsList';
 import {removeCurrentModal} from 'modules/modals/actions/modalsActions';
 import {createRecordApi} from 'modules/modals/actions/api/createRecordApi';
-import {fetchTimesheetListByDateApi} from 'modules/timesheet/actions/api/fetchTimesheetListByDateApi';
 
 import TimesheetRecordModal from './TimesheetRecordModal';
 
 const mapStateToProps = (state) => ({
-  list: state.projects.list,
-  userId: state.auth.signIn.user.id,
-
-  startOfMonth: state.timesheet.filters.date.startOfMonth,
-  endOfMonth: state.timesheet.filters.date.endOfMonth
+  list: state.projects.list.filter((item) => !item.deleted),
+  userId: state.common.user.id
 });
 
 const mapDispatchToProps = {
   createRecordApi,
-  fetchTimesheetListByDateApi,
   getProjectsList,
   removeCurrentModal
 };
@@ -40,7 +35,7 @@ export default compose(
   withState('projectId', 'setProjectId', ''),
   withState('selectProjectError', 'setSelectProjectError', false),
   withState('timeError', 'setTimeError', false),
-  withState('date', 'setDate', new Date().toISOString().slice(0, 10)),
+  withState('date', 'setDate', moment()),
 
   /* eslint-disable no-shadow */
   withHandlers({
@@ -74,25 +69,19 @@ export default compose(
       }
     },
 
-    handleDateChange: ({date, setDate}) => (event) => {
-      const {value} = event.target;
-      if (date !== value) {
-        setDate(value);
-      }
+    handleDateChange: ({setDate}) => (date) => {
+      setDate(date);
     }
   }),
 
   withHandlers({
     handleFormSubmit: ({
       createRecordApi,
-      fetchTimesheetListByDateApi,
+      date,
       handleOnClose,
       projectId,
       setSelectProjectError,
       setTimeError,
-      endOfMonth,
-
-      startOfMonth,
       userId
     }) => (event) => {
       event.preventDefault();
@@ -109,7 +98,6 @@ export default compose(
 
       if (!projectId || !time) return;
 
-      const date = event.target.date.value;
       const comments = event.target.comments.value;
 
       const params = {
@@ -121,14 +109,7 @@ export default compose(
       };
 
       createRecordApi(params)
-        .then(() => {
-          handleOnClose();
-          fetchTimesheetListByDateApi({
-            id: userId,
-            start: startOfMonth,
-            end: endOfMonth
-          });
-        })
+        .then(() => handleOnClose())
         .catch(() => {});
     }
   }),

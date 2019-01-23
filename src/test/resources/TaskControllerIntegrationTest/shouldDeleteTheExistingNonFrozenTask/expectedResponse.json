@@ -1,0 +1,7 @@
+{
+  "error": true,
+  "data": {
+    "error_code": 10,
+    "error_message": "The task with id '1' is already frozen. Cannot modify it."
+  }
+}
