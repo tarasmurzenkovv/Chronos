@@ -11,6 +11,7 @@ import * as moment from 'moment';
 
 import {addModal} from 'modules/modals/actions/modalsActions';
 import getProjectsList from 'modules/modals/actions/api/getProjectsList';
+
 import {
   TIMESHEET_RECORD_DELETE_MODAL,
   TIMESHEET_RECORD_EDIT_MODAL,
@@ -87,7 +88,6 @@ export default compose(
     handleEditButtonClick: ({addModal}) => () => {
       addModal({id: TIMESHEET_RECORD_EDIT_MODAL});
     },
-
     handleRowEnter: ({setHoveredRow}) => (id) => () => {
       setHoveredRow(id);
     },

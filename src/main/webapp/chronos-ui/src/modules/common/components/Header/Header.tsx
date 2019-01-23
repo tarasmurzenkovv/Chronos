@@ -16,6 +16,7 @@ import PermIdentity from '@material-ui/icons/PermIdentity';
 
 import mainLogo from 'shared/assets/img/syngentaLogo.svg';
 
+import {history} from 'configurations/store';
 import * as theme from './Header.scss';
 import styles from './styles';
 
@@ -56,7 +57,13 @@ const Header: React.FunctionComponent<IProps> = ({
           </a>
         </div>
         <Typography variant="h6" color="inherit" className={classes.navTitle}>
-          Calendar <span className={classes.navTitleName}>{userName}</span>
+          {pathname === '/' ? (
+            <span>
+              Calendar <span className={classes.navTitleName}>{userName}</span>
+            </span>
+          ) : (
+            'Settings'
+          )}
         </Typography>
         {isAdmin && (
           <IconButton
@@ -74,18 +81,25 @@ const Header: React.FunctionComponent<IProps> = ({
           className={`${classes.navButton} ${
             pathname === '/' ? classes.active : ''
           }`}
+          onClick={() => {
+            history.push('/');
+          }}
         >
           <CalendarIcon className={classes.iconCalendar} />
         </IconButton>
-        <IconButton
-          aria-label="Settings"
-          className={`${classes.navButton} ${classes.navSettings} ${
-            pathname === '/settings' ? classes.active : ''
-          }`}
-          disabled
-        >
-          <SettingsIcon className={classes.iconSettings} />
-        </IconButton>
+        {isAdmin && (
+          <IconButton
+            aria-label="Settings"
+            className={`${classes.navButton} ${classes.navSettings} ${
+              pathname === '/settings' ? classes.active : ''
+            }`}
+            onClick={() => {
+              history.push('/settings');
+            }}
+          >
+            <SettingsIcon className={classes.iconSettings} />
+          </IconButton>
+        )}
       </Toolbar>
     </AppBar>
   </div>

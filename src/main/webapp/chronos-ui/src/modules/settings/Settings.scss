@@ -1,0 +1,14 @@
+.formControlWrapper{
+  display: flex;
+  justify-content: space-between;
+}
+.btnWrapper{
+  display: flex;
+  justify-content: space-between;
+}
+.colorOption{
+  width: 26px;
+  height: 26px;
+  border: 1px solid rgba(173, 181, 199, 0.87);
+  border-radius: 18px;
+}
