@@ -1,0 +1,7 @@
+{
+  "error": true,
+  "data": {
+    "error_code": 9,
+    "error_message": "Cannot modify deleted project for id 777"
+  }
+}

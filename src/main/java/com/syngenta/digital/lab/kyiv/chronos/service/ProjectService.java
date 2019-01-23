@@ -28,6 +28,9 @@ public class ProjectService {
 
     @Transactional
     public ProjectDto create(ProjectDto projectDto) {
+        if (projectDto.isDeleted()) {
+            throw new ProjectException(ERR_CODE_NOT_EXISTING_PROJECT_TYPE, "Cannot save new project with flag deleted set to true");
+        }
         ProjectTypeEntity projectTypeEntity = projectTypeRepository.findById(projectDto.getProjectTypeId())
                 .orElseThrow(() -> new ProjectException(ERR_CODE_NOT_EXISTING_PROJECT_TYPE, "Cannot find project type for id " + projectDto.getProjectTypeId()));
         ProjectEntity projectEntity = projectMapper.mapToEntity(projectDto, projectTypeEntity);
@@ -38,7 +41,7 @@ public class ProjectService {
     @Transactional
     public ProjectDto update(ProjectDto projectDto) {
         if (projectDto.getId() == null) {
-            throw new ProjectTypeException(ERR_CODE_NOT_EXISTING_PROJECT_TYPE, "Cannot update project for null id value");
+            throw new ProjectException(ERR_CODE_NOT_EXISTING_PROJECT_TYPE, "Cannot update project for null id value");
         }
         ProjectTypeEntity projectTypeEntity = projectTypeRepository.findById(projectDto.getProjectTypeId())
                 .orElseThrow(() -> new ProjectException(ERR_CODE_NOT_EXISTING_PROJECT_TYPE, "Cannot find project type for id " + projectDto.getProjectTypeId()));
@@ -52,7 +55,6 @@ public class ProjectService {
         ProjectEntity savedProjectEntity = projectRepository.save(projectEntity);
         return projectMapper.mapToDto(savedProjectEntity);
     }
-
 
     public ProjectDto find(long projectId) {
         return projectRepository.findById(projectId)

@@ -1,0 +1,7 @@
+{
+  "error": true,
+  "data": {
+    "error_code": 9,
+    "error_message": "Cannot save new project with flag deleted set to true"
+  }
+}
