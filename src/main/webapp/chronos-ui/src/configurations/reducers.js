@@ -1,17 +1,19 @@
 import {combineReducers} from 'redux';
 import {connectRouter} from 'connected-react-router';
 
-import modals, {projects} from 'modules/modals/reducers';
 import auth from 'modules/authorization/reducers';
-import timesheet from 'modules/timesheet/reducers';
 import common from 'modules/common/reducers';
+import modals, {projects} from 'modules/modals/reducers';
+import timesheet from 'modules/timesheet/reducers';
+import reports from 'modules/reports/reducers';
 
 export default (history) =>
   combineReducers({
     auth,
+    common,
     modals,
     projects,
+    reports,
     router: connectRouter(history),
-    timesheet,
-    common
+    timesheet
   });

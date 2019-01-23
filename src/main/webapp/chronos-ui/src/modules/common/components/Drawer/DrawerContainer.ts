@@ -2,6 +2,8 @@ import {connect} from 'react-redux';
 import {compose, lifecycle, withHandlers} from 'recompose';
 import sortBy from 'lodash/sortBy';
 
+import {selectAllUserIdForReports} from 'modules/reports/actions/reports';
+
 import {fetchUsersList} from '../../actions/api/fetchUsersList';
 import {selectUserInUserlist, setDrawerStatus} from '../../actions/drawer';
 import Drawer from './Drawer';
@@ -15,6 +17,7 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = {
   fetchUsersList,
+  selectAllUserIdForReports,
   selectUserInUserlist,
   setDrawerStatus
 };
@@ -23,6 +26,7 @@ interface IProps {
   fetchUsersList: () => Promise<any>;
   selectUserInUserlist: (userId: number) => void;
   userId: number;
+  selectAllUserIdForReports: () => void;
 }
 
 export default compose(
@@ -42,9 +46,18 @@ export default compose(
 
   lifecycle<IProps, {}>({
     componentDidMount() {
-      const {fetchUsersList, selectUserInUserlist, userId} = this.props;
+      const {
+        userId,
 
-      fetchUsersList().then(() => selectUserInUserlist(userId));
+        fetchUsersList,
+        selectAllUserIdForReports,
+        selectUserInUserlist
+      } = this.props;
+
+      fetchUsersList().then(() => {
+        selectUserInUserlist(userId);
+        selectAllUserIdForReports();
+      });
     }
   })
 )(Drawer);

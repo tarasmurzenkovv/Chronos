@@ -21,11 +21,10 @@ const styles = createStyles({
     height: '36px',
     padding: '0',
     backgroundColor: '#d6d6e3',
-    borderRadius: '6px'
+    borderRadius: '6px',
+    marginRight: 40
   },
-  navSettings: {
-    margin: '0 14px 0 36px'
-  },
+  navSettings: {},
   active: {
     backgroundColor: '#25cdda'
   },

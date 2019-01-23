@@ -34,6 +34,7 @@ interface IProps extends WithStyles<typeof styles> {
 
   handleProjectChange(): void;
   handleDateChange(): void;
+  handleDateChange(): void;
 
   handleFormSubmit(): void;
   handleTimeChange(): void;
@@ -151,7 +152,7 @@ const TimesheetRecordModal: React.FunctionComponent<IProps> = ({
                 </FormHelperText>
               )}
             </FormControl>
-            <FormControl className={classes.dateInputBlock}>
+            <FormControl>
               <TextField
                 id="date"
                 name="date"
@@ -173,7 +174,6 @@ const TimesheetRecordModal: React.FunctionComponent<IProps> = ({
                     notchedOutline: classes.textFieldFocusedNotchedOutline
                   }
                 }}
-                className={classes.textField}
                 required
                 onChange={handleDateChange}
               />
