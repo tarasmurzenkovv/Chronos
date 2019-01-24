@@ -7,6 +7,7 @@ buildscript {
         classpath 'com.moowork.gradle:gradle-node-plugin:1.2.0'
         classpath 'org.liquibase:liquibase-gradle-plugin:1.2.0'
         classpath 'mysql:mysql-connector-java:5.1.46'
+        classpath 'org.postgresql:postgresql:42.2.5'
     }
 }
 
@@ -28,7 +29,7 @@ apply plugin: "org.hidetake.ssh"
 
 remotes {
     webServer {
-    	def pathToRsa = project.findProperty("host.id_rsa.file.path")
+        def pathToRsa = project.findProperty("host.id_rsa.file.path")
         host = project.findProperty("host")
         user = project.findProperty("host.user")
         password = project.findProperty("host.password")
@@ -51,7 +52,6 @@ lombok {
 
 bootJar {
     baseName = 'chronos'
-    version = '0.1.0'
     from('src/main/webapp/chronos-ui/build') {
         into 'public'
     }
@@ -71,7 +71,7 @@ checkstyleMain {
 
 task applyDbChanges() {
     def changeLog = "$projectDir/src/main/resources/db/changelog.xml"
-    def dbUrl = 'jdbc:mysql://139.59.210.123:3306/chrono_db?useSSL=false'
+    def dbUrl = project.findProperty("dbUrl")
     def dbUserName = project.findProperty("user_name")
     def dbPassword = project.findProperty("password")
     liquibase {
@@ -117,7 +117,7 @@ compileJava {
 }
 
 clean {
-	dependsOn deletFeArtifacts
+    dependsOn deletFeArtifacts
 }
 
 task deploy {
@@ -127,12 +127,12 @@ task deploy {
         }
         ssh.run {
             session(remotes.webServer) {
-                executeSudo('systemctl stop chronos_web_app', pty: true)
+                executeSudo('systemctl stop ' + project.findProperty("serviceName"), pty: true)
 
-                put from: "${project.projectDir}/build/libs/chronos-0.1.0.jar",
-                    into: '/home/syngenta/deployed_applications/chronos_app'
+                put from: "${project.projectDir}/build/libs/chronos.jar",
+                        into: '/home/syngenta/deployed_applications/chronos_app'
 
-                executeSudo('systemctl start chronos_web_app', pty: true)
+                executeSudo('systemctl start ' + project.findProperty("serviceName"), pty: true)
             }
         }
     }
@@ -161,6 +161,7 @@ dependencies {
     compile 'io.jsonwebtoken:jjwt:0.9.1'
     compile 'javax.xml.bind:jaxb-api:2.3.1'
     compile 'mysql:mysql-connector-java:5.1.46'
+    compile group: 'org.postgresql', name: 'postgresql', version: '42.2.5'
     compile 'org.apache.commons:commons-lang3:3.8.1'
     compile 'io.springfox:springfox-swagger2:2.0.1'
     compile 'io.springfox:springfox-swagger-ui:2.0.2'

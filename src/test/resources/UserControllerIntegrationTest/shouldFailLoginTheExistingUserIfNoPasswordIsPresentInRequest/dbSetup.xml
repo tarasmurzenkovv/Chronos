@@ -1,4 +1,4 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <dataset>
-    <USER ID="1" FIRST_NAME="First_name" LAST_NAME="Last_name" USER_EMAIL="email@email.com" USER_PASSWORD="passW3$rdd"/>
+    <APPLICATION_USER ID="1" FIRST_NAME="First_name" LAST_NAME="Last_name" USER_EMAIL="email@email.com" USER_PASSWORD="passW3$rdd"/>
 </dataset>

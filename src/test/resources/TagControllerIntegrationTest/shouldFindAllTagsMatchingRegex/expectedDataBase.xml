@@ -2,7 +2,7 @@
 <dataset>
     <PROJECT_TYPE/>
     <PROJECT/>
-    <USER/>
+    <APPLICATION_USER/>
     <TASK/>
     <TASK_TAGS/>
     <TAG TAG="awesome_tag"/>

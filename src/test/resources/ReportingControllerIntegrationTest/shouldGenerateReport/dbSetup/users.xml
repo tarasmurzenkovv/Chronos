@@ -1,8 +1,8 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <dataset>
-    <USER ID="1" FIRST_NAME="Test1_Name" LAST_NAME="Test1_LastName" USER_EMAIL="email@emial.com" USER_PASSWORD="passW3$rdd" JOB_TITLE="Developer"/>
-    <USER ID="2" FIRST_NAME="Test2_Name" LAST_NAME="Test2_LastName" USER_EMAIL="email@emial.com" USER_PASSWORD="passW3$rdd" JOB_TITLE="Developer"/>
-    <USER ID="3" FIRST_NAME="Test3_Name" LAST_NAME="Test3_LastName" USER_EMAIL="email@emial.com" USER_PASSWORD="passW3$rdd" JOB_TITLE="Developer"/>
-    <USER ID="4" FIRST_NAME="Test4_Name" LAST_NAME="Test4_LastName" USER_EMAIL="email@emial.com" USER_PASSWORD="passW3$rdd" JOB_TITLE="Developer"/>
-    <USER ID="5" FIRST_NAME="Test5_Name" LAST_NAME="Test5_LastName" USER_EMAIL="email@emial.com" USER_PASSWORD="passW3$rdd" JOB_TITLE="Developer"/>
+    <APPLICATION_USER ID="1" FIRST_NAME="Test1_Name" LAST_NAME="Test1_LastName" USER_EMAIL="email@emial.com" USER_PASSWORD="passW3$rdd" JOB_TITLE="Developer"/>
+    <APPLICATION_USER ID="2" FIRST_NAME="Test2_Name" LAST_NAME="Test2_LastName" USER_EMAIL="email@emial.com" USER_PASSWORD="passW3$rdd" JOB_TITLE="Developer"/>
+    <APPLICATION_USER ID="3" FIRST_NAME="Test3_Name" LAST_NAME="Test3_LastName" USER_EMAIL="email@emial.com" USER_PASSWORD="passW3$rdd" JOB_TITLE="Developer"/>
+    <APPLICATION_USER ID="4" FIRST_NAME="Test4_Name" LAST_NAME="Test4_LastName" USER_EMAIL="email@emial.com" USER_PASSWORD="passW3$rdd" JOB_TITLE="Developer"/>
+    <APPLICATION_USER ID="5" FIRST_NAME="Test5_Name" LAST_NAME="Test5_LastName" USER_EMAIL="email@emial.com" USER_PASSWORD="passW3$rdd" JOB_TITLE="Developer"/>
 </dataset>
