@@ -1,1 +1,1 @@
-gradlew build -x buildFe -x test -x compileTest && heroku deploy:jar ./build/libs/chronos.jar --app chronos-time-tracking
+gradlew build && heroku deploy:jar ./build/libs/chronos.jar --app chronos-time-tracking
