@@ -1,10 +1,10 @@
 import * as React from 'react';
-import {Settings} from 'modules/settings';
+import {Settings} from 'modules/settings/components';
 
 const SettingsPage: React.FunctionComponent = () => (
-  <div>
+  <React.Fragment>
     <Settings />
-  </div>
+  </React.Fragment>
 );
 
 export default SettingsPage;

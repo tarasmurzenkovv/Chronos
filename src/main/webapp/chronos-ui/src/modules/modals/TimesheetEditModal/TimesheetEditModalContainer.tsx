@@ -11,7 +11,7 @@ import {editRecordApi} from 'modules/modals/actions/api/editRecordApi';
 import TimesheetRecordModal from './TimesheetEditModal';
 
 const mapStateToProps = (state) => ({
-  list: state.projects.list,
+  list: state.projects.list.filter((item) => !item.deleted),
   userId: state.common.user.id,
   selectedId: state.timesheet.selectedId,
   selectedItemData: state.timesheet.list.find(

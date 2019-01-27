@@ -23,6 +23,7 @@ import {IListItem as IListItemProject} from 'modules/modals/reducers/projects';
 
 import {IListItem as IListItemTimesheet} from '../../reducers/timesheet';
 import styles from './styles';
+import * as theme from './TimesheetListTable.scss';
 
 interface IList extends IListItemTimesheet, IListItemProject {}
 
@@ -107,7 +108,13 @@ const TimesheetListTable: React.FunctionComponent<IProps> = ({
               {item.spent_time}
             </TableCell>
             <TableCell align="left" className={classes.nameCell}>
-              {item.project_name}
+              <span className={theme.optionText}>{item.project_name}</span>
+              <div
+                className={theme.colorOption}
+                style={{
+                  backgroundColor: `${item.color}`
+                }}
+              />
             </TableCell>
             <TableCell align="left" className={classes.commentCell}>
               {item.comments}

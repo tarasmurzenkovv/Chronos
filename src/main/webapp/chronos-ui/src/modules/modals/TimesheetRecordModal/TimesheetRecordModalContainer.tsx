@@ -10,10 +10,15 @@ import {createRecordApi} from 'modules/modals/actions/api/createRecordApi';
 
 import TimesheetRecordModal from './TimesheetRecordModal';
 
-const mapStateToProps = (state) => ({
-  list: state.projects.list.filter((item) => !item.deleted),
-  userId: state.common.user.id
-});
+const mapStateToProps = (state) => {
+  const list = state.projects.list.filter((item) => !item.deleted);
+  const userId = state.common.user.id;
+
+  return {
+    list,
+    userId
+  };
+};
 
 const mapDispatchToProps = {
   createRecordApi,
