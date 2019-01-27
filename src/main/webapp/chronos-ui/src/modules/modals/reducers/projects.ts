@@ -17,17 +17,20 @@ export interface IListItem {
 export type TState = Readonly<{
   status: string;
   list: IListItem[];
+  isLoading: boolean;
 }>;
 
 const defaultState: TState = {
   status: requestsStatuses.default,
-  list: []
+  list: [],
+  isLoading: false
 };
 
 const projects = createReducer(defaultState, {
-  [GET_PROJECTS_LIST.pending]: (state: TState) => ({
+  [GET_PROJECTS_LIST.pending]: (state: TState, {payload: {isLoading}}) => ({
     ...state,
-    status: requestsStatuses.pending
+    status: requestsStatuses.pending,
+    isLoading
   }),
 
   [GET_PROJECTS_LIST.failure]: (state: TState) => ({
@@ -35,10 +38,14 @@ const projects = createReducer(defaultState, {
     status: requestsStatuses.failure
   }),
 
-  [GET_PROJECTS_LIST.success]: (state: TState, {payload: {list}}) => ({
+  [GET_PROJECTS_LIST.success]: (
+    state: TState,
+    {payload: {list, isLoading}}
+  ) => ({
     ...state,
     status: requestsStatuses.success,
-    list
+    list,
+    isLoading
   }),
   [LOCATION_CHANGE]: () => defaultState
 });

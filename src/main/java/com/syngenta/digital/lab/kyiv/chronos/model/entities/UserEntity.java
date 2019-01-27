@@ -31,8 +31,8 @@ import java.time.LocalDate;
                 "       COMMENTS " +
                 "FROM TASK " +
                 "       JOIN PROJECT ON PROJECT.ID = PROJECT_ID " +
-                "       JOIN USER ON USER.ID = USER_ID " +
-                "WHERE REPORTING_DATE <=:endDate AND REPORTING_DATE >=:startDate AND USER.ID in :userIds " +
+                "       JOIN APPLICATION_USER ON APPLICATION_USER.ID = USER_ID " +
+                "WHERE REPORTING_DATE <=:endDate AND REPORTING_DATE >=:startDate AND APPLICATION_USER.ID in :userIds " +
                 "GROUP BY PROJECT_ID, PROJECT_NAME, FIRST_NAME, LAST_NAME, JOB_TITLE, TASK_ID, SPENT_TIME, REPORTING_DATE, COMMENTS " +
                 "ORDER BY PROJECT_NAME, FIRST_NAME, LAST_NAME",
         resultSetMapping = "reporting-dto-mapping"
@@ -53,7 +53,7 @@ import java.time.LocalDate;
 )
 
 @Entity
-@Table(name = "USER")
+@Table(name = "APPLICATION_USER")
 @Getter
 @Setter
 public class UserEntity {

@@ -1,0 +1,1 @@
+gradlew build && heroku deploy:jar ./build/libs/chronos.jar --app chronos-time-tracking

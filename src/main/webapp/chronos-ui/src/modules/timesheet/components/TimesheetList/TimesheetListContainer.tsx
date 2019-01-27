@@ -38,7 +38,8 @@ const mapStateToProps = (state) => {
   return {
     list,
     month,
-    visibleToUser
+    visibleToUser,
+    projectsList
   };
 };
 
@@ -53,6 +54,7 @@ interface IProps {
   monthFilter: string;
   getProjectsList: () => void;
   setMonthFilter: (month: any) => void;
+  projectsList: any;
 }
 
 export default compose(
@@ -104,7 +106,6 @@ export default compose(
   lifecycle<IProps, {}>({
     componentDidMount() {
       const {getProjectsList, setMonthFilter} = this.props;
-
       const today = moment();
 
       setMonthFilter(today);

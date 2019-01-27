@@ -25,11 +25,11 @@ import styles from './styles';
 const TimesheetRecordModal = ({
   classes,
   date,
-  list,
   projectId,
   isOpen,
   selectProjectError,
   timeError,
+  list,
 
   handleProjectChange,
   handleDateChange,
@@ -86,8 +86,14 @@ const TimesheetRecordModal = ({
               }
             >
               {list.map((item) => (
-                <MenuItem key={item.id} value={item.id}>
-                  {item.project_name}
+                <MenuItem key={Math.random()} value={item.id}>
+                  <div
+                    className={theme.colorOption}
+                    style={{
+                      backgroundColor: `${item.color}`
+                    }}
+                  />
+                  <div className={theme.optionText}>{item.project_name}</div>
                 </MenuItem>
               ))}
             </Select>

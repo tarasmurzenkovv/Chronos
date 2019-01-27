@@ -6,6 +6,11 @@ export const formatTimesheetList = (timesheetList, projectsList) =>
         ? projectsList.find(
           (projectItem) => projectItem.id === timesheetItem.project_id
             ).project_name
+          : '',
+        color: projectsList.length
+        ? projectsList.find(
+          (projectItem) => projectItem.id === timesheetItem.project_id
+            ).color
           : ''
     }))
     : [];

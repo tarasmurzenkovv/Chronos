@@ -86,7 +86,13 @@ const TimesheetEditModal = ({
             >
               {list.map((item) => (
                 <MenuItem key={item.id} value={item.id}>
-                  {item.project_name}
+                  <div
+                    className={theme.colorOption}
+                    style={{
+                      backgroundColor: `${item.color}`
+                    }}
+                  />
+                  <div className={theme.optionText}>{item.project_name}</div>
                 </MenuItem>
               ))}
             </Select>

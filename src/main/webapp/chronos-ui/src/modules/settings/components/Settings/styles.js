@@ -14,14 +14,14 @@ const styles = () => ({
     textAlign: 'center'
   },
   formWrapper: {
-    width: '50%',
+    width: '45%',
     margin: '0 auto'
   },
   formControl: {
     display: 'flex',
     flexDirection: 'row',
+    flexGrow: '2',
     marginRight: '45px',
-    width: '80%',
     borderRadius: '5px',
     textAlign: 'left'
   },
@@ -32,10 +32,11 @@ const styles = () => ({
     margin: '16px 0px'
   },
   formControlDeleted: {
-    margin: '0px'
+    margin: '0px 45px 0px 0px'
   },
   inputTextDeleted: {
-    margin: '0px'
+    margin: '0px',
+    width: '120px!important'
   },
   deletedText: {
     color: '#ffffff'
@@ -95,27 +96,31 @@ const styles = () => ({
     left: '15px'
   },
   controlBtn: {
-    marginTop: '25px',
+    margin: '25px 0px',
     padding: '0 20px',
     height: '42px',
     backgroundColor: '#25cdda',
     color: '#ffffff',
     fontWeight: '400',
-    textTransform: 'capitalize'
+    textTransform: 'capitalize',
+    '&:hover': {
+      backgroundColor: '#25cdda !important'
+    }
+  },
+  saveBtnActive: {
+    width: '140px'
   },
   saveBtnDisabled: {
     width: '140px',
     border: '1px solid #25cdda',
-    color: '#25cdda',
+    color: '#25cdda!important',
     fontWeight: '500',
-    backgroundColor: 'transparent',
-    '&:hover': {
-      backgroundColor: 'transparent !important'
-    }
+    backgroundColor: 'transparent'
   },
   deleteBtn: {
     paddingLeft: '0px',
-    marginRight: '20px',
+    marginRight: '15px',
+    width: '36px',
     color: '#ed5454',
     '&:hover': {
       backgroundColor: 'transparent !important'

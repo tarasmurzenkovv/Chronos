@@ -107,6 +107,9 @@ const styles = () => ({
     overflowY: 'hidden',
     overflowX: 'hidden'
   },
+  selectBox: {
+    display: 'flex'
+  },
   selectionList: {
     position: 'absolute',
     top: '300px'
