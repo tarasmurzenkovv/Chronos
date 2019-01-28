@@ -28,11 +28,11 @@ public class BaseIntegrationTest {
     protected ObjectMapper objectMapper = new ObjectMapper();
 
     @LocalServerPort
-    int port;
+    private int port;
 
     @Before
     public void setUp() {
-        RestAssured.port = port;
+        RestAssured.port = this.port;
     }
 
     @Test

@@ -7,6 +7,7 @@ import com.github.springtestdbunit.annotation.DatabaseTearDown;
 import com.github.springtestdbunit.annotation.ExpectedDatabase;
 import com.jayway.restassured.RestAssured;
 import com.jayway.restassured.response.Response;
+import com.syngenta.digital.lab.kyiv.chronos.configuration.SingleCountQueryExecutionListenerWrapper;
 import com.syngenta.digital.lab.kyiv.chronos.model.response.ErrorResponsePayload;
 import com.syngenta.digital.lab.kyiv.chronos.model.response.GeneralResponse;
 import com.syngenta.digital.lab.kyiv.chronos.service.ClockService;
@@ -24,6 +25,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import org.mockito.Mockito;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpStatus;
 
@@ -45,11 +47,14 @@ public class ReportingControllerIntegrationTest extends BaseIntegrationTest {
     public TemporaryFolder testFolder = new TemporaryFolder();
     @MockBean
     private ClockService clockService;
+    @Autowired
+    private SingleCountQueryExecutionListenerWrapper singleQueryCountHolder;
 
     @Before
     public void setup() {
         Mockito.when(clockService.nowTime()).thenReturn(LocalDateTime.of(2017, 1, 1, 1, 1));
         Mockito.when(clockService.now()).thenReturn(LocalDate.of(2017, 1, 1));
+        singleQueryCountHolder.reset();
     }
 
     @Test
@@ -79,6 +84,10 @@ public class ReportingControllerIntegrationTest extends BaseIntegrationTest {
         List<String> actualParsedCsvFile = reader.lines().collect(Collectors.toList());
         List<String> expectedParsedCsvFile = FileUtils.parseCsvFile("/ReportingControllerIntegrationTest/shouldGenerateReport/response/expectedCsvFile.csv");
         Assertions.assertThat(actualParsedCsvFile).containsExactlyInAnyOrderElementsOf(expectedParsedCsvFile);
+        Assertions.assertThat(singleQueryCountHolder.select()).isEqualTo(1L);
+        Assertions.assertThat(singleQueryCountHolder.insert()).isEqualTo(0L);
+        Assertions.assertThat(singleQueryCountHolder.update()).isEqualTo(1L);
+        Assertions.assertThat(singleQueryCountHolder.delete()).isEqualTo(0L);
     }
 
     @Test
@@ -126,6 +135,11 @@ public class ReportingControllerIntegrationTest extends BaseIntegrationTest {
 
         List<String> expectedParsedCsvFile = FileUtils.parseCsvFile("/ReportingControllerIntegrationTest/shouldGenerateReport/response/expectedCsvFile.csv");
         Assertions.assertThat(actualParsedValues).containsExactlyInAnyOrderElementsOf(expectedParsedCsvFile);
+
+        Assertions.assertThat(singleQueryCountHolder.select()).isEqualTo(1L);
+        Assertions.assertThat(singleQueryCountHolder.insert()).isEqualTo(0L);
+        Assertions.assertThat(singleQueryCountHolder.update()).isEqualTo(1L);
+        Assertions.assertThat(singleQueryCountHolder.delete()).isEqualTo(0L);
     }
 
     @Test
@@ -150,5 +164,10 @@ public class ReportingControllerIntegrationTest extends BaseIntegrationTest {
                 });
 
         Assertions.assertThat(actualResponse).isEqualTo(expectedResponse);
+
+        Assertions.assertThat(singleQueryCountHolder.select()).isEqualTo(0L);
+        Assertions.assertThat(singleQueryCountHolder.insert()).isEqualTo(0L);
+        Assertions.assertThat(singleQueryCountHolder.update()).isEqualTo(0L);
+        Assertions.assertThat(singleQueryCountHolder.delete()).isEqualTo(0L);
     }
 }

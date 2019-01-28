@@ -16,7 +16,7 @@ public interface UserRepository extends JpaRepository<UserEntity, Long> {
     @Query("select count(user.userEmail) from UserEntity user where user.userEmail=:email")
     Long countEmails(@Param("email") String email);
 
-    @Query("select user from UserEntity user where user.userEmail=:email")
+    @Query("select user from UserEntity user join fetch user.userRoleEntity where user.userEmail=:email")
     Optional<UserEntity> find(@Param("email") String email);
 
     default  List<Report> generateReport(ReportingRequest reportingRequest) {
