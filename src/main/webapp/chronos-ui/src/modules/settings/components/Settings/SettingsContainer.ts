@@ -88,7 +88,6 @@ export default compose(
       selectProject(id);
       setActiveBtn(true);
       invokedAction.push('delete');
-      console.log('id', id)
     },
     handleProjectChange: ({
       projectNew,

@@ -146,8 +146,7 @@ const Settings: React.FunctionComponent<IProps> = ({
             isBtnActive ? classes.saveBtnActive : classes.saveBtnDisabled
           } ${classes.controlBtnSave}`}
         >
-          {isBtnActive ? 'Saved' : 'Save'}
-          {isBtnActive && <DoneIcon className={classes.rightIcon} />}
+          Save
         </Button>
       </div>
     </form>
