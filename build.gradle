@@ -13,7 +13,7 @@ buildscript {
 
 plugins {
     id 'io.franzbecker.gradle-lombok' version '1.14'
-    id "org.liquibase.gradle" version "2.0.1"
+    id "org.liquibase.gradle" version '2.0.1'
     id 'org.hidetake.ssh' version '2.9.0'
     id 'java'
 }
@@ -109,12 +109,14 @@ task installFeDependencies(type: NpmTask) {
 
 task buildFe(type: NpmTask) {
     args = ['run', 'build']
-    dependsOn installFeDependencies
+    /*dependsOn installFeDependencies*/
 }
 
+/*
 compileJava {
     dependsOn buildFe
 }
+*/
 
 clean {
     dependsOn deletFeArtifacts
@@ -153,6 +155,10 @@ dependencies {
     compile 'org.springframework.boot:spring-boot-starter-web'
     compile 'org.springframework.boot:spring-boot-starter-data-jpa'
     compile 'org.springframework.boot:spring-boot-configuration-processor'
+    compile 'org.springframework.boot:spring-boot-starter-security'
+    compile 'org.springframework.ldap:spring-ldap-core'
+    compile 'org.springframework.security:spring-security-ldap'
+    compile 'org.springframework:spring-tx'
     compile 'org.postgresql:postgresql:42.2.5'
     compile 'org.javassist:javassist:3.23.1-GA'
     compile 'org.slf4j:slf4j-api:1.7.25'
@@ -170,6 +176,7 @@ dependencies {
     compile 'org.apache.commons:commons-csv:1.6'
     compile 'commons-io:commons-io:2.6'
     compile 'net.ttddyy:datasource-proxy:1.4.10'
+    compile 'com.unboundid:unboundid-ldapsdk'
 
     testCompile 'org.awaitility:awaitility:3.1.3'
     testCompile 'org.springframework.boot:spring-boot-starter-test'
@@ -180,4 +187,6 @@ dependencies {
     testCompile 'org.junit.jupiter:junit-jupiter-engine:5.3.2'
     testCompile 'org.junit.jupiter:junit-jupiter-api:5.3.2'
     testCompile 'org.assertj:assertj-core:3.11.1'
+    testCompile 'org.springframework.boot:spring-boot-starter-test'
+    testCompile 'org.springframework.security:spring-security-test'
 }

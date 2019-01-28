@@ -3,7 +3,6 @@ package com.syngenta.digital.lab.kyiv.chronos.utils;
 import lombok.SneakyThrows;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -21,12 +20,6 @@ public final class FileUtils {
     public static List<String> parseCsvFile(String pathToCsvFile) {
         var file = new File(URLDecoder.decode(JsonUtils.class.getResource(pathToCsvFile).getFile(), StandardCharsets.UTF_8));
         return Files.newBufferedReader(file.toPath()).lines().collect(Collectors.toList());
-    }
-
-    @SneakyThrows
-    public static Workbook readXlsxFile(String pathToCsvFile) {
-        var file = new File(URLDecoder.decode(JsonUtils.class.getResource(pathToCsvFile).getFile(), StandardCharsets.UTF_8));
-        return WorkbookFactory.create(file);
     }
 
     @SneakyThrows

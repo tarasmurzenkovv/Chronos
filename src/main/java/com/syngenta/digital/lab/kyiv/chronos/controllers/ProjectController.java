@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -25,23 +26,27 @@ import java.util.List;
 public class ProjectController {
     private final ProjectService projectService;
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping("/project")
     public ResponseEntity<GeneralResponse<ProjectDto>> save(@RequestBody ProjectDto projectDto) {
         log.info("About to register the following project '{}'", projectDto);
         return GeneralResponse.from(projectService.create(projectDto), HttpStatus.CREATED);
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping("/project/{id}")
     public ResponseEntity<GeneralResponse<ProjectDto>> find(@PathVariable("id") long projectId) {
         log.info("About to find by id '{}'", projectId);
         return GeneralResponse.from(projectService.find(projectId), HttpStatus.FOUND);
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping("/project")
     public ResponseEntity<GeneralResponse<List<ProjectDto>>> find() {
         return GeneralResponse.from(projectService.find(), HttpStatus.FOUND);
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PutMapping("/project")
     public ResponseEntity<GeneralResponse<ProjectDto>> update(@RequestBody ProjectDto projectDto) {
         log.info("About to register the following project '{}'", projectDto);
@@ -49,6 +54,7 @@ public class ProjectController {
         return GeneralResponse.from(savedProjectDto, HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @DeleteMapping("/project/{id}")
     public ResponseEntity<GeneralResponse<ProjectDto>> delete(@PathVariable("id") long projectId) {
         log.info("About to delete project by id '{}'", projectId);

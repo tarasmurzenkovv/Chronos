@@ -15,15 +15,13 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.WebDataBinder;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.beans.PropertyEditorSupport;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -35,6 +33,7 @@ public class ReportingController {
     private final ReportingService reportingService;
 
     @SneakyThrows
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping(value = "/reporting/{reportType}")
     public ResponseEntity<Resource> generateCsvReport(@PathVariable("reportType") ReportType reportType,
                                                       @RequestParam("id") List<Long> userIds,

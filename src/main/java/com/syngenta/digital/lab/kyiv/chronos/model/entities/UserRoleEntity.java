@@ -1,14 +1,11 @@
 package com.syngenta.digital.lab.kyiv.chronos.model.entities;
 
+import com.syngenta.digital.lab.kyiv.chronos.model.dto.UserRoleEnum;
+import com.syngenta.digital.lab.kyiv.chronos.service.UserRoleConverter;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
 @Table(name = "APPLICATION_USER_ROLE")
@@ -20,5 +17,6 @@ public class UserRoleEntity {
     private Long id;
 
     @Column(name = "ROLE")
-    private String role;
+    @Convert(converter = UserRoleConverter.class)
+    private UserRoleEnum role;
 }

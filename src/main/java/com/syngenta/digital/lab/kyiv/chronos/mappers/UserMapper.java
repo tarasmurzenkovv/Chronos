@@ -1,17 +1,26 @@
 package com.syngenta.digital.lab.kyiv.chronos.mappers;
 
+import com.syngenta.digital.lab.kyiv.chronos.configuration.security.UserPrincipal;
+import com.syngenta.digital.lab.kyiv.chronos.configuration.security.service.JwtTokenProvider;
 import com.syngenta.digital.lab.kyiv.chronos.model.dto.UserDto;
 import com.syngenta.digital.lab.kyiv.chronos.model.entities.UserEntity;
 import com.syngenta.digital.lab.kyiv.chronos.repositories.UserRoleRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class UserMapper {
     private static final String DEFAULT_JOB_TITLE = "Developer";
     private final UserRoleRepository userRoleRepository;
+    private final JwtTokenProvider tokenProvider;
 
     public UserEntity mapToEntity(UserDto userDto) {
         UserEntity userEntity = new UserEntity();
@@ -32,10 +41,36 @@ public class UserMapper {
         userDto.setEmail(userEntity.getUserEmail());
         userDto.setFirstName(userEntity.getFirstName());
         userDto.setLastName(userEntity.getLastName());
-        userDto.setPassword(null);
-        userDto.setRole(userEntity.getUserRoleEntity().getRole());
+        userDto.setRole(userEntity.getUserRoleEntity().getRole().getRoleAsString());
         userDto.setJobTitle(StringUtils.isEmpty(userEntity.getJobTitle())? DEFAULT_JOB_TITLE : userEntity.getJobTitle());
 
+        return userDto;
+    }
+
+    public UserPrincipal mapToUserPrinciple(UserEntity user) {
+        List<GrantedAuthority> authorities = List.of(new SimpleGrantedAuthority(
+                String.format("ROLE_%s", user.getUserRoleEntity().getRole().name())
+        ));
+
+        return new UserPrincipal(
+                user.getId(),
+                user.getFirstName(),
+                user.getLastName(),
+                user.getUserEmail(),
+                user.getUserPassword(),
+                authorities
+        );
+    }
+
+    public UserDto mapToDto(Authentication authentication, UserPrincipal principal) {
+
+        UserDto userDto = new UserDto();
+
+        userDto.setEmail(principal.getEmail());
+        userDto.setFirstName(principal.getName());
+        userDto.setLastName(principal.getUsername());
+        userDto.setId(principal.getId());
+        userDto.setRole(principal.getAuthorities().stream().map(GrantedAuthority::getAuthority).findFirst().get());
         return userDto;
     }
 }

@@ -10,6 +10,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -43,10 +45,11 @@ public class UserController {
 
     @GetMapping("/user/{id}/task")
     public ResponseEntity<GeneralResponse<List<TaskDto>>> find(@PathVariable("id") long userId) {
-        log.info("About to find task by id '{}'", userId);
+        log.info("About to find task by user id '{}'", userId);
         return GeneralResponse.from(userService.find(userId), HttpStatus.FOUND);
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping("/user/information")
     public ResponseEntity<GeneralResponse<List<UserDto>>> find() {
         log.info("About to find all users ");
@@ -55,10 +58,11 @@ public class UserController {
 
     @GetMapping("/user/information/{id}")
     public ResponseEntity<GeneralResponse<UserDto>> findUserInformation(@PathVariable("id") long userId) {
-        log.info("About to find users for id '{id}'", userId);
+        log.info("About to find users for id '{}'", userId);
         return GeneralResponse.from(userService.findInformation(userId), HttpStatus.FOUND);
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping("/user/{id}")
     public ResponseEntity<GeneralResponse<List<TaskDto>>> find(
             @PathVariable("id") long userId,
