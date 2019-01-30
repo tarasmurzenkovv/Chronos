@@ -16,6 +16,7 @@ import {
 import DeleteOutlinedIcon from '@material-ui/icons/DeleteOutlined';
 import {Comment} from '@material-ui/icons';
 import EditFilledIcon from '@material-ui/icons/Edit';
+import LockIcon from '@material-ui/icons/Lock';
 
 import {defaultDateFormatApi} from 'shared/utils/constants';
 
@@ -104,17 +105,27 @@ const TimesheetListTable: React.FunctionComponent<IProps> = ({
                 )}
               </span>
             </TableCell>
-            <TableCell align="center" className={classes.timeCell}>
-              {item.spent_time}
+            <TableCell align="center" className={item.deleted ? `${classes.timeCell} ${classes.disabledCell}` : classes.timeCell}>
+             {item.spent_time}
             </TableCell>
-            <TableCell align="left" className={classes.nameCell}>
+            <TableCell
+              align="left"
+              className={
+                item.deleted
+                  ? `${classes.nameCell} ${classes.disabledCell}`
+                  : classes.nameCell
+              }
+            >
               <span className={theme.optionText}>{item.project_name}</span>
               <div
                 className={theme.colorOption}
                 style={{
-                  backgroundColor: `${item.color}`
+                  backgroundColor: item.deleted
+                    ? 'rgba(173, 181, 199, 0.1)'
+                    : `${item.color}`
                 }}
               />
+              {item.deleted && <LockIcon className={classes.lockedProject} />}
             </TableCell>
             <TableCell align="left" className={classes.commentCell}>
               {item.comments}

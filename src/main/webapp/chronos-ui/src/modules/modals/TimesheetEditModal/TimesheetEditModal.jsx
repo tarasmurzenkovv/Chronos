@@ -6,6 +6,7 @@ import {
   DialogTitle,
   FormControl,
   FormHelperText,
+  FormLabel,
   IconButton,
   InputLabel,
   MenuItem,
@@ -53,6 +54,14 @@ const TimesheetEditModal = ({
       >
         <CloseIcon />
       </IconButton>
+      <FormLabel
+        classes={{
+          required: `${classes.labelFieldRequired} ${classes.labelFiledBlock}`
+        }}
+        required
+      >
+        Required
+      </FormLabel>
       <form className={classes.container} onSubmit={handleFormSubmit}>
         <DialogContent className={classes.modalContent}>
           <FormControl
@@ -64,6 +73,7 @@ const TimesheetEditModal = ({
             <InputLabel
               htmlFor="outlined-projectId"
               className={classes.labelText}
+              classes={{required: classes.textFieldRequired}}
             >
               Project
             </InputLabel>
@@ -109,15 +119,15 @@ const TimesheetEditModal = ({
               id="time"
               name="time"
               label="Spent time, h."
-              margin="normal"
               variant="outlined"
               type="number"
-              className={classes.textField}
+              className={classes.textFieldTime}
               defaultValue={selectedItemData.spent_time}
               InputLabelProps={{
                 classes: {
                   root: classes.textFieldLabel,
-                  focused: classes.textFieldLabelFocused
+                  focused: classes.textFieldLabelFocused,
+                  required: classes.textFieldRequired
                 },
                 required: true
               }}
@@ -144,11 +154,13 @@ const TimesheetEditModal = ({
                 format="DD.MM.YYYY"
                 value={date}
                 onChange={handleDateChange}
+                className={classes.dateBlock}
                 InputLabelProps={{
                   shrink: true,
                   classes: {
                     root: classes.textFieldLabel,
-                    focused: classes.textFieldLabelFocused
+                    focused: classes.textFieldLabelFocused,
+                    required: classes.textFieldRequired
                   }
                 }}
                 InputProps={{
@@ -162,7 +174,6 @@ const TimesheetEditModal = ({
             </MuiPickersUtilsProvider>
           </div>
 
-          <div className={theme.labelText}>Comments:</div>
           <div>
             <TextField
               id="comments"

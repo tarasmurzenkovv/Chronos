@@ -15,7 +15,8 @@ import {
 
 import AddIcon from '@material-ui/icons/Add';
 import RemoveCircleOutlineIcon from '@material-ui/icons/RemoveCircleOutline';
-import DoneIcon from '@material-ui/icons/Done';
+import LockIcon from '@material-ui/icons/Lock';
+import LockOpenIcon from '@material-ui/icons/LockOpen';
 import {IListItem} from '../../../modals/reducers/projects';
 import {COLORS} from '../../../../shared/constatns';
 import * as theme from './Settings.scss';
@@ -26,7 +27,7 @@ interface IProps extends WithStyles<typeof styles> {
   projects: IListItem[];
   projectsList: IListItem[];
   isBtnActive: boolean;
-  isLoading: boolean;
+  isProjectClosed: {id: number};
   shouldBlockNavigation: boolean;
 
   handleAddProjectBtnClick(): void;
@@ -41,6 +42,7 @@ const Settings: React.FunctionComponent<IProps> = ({
   projects,
   color,
   isBtnActive,
+  isProjectClosed,
   handleAddProjectBtnClick,
   handleColorChange,
   handleDeleteProject,
@@ -59,9 +61,18 @@ const Settings: React.FunctionComponent<IProps> = ({
             color="primary"
             aria-label="Menu"
             onClick={handleDeleteProject(project.id)}
-            className={classes.deleteBtn}
+            // className={classes.deleteBtn}
+            className={classes.editBtn}
+            name={`${project.id}`}
           >
-            <RemoveCircleOutlineIcon />
+            {isProjectClosed[project.id] || project.deleted ? (
+              <LockIcon />
+            ) : (
+              project.project_name !== 'New project' && <LockOpenIcon />
+            )}
+            {project.isNew && (
+              <RemoveCircleOutlineIcon className={classes.deleteBtn} />
+            )}
           </IconButton>
           <FormControl variant="outlined" className={classes.formControl}>
             <TextField
@@ -78,6 +89,7 @@ const Settings: React.FunctionComponent<IProps> = ({
                   notchedOutline: classes.textFieldFocusedNotchedOutline
                 }
               }}
+              disabled={isProjectClosed[project.id] || project.deleted}
               onChange={handleProjectChange(project.id)}
             />
           </FormControl>
@@ -89,12 +101,24 @@ const Settings: React.FunctionComponent<IProps> = ({
               value={project.id}
               onChange={handleColorChange(project.id)}
               className={classes.selectColor}
+              classes={{
+                selectMenu: classes.selectBox
+              }}
+              disabled={isProjectClosed[project.id] || project.deleted}
               renderValue={() => (
                 <div>
                   <div
-                    className={theme.colorOption}
+                    className={
+                      isProjectClosed[project.id] || project.deleted
+                        ? theme.colorOptionDisabled
+                        : theme.colorOption
+                    }
                     style={{
-                      backgroundColor: `${color[`${project.id}`]}`
+                      backgroundColor: `${
+                        color[`${project.id}`] === undefined
+                          ? '#8bc34a'
+                          : color[`${project.id}`]
+                      }`
                     }}
                   />
                 </div>

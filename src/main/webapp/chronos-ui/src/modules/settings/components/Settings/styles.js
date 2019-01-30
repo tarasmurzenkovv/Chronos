@@ -83,6 +83,9 @@ const styles = () => ({
     minWidth: '120px'
     // fontSize: '0px'
   },
+  selectBox: {
+    padding: '16px'
+  },
   textFieldFocusedNotchedOutline: {
     borderWidth: '2px',
     borderColor: 'rgba(173, 181, 199, 0.87)',
@@ -118,6 +121,7 @@ const styles = () => ({
     backgroundColor: 'transparent'
   },
   deleteBtn: {
+    position: 'absolute',
     paddingLeft: '0px',
     marginRight: '15px',
     width: '36px',
@@ -125,6 +129,13 @@ const styles = () => ({
     '&:hover': {
       backgroundColor: 'transparent !important'
     }
+  },
+  editBtn: {
+    marginTop: '20px',
+    marginRight: '5px',
+    width: '50px',
+    height: '50px',
+    color: 'rgba(173, 181, 199, 0.87)'
   },
   navTitle: {
     margin: '40px 0px 20px 0px',
