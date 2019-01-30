@@ -7,6 +7,7 @@ import com.github.springtestdbunit.annotation.ExpectedDatabase;
 import com.jayway.restassured.RestAssured;
 import com.jayway.restassured.http.ContentType;
 import com.jayway.restassured.response.Response;
+import com.syngenta.digital.lab.kyiv.chronos.configuration.SingleCountQueryExecutionListenerWrapper;
 import com.syngenta.digital.lab.kyiv.chronos.model.dto.ProjectDto;
 import com.syngenta.digital.lab.kyiv.chronos.model.response.ErrorResponsePayload;
 import com.syngenta.digital.lab.kyiv.chronos.model.response.GeneralResponse;
@@ -14,7 +15,9 @@ import com.syngenta.digital.lab.kyiv.chronos.utils.JsonUtils;
 import lombok.SneakyThrows;
 import org.apache.http.HttpStatus;
 import org.assertj.core.api.Assertions;
+import org.junit.Before;
 import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
@@ -22,6 +25,14 @@ import static com.github.springtestdbunit.assertion.DatabaseAssertionMode.NON_ST
 
 @DatabaseTearDown("/dbTearDown.xml")
 public class ProjectControllerIntegrationTest extends BaseIntegrationTest {
+
+    @Autowired
+    private SingleCountQueryExecutionListenerWrapper singleQueryCountHolder;
+
+    @Before
+    public void setUp() {
+        singleQueryCountHolder.reset();
+    }
 
     @Test
     @SneakyThrows
@@ -49,6 +60,11 @@ public class ProjectControllerIntegrationTest extends BaseIntegrationTest {
                 });
 
         Assertions.assertThat(actualResponse).isEqualTo(expectedResponse);
+
+        Assertions.assertThat(singleQueryCountHolder.select()).isEqualTo(2L);
+        Assertions.assertThat(singleQueryCountHolder.insert()).isEqualTo(0L);
+        Assertions.assertThat(singleQueryCountHolder.update()).isEqualTo(0L);
+        Assertions.assertThat(singleQueryCountHolder.delete()).isEqualTo(0L);
     }
 
     @Test
@@ -77,6 +93,10 @@ public class ProjectControllerIntegrationTest extends BaseIntegrationTest {
                 });
 
         Assertions.assertThat(actualResponse).isEqualTo(expectedResponse);
+        Assertions.assertThat(singleQueryCountHolder.select()).isEqualTo(2L);
+        Assertions.assertThat(singleQueryCountHolder.insert()).isEqualTo(0L);
+        Assertions.assertThat(singleQueryCountHolder.update()).isEqualTo(0L);
+        Assertions.assertThat(singleQueryCountHolder.delete()).isEqualTo(0L);
     }
 
     @Test
@@ -105,6 +125,10 @@ public class ProjectControllerIntegrationTest extends BaseIntegrationTest {
                 });
 
         Assertions.assertThat(actualResponse).isEqualTo(expectedResponse);
+        Assertions.assertThat(singleQueryCountHolder.select()).isEqualTo(0L);
+        Assertions.assertThat(singleQueryCountHolder.insert()).isEqualTo(0L);
+        Assertions.assertThat(singleQueryCountHolder.update()).isEqualTo(0L);
+        Assertions.assertThat(singleQueryCountHolder.delete()).isEqualTo(0L);
     }
 
     @Test
@@ -132,6 +156,10 @@ public class ProjectControllerIntegrationTest extends BaseIntegrationTest {
                 });
 
         Assertions.assertThat(actualResponse).isEqualTo(expectedResponse);
+        Assertions.assertThat(singleQueryCountHolder.select()).isEqualTo(0L);
+        Assertions.assertThat(singleQueryCountHolder.insert()).isEqualTo(0L);
+        Assertions.assertThat(singleQueryCountHolder.update()).isEqualTo(0L);
+        Assertions.assertThat(singleQueryCountHolder.delete()).isEqualTo(0L);
     }
 
     @Test
@@ -161,6 +189,11 @@ public class ProjectControllerIntegrationTest extends BaseIntegrationTest {
         Assertions.assertThat(actualResponse.getData().getProjectName()).isEqualTo("Project name");
         Assertions.assertThat(actualResponse.getData().getColor()).isEqualTo("color");
         Assertions.assertThat(actualResponse.getData().getProjectDescription()).isEqualTo("Some useful description");
+
+        Assertions.assertThat(singleQueryCountHolder.select()).isEqualTo(1L);
+        Assertions.assertThat(singleQueryCountHolder.update()).isEqualTo(0L);
+        Assertions.assertThat(singleQueryCountHolder.insert()).isEqualTo(1L);
+        Assertions.assertThat(singleQueryCountHolder.delete()).isEqualTo(0L);
     }
 
     @Test
@@ -189,6 +222,10 @@ public class ProjectControllerIntegrationTest extends BaseIntegrationTest {
                 });
 
         Assertions.assertThat(actualResponse).isEqualTo(expectedResponse);
+        Assertions.assertThat(singleQueryCountHolder.select()).isEqualTo(1L);
+        Assertions.assertThat(singleQueryCountHolder.insert()).isEqualTo(0L);
+        Assertions.assertThat(singleQueryCountHolder.update()).isEqualTo(0L);
+        Assertions.assertThat(singleQueryCountHolder.delete()).isEqualTo(0L);
     }
 
     @Test
@@ -214,6 +251,10 @@ public class ProjectControllerIntegrationTest extends BaseIntegrationTest {
         Assertions.assertThat(actualResponse.getData().getProjectTypeId()).isNotNull();
         Assertions.assertThat(actualResponse.getData().getProjectName()).isEqualTo("Project name");
         Assertions.assertThat(actualResponse.getData().getProjectDescription()).isEqualTo("Some useful description");
+        Assertions.assertThat(singleQueryCountHolder.select()).isEqualTo(1L);
+        Assertions.assertThat(singleQueryCountHolder.insert()).isEqualTo(0L);
+        Assertions.assertThat(singleQueryCountHolder.update()).isEqualTo(0L);
+        Assertions.assertThat(singleQueryCountHolder.delete()).isEqualTo(0L);
     }
 
     @Test
@@ -247,6 +288,10 @@ public class ProjectControllerIntegrationTest extends BaseIntegrationTest {
         Assertions.assertThat(actualResponse.getData().get(1).getProjectTypeId()).isNotNull();
         Assertions.assertThat(actualResponse.getData().get(1).getProjectName()).isEqualTo("Project name");
         Assertions.assertThat(actualResponse.getData().get(1).getProjectDescription()).isEqualTo("Some useful description");
+        Assertions.assertThat(singleQueryCountHolder.select()).isEqualTo(1L);
+        Assertions.assertThat(singleQueryCountHolder.insert()).isEqualTo(0L);
+        Assertions.assertThat(singleQueryCountHolder.update()).isEqualTo(0L);
+        Assertions.assertThat(singleQueryCountHolder.delete()).isEqualTo(0L);
     }
 
     @Test
@@ -274,6 +319,11 @@ public class ProjectControllerIntegrationTest extends BaseIntegrationTest {
         Assertions.assertThat(actualResponse.getData().getProjectTypeId()).isNotNull();
         Assertions.assertThat(actualResponse.getData().getProjectName()).isEqualTo("Updated project name");
         Assertions.assertThat(actualResponse.getData().getProjectDescription()).isEqualTo("Some useful description");
+
+        Assertions.assertThat(singleQueryCountHolder.select()).isEqualTo(2L);
+        Assertions.assertThat(singleQueryCountHolder.update()).isEqualTo(1L);
+        Assertions.assertThat(singleQueryCountHolder.insert()).isEqualTo(0L);
+        Assertions.assertThat(singleQueryCountHolder.delete()).isEqualTo(0L);
     }
 
     @Test

@@ -12,6 +12,7 @@ export interface IListItem {
   project_type_id: number;
   color: string;
   deleted: boolean;
+  isNew: boolean;
 }
 
 export type TState = Readonly<{

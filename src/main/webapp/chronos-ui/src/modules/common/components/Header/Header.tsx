@@ -5,6 +5,7 @@ import {
   IconButton,
   Toolbar,
   Typography,
+  Tooltip,
   withStyles,
   WithStyles
 } from '@material-ui/core';
@@ -29,7 +30,15 @@ interface IProps extends WithStyles<typeof styles> {
   handleButtonClick: (route: string) => (event: React.SyntheticEvent) => void;
   setDrawerStatus(): void;
 }
-
+const HeaderText = (userName) => ({
+  '/': (
+    <span>
+      Calendar <span>{userName}</span>
+    </span>
+  ),
+  '/reports': 'Reports',
+  '/settings': 'Settings'
+});
 const Header: React.FunctionComponent<IProps> = ({
   classes,
   pathname,
@@ -43,13 +52,15 @@ const Header: React.FunctionComponent<IProps> = ({
     <AppBar position="static" className={classes.navBar}>
       <Toolbar>
         {isAdmin && (
-          <IconButton
-            color="primary"
-            aria-label="Menu"
-            onClick={setDrawerStatus}
-          >
-            {isDrawerOpen ? <CloseIcon /> : <PermIdentity />}
-          </IconButton>
+          <Tooltip title="Users">
+            <IconButton
+              color="primary"
+              aria-label="Menu"
+              onClick={setDrawerStatus}
+            >
+              {isDrawerOpen ? <CloseIcon /> : <PermIdentity />}
+            </IconButton>
+          </Tooltip>
         )}
         <div className={theme.logo}>
           <a href="/">
@@ -57,48 +68,48 @@ const Header: React.FunctionComponent<IProps> = ({
           </a>
         </div>
         <Typography variant="h6" color="inherit" className={classes.navTitle}>
-          {pathname === '/' ? (
-            <span>
-              Calendar <span className={classes.navTitleName}>{userName}</span>
-            </span>
-          ) : (
-            'Settings'
-          )}
+          {HeaderText(userName)[pathname]}
         </Typography>
         {isAdmin && (
-          <IconButton
-            aria-label="Reports"
-            className={`${classes.navButton} ${
-              pathname === '/reports' ? classes.active : ''
-            }`}
-            onClick={handleButtonClick('/reports')}
-          >
-            <ChartIcon className={classes.iconCalendar} />
-          </IconButton>
+          <Tooltip title="Reports">
+            <IconButton
+              aria-label="Reports"
+              className={`${classes.navButton} ${
+                pathname === '/reports' ? classes.active : ''
+              }`}
+              onClick={handleButtonClick('/reports')}
+            >
+              <ChartIcon className={classes.iconCalendar} />
+            </IconButton>
+          </Tooltip>
         )}
-        <IconButton
-          aria-label="Calendar"
-          className={`${classes.navButton} ${
-            pathname === '/' ? classes.active : ''
-          }`}
-          onClick={() => {
-            history.push('/');
-          }}
-        >
-          <CalendarIcon className={classes.iconCalendar} />
-        </IconButton>
-        {isAdmin && (
+        <Tooltip title="Calendar">
           <IconButton
-            aria-label="Settings"
-            className={`${classes.navButton} ${classes.navSettings} ${
-              pathname === '/settings' ? classes.active : ''
+            aria-label="Calendar"
+            className={`${classes.navButton} ${
+              pathname === '/' ? classes.active : ''
             }`}
             onClick={() => {
-              history.push('/settings');
+              history.push('/');
             }}
           >
-            <SettingsIcon className={classes.iconSettings} />
+            <CalendarIcon className={classes.iconCalendar} />
           </IconButton>
+        </Tooltip>
+        {isAdmin && (
+          <Tooltip title="Settings">
+            <IconButton
+              aria-label="Settings"
+              className={`${classes.navButton} ${classes.navSettings} ${
+                pathname === '/settings' ? classes.active : ''
+              }`}
+              onClick={() => {
+                history.push('/settings');
+              }}
+            >
+              <SettingsIcon className={classes.iconSettings} />
+            </IconButton>
+          </Tooltip>
         )}
       </Toolbar>
     </AppBar>

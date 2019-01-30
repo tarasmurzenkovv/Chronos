@@ -7,6 +7,7 @@ import com.github.springtestdbunit.annotation.ExpectedDatabase;
 import com.jayway.restassured.RestAssured;
 import com.jayway.restassured.http.ContentType;
 import com.jayway.restassured.response.Response;
+import com.syngenta.digital.lab.kyiv.chronos.configuration.SingleCountQueryExecutionListenerWrapper;
 import com.syngenta.digital.lab.kyiv.chronos.model.dto.LoginRequest;
 import com.syngenta.digital.lab.kyiv.chronos.model.dto.TaskDto;
 import com.syngenta.digital.lab.kyiv.chronos.model.dto.UserDto;
@@ -16,7 +17,9 @@ import com.syngenta.digital.lab.kyiv.chronos.utils.JsonUtils;
 import lombok.SneakyThrows;
 import org.apache.http.HttpStatus;
 import org.assertj.core.api.Assertions;
+import org.junit.Before;
 import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -26,6 +29,13 @@ import static com.github.springtestdbunit.assertion.DatabaseAssertionMode.NON_ST
 
 @DatabaseTearDown("/dbTearDown.xml")
 public class UserControllerIntegrationTest extends BaseIntegrationTest {
+    @Autowired
+    private SingleCountQueryExecutionListenerWrapper singleQueryCountHolder;
+
+    @Before
+    public void setup() {
+        singleQueryCountHolder.reset();
+    }
 
     @Test
     @SneakyThrows
@@ -72,6 +82,11 @@ public class UserControllerIntegrationTest extends BaseIntegrationTest {
         Assertions.assertThat(reportingDates).isNotEmpty();
         Assertions.assertThat(reportingDates)
                 .isEqualTo(List.of(LocalDate.of(2019,1,1),LocalDate.of(2019,2,1)));
+
+        Assertions.assertThat(singleQueryCountHolder.select()).isEqualTo(1L);
+        Assertions.assertThat(singleQueryCountHolder.insert()).isEqualTo(0L);
+        Assertions.assertThat(singleQueryCountHolder.update()).isEqualTo(0L);
+        Assertions.assertThat(singleQueryCountHolder.delete()).isEqualTo(0L);
     }
 
 
@@ -111,6 +126,11 @@ public class UserControllerIntegrationTest extends BaseIntegrationTest {
         Assertions.assertThat(actualResponse.getData().get(1).getComments()).isEqualTo("comments");
         Assertions.assertThat(actualResponse.getData().get(1).getReportingDate()).isEqualTo(LocalDate.of(2019,1,1));
         Assertions.assertThat(actualResponse.getData().get(1).getSpentTime()).isEqualTo(0.8f);
+
+        Assertions.assertThat(singleQueryCountHolder.select()).isEqualTo(1L);
+        Assertions.assertThat(singleQueryCountHolder.insert()).isEqualTo(0L);
+        Assertions.assertThat(singleQueryCountHolder.update()).isEqualTo(0L);
+        Assertions.assertThat(singleQueryCountHolder.delete()).isEqualTo(0L);
     }
 
     @Test
@@ -139,6 +159,11 @@ public class UserControllerIntegrationTest extends BaseIntegrationTest {
                 });
 
         Assertions.assertThat(actualResponse).isEqualTo(expectedResponse);
+
+        Assertions.assertThat(singleQueryCountHolder.select()).isEqualTo(0L);
+        Assertions.assertThat(singleQueryCountHolder.insert()).isEqualTo(0L);
+        Assertions.assertThat(singleQueryCountHolder.update()).isEqualTo(0L);
+        Assertions.assertThat(singleQueryCountHolder.delete()).isEqualTo(0L);
     }
 
     @Test
@@ -167,6 +192,11 @@ public class UserControllerIntegrationTest extends BaseIntegrationTest {
                 });
 
         Assertions.assertThat(actualResponse).isEqualTo(expectedResponse);
+
+        Assertions.assertThat(singleQueryCountHolder.select()).isEqualTo(1L);
+        Assertions.assertThat(singleQueryCountHolder.insert()).isEqualTo(0L);
+        Assertions.assertThat(singleQueryCountHolder.update()).isEqualTo(0L);
+        Assertions.assertThat(singleQueryCountHolder.delete()).isEqualTo(0L);
     }
 
     @Test
@@ -196,6 +226,11 @@ public class UserControllerIntegrationTest extends BaseIntegrationTest {
         Assertions.assertThat(actualResponse.getData().getFirstName()).isEqualTo("First_name");
         Assertions.assertThat(actualResponse.getData().getLastName()).isEqualTo("Last_name");
         Assertions.assertThat(actualResponse.getData().getPassword()).isNull();
+
+        Assertions.assertThat(singleQueryCountHolder.select()).isEqualTo(1L);
+        Assertions.assertThat(singleQueryCountHolder.insert()).isEqualTo(0L);
+        Assertions.assertThat(singleQueryCountHolder.update()).isEqualTo(0L);
+        Assertions.assertThat(singleQueryCountHolder.delete()).isEqualTo(0L);
     }
 
     @Test
@@ -224,6 +259,11 @@ public class UserControllerIntegrationTest extends BaseIntegrationTest {
         Assertions.assertThat(actualResponse.getData().getFirstName()).isEqualTo("First_name");
         Assertions.assertThat(actualResponse.getData().getLastName()).isEqualTo("Last_name");
         Assertions.assertThat(actualResponse.getData().getPassword()).isNull();
+
+        Assertions.assertThat(singleQueryCountHolder.select()).isEqualTo(2L);
+        Assertions.assertThat(singleQueryCountHolder.insert()).isEqualTo(1L);
+        Assertions.assertThat(singleQueryCountHolder.update()).isEqualTo(0L);
+        Assertions.assertThat(singleQueryCountHolder.delete()).isEqualTo(0L);
     }
 
     @Test
@@ -252,6 +292,10 @@ public class UserControllerIntegrationTest extends BaseIntegrationTest {
                 });
 
         Assertions.assertThat(actualResponse).isEqualTo(expectedResponse);
+        Assertions.assertThat(singleQueryCountHolder.select()).isEqualTo(1L);
+        Assertions.assertThat(singleQueryCountHolder.insert()).isEqualTo(0L);
+        Assertions.assertThat(singleQueryCountHolder.update()).isEqualTo(0L);
+        Assertions.assertThat(singleQueryCountHolder.delete()).isEqualTo(0L);
     }
 
 
@@ -281,6 +325,10 @@ public class UserControllerIntegrationTest extends BaseIntegrationTest {
                 });
 
         Assertions.assertThat(actualResponse).isEqualTo(expectedResponse);
+        Assertions.assertThat(singleQueryCountHolder.select()).isEqualTo(1L);
+        Assertions.assertThat(singleQueryCountHolder.insert()).isEqualTo(0L);
+        Assertions.assertThat(singleQueryCountHolder.update()).isEqualTo(0L);
+        Assertions.assertThat(singleQueryCountHolder.delete()).isEqualTo(0L);
     }
 
     @Test
@@ -310,6 +358,10 @@ public class UserControllerIntegrationTest extends BaseIntegrationTest {
                 });
 
         Assertions.assertThat(actualResponse).isEqualTo(expectedResponse);
+        Assertions.assertThat(singleQueryCountHolder.select()).isEqualTo(1L);
+        Assertions.assertThat(singleQueryCountHolder.insert()).isEqualTo(0L);
+        Assertions.assertThat(singleQueryCountHolder.update()).isEqualTo(0L);
+        Assertions.assertThat(singleQueryCountHolder.delete()).isEqualTo(0L);
     }
 
     @Test
@@ -338,6 +390,10 @@ public class UserControllerIntegrationTest extends BaseIntegrationTest {
                 });
 
         Assertions.assertThat(actualResponse).isEqualTo(expectedResponse);
+        Assertions.assertThat(singleQueryCountHolder.select()).isEqualTo(1L);
+        Assertions.assertThat(singleQueryCountHolder.insert()).isEqualTo(0L);
+        Assertions.assertThat(singleQueryCountHolder.update()).isEqualTo(0L);
+        Assertions.assertThat(singleQueryCountHolder.delete()).isEqualTo(0L);
     }
 
     @Test
@@ -366,6 +422,10 @@ public class UserControllerIntegrationTest extends BaseIntegrationTest {
                 });
 
         Assertions.assertThat(actualResponse).isEqualTo(expectedResponse);
+        Assertions.assertThat(singleQueryCountHolder.select()).isEqualTo(1L);
+        Assertions.assertThat(singleQueryCountHolder.insert()).isEqualTo(0L);
+        Assertions.assertThat(singleQueryCountHolder.update()).isEqualTo(0L);
+        Assertions.assertThat(singleQueryCountHolder.delete()).isEqualTo(0L);
     }
 
     @Test
@@ -394,6 +454,10 @@ public class UserControllerIntegrationTest extends BaseIntegrationTest {
                 });
 
         Assertions.assertThat(actualResponse).isEqualTo(expectedResponse);
+        Assertions.assertThat(singleQueryCountHolder.select()).isEqualTo(1L);
+        Assertions.assertThat(singleQueryCountHolder.insert()).isEqualTo(0L);
+        Assertions.assertThat(singleQueryCountHolder.update()).isEqualTo(0L);
+        Assertions.assertThat(singleQueryCountHolder.delete()).isEqualTo(0L);
     }
 
     @Test
@@ -423,6 +487,10 @@ public class UserControllerIntegrationTest extends BaseIntegrationTest {
                 });
 
         Assertions.assertThat(actualResponse).isEqualTo(expectedResponse);
+        Assertions.assertThat(singleQueryCountHolder.select()).isEqualTo(1L);
+        Assertions.assertThat(singleQueryCountHolder.insert()).isEqualTo(0L);
+        Assertions.assertThat(singleQueryCountHolder.update()).isEqualTo(0L);
+        Assertions.assertThat(singleQueryCountHolder.delete()).isEqualTo(0L);
     }
 
     @Test
@@ -452,6 +520,10 @@ public class UserControllerIntegrationTest extends BaseIntegrationTest {
                 });
 
         Assertions.assertThat(actualResponse).isEqualTo(expectedResponse);
+        Assertions.assertThat(singleQueryCountHolder.select()).isEqualTo(1L);
+        Assertions.assertThat(singleQueryCountHolder.insert()).isEqualTo(0L);
+        Assertions.assertThat(singleQueryCountHolder.update()).isEqualTo(0L);
+        Assertions.assertThat(singleQueryCountHolder.delete()).isEqualTo(0L);
     }
 
     @Test
@@ -481,6 +553,10 @@ public class UserControllerIntegrationTest extends BaseIntegrationTest {
                 });
 
         Assertions.assertThat(actualResponse).isEqualTo(expectedResponse);
+        Assertions.assertThat(singleQueryCountHolder.select()).isEqualTo(1L);
+        Assertions.assertThat(singleQueryCountHolder.insert()).isEqualTo(0L);
+        Assertions.assertThat(singleQueryCountHolder.update()).isEqualTo(0L);
+        Assertions.assertThat(singleQueryCountHolder.delete()).isEqualTo(0L);
     }
 
     @Test
@@ -510,5 +586,9 @@ public class UserControllerIntegrationTest extends BaseIntegrationTest {
                 });
 
         Assertions.assertThat(actualResponse).isEqualTo(expectedResponse);
+        Assertions.assertThat(singleQueryCountHolder.select()).isEqualTo(1L);
+        Assertions.assertThat(singleQueryCountHolder.insert()).isEqualTo(0L);
+        Assertions.assertThat(singleQueryCountHolder.update()).isEqualTo(0L);
+        Assertions.assertThat(singleQueryCountHolder.delete()).isEqualTo(0L);
     }
 }

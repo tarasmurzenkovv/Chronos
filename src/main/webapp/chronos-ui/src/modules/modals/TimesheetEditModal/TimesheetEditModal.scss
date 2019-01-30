@@ -2,7 +2,9 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  flex-wrap: wrap;
   margin-top: 25px;
+  margin-bottom: 9px;
 }
 
 .labelText {

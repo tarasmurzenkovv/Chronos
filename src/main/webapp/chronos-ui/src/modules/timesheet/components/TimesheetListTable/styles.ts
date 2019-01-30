@@ -47,7 +47,11 @@ const styles = () =>
       color: 'rgba(0, 0, 0, 0.87)'
     },
     nameCell: {
+      position: 'relative',
       paddingLeft: '10px'
+    },
+    disabledCell: {
+      color: 'rgba(173, 181, 199, 0.87)'
     },
     tableHeadCommentCell: {
       display: 'flex',
@@ -85,6 +89,13 @@ const styles = () =>
     },
     actionCell: {
       padding: '0px!important'
+    },
+    lockedProject: {
+      position: 'absolute',
+      top: '16px',
+      left: '155px',
+      color: 'rgba(173, 181, 199, 0.87)',
+      fontSize: '24px'
     }
   });
 

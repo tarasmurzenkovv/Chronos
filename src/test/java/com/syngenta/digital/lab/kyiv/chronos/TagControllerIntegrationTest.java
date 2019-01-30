@@ -7,13 +7,17 @@ import com.github.springtestdbunit.annotation.ExpectedDatabase;
 import com.jayway.restassured.RestAssured;
 import com.jayway.restassured.http.ContentType;
 import com.jayway.restassured.response.Response;
+import com.syngenta.digital.lab.kyiv.chronos.configuration.SingleCountQueryExecutionListenerWrapper;
 import com.syngenta.digital.lab.kyiv.chronos.model.dto.TagDto;
 import com.syngenta.digital.lab.kyiv.chronos.model.response.GeneralResponse;
 import com.syngenta.digital.lab.kyiv.chronos.utils.JsonUtils;
 import lombok.SneakyThrows;
 import org.apache.http.HttpStatus;
 import org.assertj.core.api.Assertions;
+import org.junit.Before;
 import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.annotation.DirtiesContext;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -21,7 +25,14 @@ import java.util.stream.Collectors;
 import static com.github.springtestdbunit.assertion.DatabaseAssertionMode.NON_STRICT_UNORDERED;
 
 @DatabaseTearDown("/dbTearDown.xml")
+@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_CLASS)
 public class TagControllerIntegrationTest extends BaseIntegrationTest {
+    @Autowired
+    private SingleCountQueryExecutionListenerWrapper singleQueryCountHolder;
+    @Before
+    public void setUp() {
+        singleQueryCountHolder.reset();
+    }
 
     @Test
     @SneakyThrows
@@ -47,6 +58,11 @@ public class TagControllerIntegrationTest extends BaseIntegrationTest {
         Assertions.assertThat(actualResponse.getData().getTagId()).isNotNull();
         Assertions.assertThat(actualResponse.getData().getTag()).isNotBlank();
         Assertions.assertThat(actualResponse.getData().getTag()).isEqualTo("awesome_tag");
+
+        Assertions.assertThat(singleQueryCountHolder.select()).isEqualTo(0L);
+        Assertions.assertThat(singleQueryCountHolder.insert()).isEqualTo(0L);
+        Assertions.assertThat(singleQueryCountHolder.update()).isEqualTo(0L);
+        Assertions.assertThat(singleQueryCountHolder.delete()).isEqualTo(0L);
     }
 
     @Test
@@ -71,5 +87,10 @@ public class TagControllerIntegrationTest extends BaseIntegrationTest {
         Assertions.assertThat(actualResponse.getData()).isNotEmpty();
         Assertions.assertThat(actualResponse.getData().stream().map(TagDto::getTag).collect(Collectors.toList()))
                 .isEqualTo(List.of("tag_123", "tag", "tag   "));
+
+        Assertions.assertThat(singleQueryCountHolder.select()).isEqualTo(0L);
+        Assertions.assertThat(singleQueryCountHolder.insert()).isEqualTo(0L);
+        Assertions.assertThat(singleQueryCountHolder.update()).isEqualTo(0L);
+        Assertions.assertThat(singleQueryCountHolder.delete()).isEqualTo(0L);
     }
 }
