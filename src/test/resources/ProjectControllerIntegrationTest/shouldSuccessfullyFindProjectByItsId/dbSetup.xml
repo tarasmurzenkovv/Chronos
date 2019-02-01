@@ -2,4 +2,6 @@
 <dataset>
     <PROJECT_TYPE ID="1" TASK_TYPE_NAME="Internal"/>
     <PROJECT ID="999" PROJECT_NAME="Project name" PROJECT_DESCRIPTION="Some useful description" PROJECT_TYPE_ID="1" DELETED="false"/>
+    <APPLICATION_USER_ROLE ID="2" ROLE="Admin"/>
+    <APPLICATION_USER ID="1" ROLE_ID="2" FIRST_NAME="First_name" LAST_NAME="Last_name" USER_EMAIL="email@email.com" USER_PASSWORD="passW3$rdd"/>
 </dataset>

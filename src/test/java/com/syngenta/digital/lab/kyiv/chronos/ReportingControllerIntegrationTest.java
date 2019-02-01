@@ -5,12 +5,9 @@ import com.github.springtestdbunit.annotation.DatabaseSetup;
 import com.github.springtestdbunit.annotation.DatabaseSetups;
 import com.github.springtestdbunit.annotation.DatabaseTearDown;
 import com.github.springtestdbunit.annotation.ExpectedDatabase;
-import com.jayway.restassured.RestAssured;
 import com.jayway.restassured.response.Response;
-import com.syngenta.digital.lab.kyiv.chronos.configuration.SingleCountQueryExecutionListenerWrapper;
 import com.syngenta.digital.lab.kyiv.chronos.model.response.ErrorResponsePayload;
 import com.syngenta.digital.lab.kyiv.chronos.model.response.GeneralResponse;
-import com.syngenta.digital.lab.kyiv.chronos.service.ClockService;
 import com.syngenta.digital.lab.kyiv.chronos.utils.FileUtils;
 import com.syngenta.digital.lab.kyiv.chronos.utils.JsonUtils;
 import lombok.SneakyThrows;
@@ -20,21 +17,13 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.assertj.core.api.Assertions;
-import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
-import org.mockito.Mockito;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpStatus;
 
 import java.io.BufferedReader;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.text.DecimalFormat;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
@@ -43,19 +32,6 @@ import static com.github.springtestdbunit.assertion.DatabaseAssertionMode.NON_ST
 
 @DatabaseTearDown("/dbTearDown.xml")
 public class ReportingControllerIntegrationTest extends BaseIntegrationTest {
-    @Rule
-    public TemporaryFolder testFolder = new TemporaryFolder();
-    @MockBean
-    private ClockService clockService;
-    @Autowired
-    private SingleCountQueryExecutionListenerWrapper singleQueryCountHolder;
-
-    @Before
-    public void setup() {
-        Mockito.when(clockService.nowTime()).thenReturn(LocalDateTime.of(2017, 1, 1, 1, 1));
-        Mockito.when(clockService.now()).thenReturn(LocalDate.of(2017, 1, 1));
-        singleQueryCountHolder.reset();
-    }
 
     @Test
     @SneakyThrows
@@ -68,8 +44,7 @@ public class ReportingControllerIntegrationTest extends BaseIntegrationTest {
     @ExpectedDatabase(value = "/ReportingControllerIntegrationTest/shouldGenerateReport/dbSetup/expectedTasks.xml",
             assertionMode = NON_STRICT_UNORDERED)
     public void shouldGenerateTheCsvReport() {
-        Response response = RestAssured
-                .given()
+        Response response = this.getRestAssured()
                 .get("/api/v0/reporting/csv?id=1&id=2&id=3&start=01/01/2016&end=01/01/2020")
                 .then()
                 .extract()
@@ -84,7 +59,7 @@ public class ReportingControllerIntegrationTest extends BaseIntegrationTest {
         List<String> actualParsedCsvFile = reader.lines().collect(Collectors.toList());
         List<String> expectedParsedCsvFile = FileUtils.parseCsvFile("/ReportingControllerIntegrationTest/shouldGenerateReport/response/expectedCsvFile.csv");
         Assertions.assertThat(actualParsedCsvFile).containsExactlyInAnyOrderElementsOf(expectedParsedCsvFile);
-        Assertions.assertThat(singleQueryCountHolder.select()).isEqualTo(1L);
+        Assertions.assertThat(singleQueryCountHolder.select()).isEqualTo(2L);
         Assertions.assertThat(singleQueryCountHolder.insert()).isEqualTo(0L);
         Assertions.assertThat(singleQueryCountHolder.update()).isEqualTo(1L);
         Assertions.assertThat(singleQueryCountHolder.delete()).isEqualTo(0L);
@@ -101,8 +76,7 @@ public class ReportingControllerIntegrationTest extends BaseIntegrationTest {
     @ExpectedDatabase(value = "/ReportingControllerIntegrationTest/shouldGenerateReport/dbSetup/expectedTasks.xml",
             assertionMode = NON_STRICT_UNORDERED)
     public void shouldGenerateTheXlsReport() {
-        Response response = RestAssured
-                .given()
+        Response response = this.getRestAssured()
                 .get("/api/v0/reporting/xls?id=1&id=2&id=3&start=01/01/2016&end=01/01/2020")
                 .then()
                 .extract()
@@ -136,17 +110,17 @@ public class ReportingControllerIntegrationTest extends BaseIntegrationTest {
         List<String> expectedParsedCsvFile = FileUtils.parseCsvFile("/ReportingControllerIntegrationTest/shouldGenerateReport/response/expectedCsvFile.csv");
         Assertions.assertThat(actualParsedValues).containsExactlyInAnyOrderElementsOf(expectedParsedCsvFile);
 
-        Assertions.assertThat(singleQueryCountHolder.select()).isEqualTo(1L);
+        Assertions.assertThat(singleQueryCountHolder.select()).isEqualTo(2L);
         Assertions.assertThat(singleQueryCountHolder.insert()).isEqualTo(0L);
         Assertions.assertThat(singleQueryCountHolder.update()).isEqualTo(1L);
         Assertions.assertThat(singleQueryCountHolder.delete()).isEqualTo(0L);
     }
 
     @Test
+    @DatabaseSetup(value = "/ReportingControllerIntegrationTest/shouldGenerateReport/dbSetup/users.xml")
     @SneakyThrows
     public void shouldNotGenerateTheReportIfStartDateIsAfterBeforeDate() {
-        Response response = RestAssured
-                .given()
+        Response response = this.getRestAssured()
                 .get("/api/v0/reporting/csv?id=1&id=2&id=3&start=01/01/2021&end=01/01/2020")
                 .then()
                 .extract()
@@ -165,7 +139,7 @@ public class ReportingControllerIntegrationTest extends BaseIntegrationTest {
 
         Assertions.assertThat(actualResponse).isEqualTo(expectedResponse);
 
-        Assertions.assertThat(singleQueryCountHolder.select()).isEqualTo(0L);
+        Assertions.assertThat(singleQueryCountHolder.select()).isEqualTo(1L);
         Assertions.assertThat(singleQueryCountHolder.insert()).isEqualTo(0L);
         Assertions.assertThat(singleQueryCountHolder.update()).isEqualTo(0L);
         Assertions.assertThat(singleQueryCountHolder.delete()).isEqualTo(0L);

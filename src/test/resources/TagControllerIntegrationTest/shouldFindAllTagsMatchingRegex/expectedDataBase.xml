@@ -10,4 +10,6 @@
     <TAG TAG="tag"/>
     <TAG TAG="tag   "/>
     <TAG TAG="t_345_qer"/>
+    <APPLICATION_USER_ROLE ID="2" ROLE="Admin"/>
+    <APPLICATION_USER ID="1" ROLE_ID="2" FIRST_NAME="First_name" LAST_NAME="Last_name" USER_EMAIL="email@emial.com" USER_PASSWORD="passW3$rdd"/>
 </dataset>

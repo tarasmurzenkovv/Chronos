@@ -7,7 +7,6 @@ import com.github.springtestdbunit.annotation.ExpectedDatabase;
 import com.jayway.restassured.RestAssured;
 import com.jayway.restassured.http.ContentType;
 import com.jayway.restassured.response.Response;
-import com.syngenta.digital.lab.kyiv.chronos.configuration.SingleCountQueryExecutionListenerWrapper;
 import com.syngenta.digital.lab.kyiv.chronos.model.dto.TagDto;
 import com.syngenta.digital.lab.kyiv.chronos.model.dto.TaskDto;
 import com.syngenta.digital.lab.kyiv.chronos.model.response.ErrorResponsePayload;
@@ -16,9 +15,7 @@ import com.syngenta.digital.lab.kyiv.chronos.utils.JsonUtils;
 import lombok.SneakyThrows;
 import org.apache.http.HttpStatus;
 import org.assertj.core.api.Assertions;
-import org.junit.Before;
 import org.junit.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.LocalDate;
 import java.util.Collections;
@@ -29,21 +26,13 @@ import static com.github.springtestdbunit.assertion.DatabaseAssertionMode.NON_ST
 
 @DatabaseTearDown("/dbTearDown.xml")
 public class TaskControllerIntegrationTest extends BaseIntegrationTest {
-    @Autowired
-    private SingleCountQueryExecutionListenerWrapper singleQueryCountHolder;
-
-    @Before
-    public void setup() {
-        singleQueryCountHolder.reset();
-    }
 
     @Test
     @SneakyThrows
     @DatabaseSetup(value = "/TaskControllerIntegrationTest/shouldNotEditFrozenTask/dbSetup.xml")
     public void shouldNotEditFrozenTask() {
 
-        Response response = RestAssured
-                .given()
+        Response response = this.getRestAssured()
                 .contentType(ContentType.JSON)
                 .body(JsonUtils.readFromJson("/TaskControllerIntegrationTest/shouldNotEditFrozenTask/updateTheExistingTaskRequest.json", TaskDto.class))
                 .put("/api/v0/task")
@@ -62,7 +51,7 @@ public class TaskControllerIntegrationTest extends BaseIntegrationTest {
 
         Assertions.assertThat(actualResponse).isEqualTo(expectedResponse);
 
-        Assertions.assertThat(singleQueryCountHolder.select()).isEqualTo(3L);
+        Assertions.assertThat(singleQueryCountHolder.select()).isEqualTo(4L);
         Assertions.assertThat(singleQueryCountHolder.insert()).isEqualTo(0L);
         Assertions.assertThat(singleQueryCountHolder.update()).isEqualTo(0L);
         Assertions.assertThat(singleQueryCountHolder.delete()).isEqualTo(0L);
@@ -73,8 +62,7 @@ public class TaskControllerIntegrationTest extends BaseIntegrationTest {
     @DatabaseSetup(value = "/TaskControllerIntegrationTest/shouldFindTaskTags/dbSetup.xml")
     public void shouldFindTaskTags() {
 
-        Response response = RestAssured
-                .given()
+        Response response = this.getRestAssured()
                 .contentType(ContentType.JSON)
                 .get("/api/v0/task/1/tags")
                 .then()
@@ -90,7 +78,7 @@ public class TaskControllerIntegrationTest extends BaseIntegrationTest {
         Assertions.assertThat(actualResponse.getData().stream().map(TagDto::getTag).collect(Collectors.toList()))
                 .containsExactlyInAnyOrderElementsOf(List.of("#awesome_tag_existing", "#awesome_new_new_tag", "#awesome_tag"));
 
-        Assertions.assertThat(singleQueryCountHolder.select()).isEqualTo(1L);
+        Assertions.assertThat(singleQueryCountHolder.select()).isEqualTo(2L);
         Assertions.assertThat(singleQueryCountHolder.insert()).isEqualTo(0L);
         Assertions.assertThat(singleQueryCountHolder.update()).isEqualTo(0L);
         Assertions.assertThat(singleQueryCountHolder.delete()).isEqualTo(0L);
@@ -101,8 +89,7 @@ public class TaskControllerIntegrationTest extends BaseIntegrationTest {
     @DatabaseSetup(value = "/TaskControllerIntegrationTest/shouldAddNewTaskWithNewTags/dbSetup.xml")
     public void shouldAddNewTaskWithNewTags() {
 
-        Response response = RestAssured
-                .given()
+        Response response = this.getRestAssured()
                 .body(JsonUtils.readFromJson("/TaskControllerIntegrationTest/shouldAddNewTaskWithNewTags/addNewTaskWithNewTagsRequest.json", TaskDto.class))
                 .contentType(ContentType.JSON)
                 .post("/api/v0/task")
@@ -124,7 +111,7 @@ public class TaskControllerIntegrationTest extends BaseIntegrationTest {
         Assertions.assertThat(actualResponse.getData().getReportingDate()).isEqualTo(LocalDate.of(2019,1,1));
         Assertions.assertThat(actualResponse.getData().getSpentTime()).isEqualTo(0.8f);
 
-        Assertions.assertThat(singleQueryCountHolder.select()).isEqualTo(5L);
+        Assertions.assertThat(singleQueryCountHolder.select()).isEqualTo(6L);
         Assertions.assertThat(singleQueryCountHolder.insert()).isEqualTo(5L);
         Assertions.assertThat(singleQueryCountHolder.update()).isEqualTo(0L);
         Assertions.assertThat(singleQueryCountHolder.delete()).isEqualTo(0L);
@@ -161,7 +148,7 @@ public class TaskControllerIntegrationTest extends BaseIntegrationTest {
         Assertions.assertThat(actualResponse.getData().getSpentTime()).isEqualTo(0.8f);
         Assertions.assertThat(actualResponse.getData().getTags()).isEqualTo(Collections.emptyList());
 
-        Assertions.assertThat(singleQueryCountHolder.select()).isEqualTo(2L);
+        Assertions.assertThat(singleQueryCountHolder.select()).isEqualTo(3L);
         Assertions.assertThat(singleQueryCountHolder.insert()).isEqualTo(1L);
         Assertions.assertThat(singleQueryCountHolder.update()).isEqualTo(0L);
         Assertions.assertThat(singleQueryCountHolder.delete()).isEqualTo(0L);
@@ -195,7 +182,7 @@ public class TaskControllerIntegrationTest extends BaseIntegrationTest {
         Assertions.assertThat(actualResponse.getData().getReportingDate()).isEqualTo(LocalDate.of(2019,1,1));
         Assertions.assertThat(actualResponse.getData().getSpentTime()).isEqualTo(0.8f);
 
-        Assertions.assertThat(singleQueryCountHolder.select()).isEqualTo(2L);
+        Assertions.assertThat(singleQueryCountHolder.select()).isEqualTo(3L);
         Assertions.assertThat(singleQueryCountHolder.insert()).isEqualTo(0L);
         Assertions.assertThat(singleQueryCountHolder.update()).isEqualTo(0L);
         Assertions.assertThat(singleQueryCountHolder.delete()).isEqualTo(0L);
@@ -206,8 +193,7 @@ public class TaskControllerIntegrationTest extends BaseIntegrationTest {
     @DatabaseSetup(value = "/TaskControllerIntegrationTest/shouldUpdateTheExistingTaskWithNewAndExistingTags/dbSetup.xml")
     public void shouldUpdateTheExistingTaskWithNewAndExistingTags() {
 
-        Response response = RestAssured
-                .given()
+        Response response = this.getRestAssured()
                 .contentType(ContentType.JSON)
                 .body(JsonUtils.readFromJson("/TaskControllerIntegrationTest/shouldUpdateTheExistingTaskWithNewAndExistingTags/updateTheExistingTaskWithNewAndExistingTags.json", TaskDto.class))
                 .put("/api/v0/task")
@@ -229,7 +215,7 @@ public class TaskControllerIntegrationTest extends BaseIntegrationTest {
         Assertions.assertThat(actualResponse.getData().getReportingDate()).isEqualTo(LocalDate.of(2019,1,1));
         Assertions.assertThat(actualResponse.getData().getSpentTime()).isEqualTo(0.8f);
 
-        Assertions.assertThat(singleQueryCountHolder.select()).isEqualTo(9L);
+        Assertions.assertThat(singleQueryCountHolder.select()).isEqualTo(10L);
         Assertions.assertThat(singleQueryCountHolder.insert()).isEqualTo(2L);
         Assertions.assertThat(singleQueryCountHolder.update()).isEqualTo(3L);
         Assertions.assertThat(singleQueryCountHolder.delete()).isEqualTo(0L);
@@ -242,8 +228,7 @@ public class TaskControllerIntegrationTest extends BaseIntegrationTest {
             assertionMode = NON_STRICT_UNORDERED)
     public void shouldUpdateTheExistingTask() {
 
-        Response response = RestAssured
-                .given()
+        Response response = this.getRestAssured()
                 .contentType(ContentType.JSON)
                 .body(JsonUtils.readFromJson("/TaskControllerIntegrationTest/shouldUpdateTheExistingTask/updateTheExistingTaskRequest.json", TaskDto.class))
                 .put("/api/v0/task")
@@ -266,7 +251,7 @@ public class TaskControllerIntegrationTest extends BaseIntegrationTest {
         Assertions.assertThat(actualResponse.getData().getSpentTime()).isEqualTo(0.8f);
         Assertions.assertThat(actualResponse.getData().getTags()).isEqualTo(Collections.emptyList());
 
-        Assertions.assertThat(singleQueryCountHolder.select()).isEqualTo(4L);
+        Assertions.assertThat(singleQueryCountHolder.select()).isEqualTo(5L);
         Assertions.assertThat(singleQueryCountHolder.insert()).isEqualTo(0L);
         Assertions.assertThat(singleQueryCountHolder.update()).isEqualTo(1L);
         Assertions.assertThat(singleQueryCountHolder.delete()).isEqualTo(0L);
@@ -279,8 +264,7 @@ public class TaskControllerIntegrationTest extends BaseIntegrationTest {
             assertionMode = NON_STRICT_UNORDERED)
     public void shouldDeleteTheExistingNonFrozenTask() {
 
-        Response response = RestAssured
-                .given()
+        Response response = this.getRestAssured()
                 .delete("/api/v0/task/1")
                 .then()
                 .extract()
@@ -288,7 +272,7 @@ public class TaskControllerIntegrationTest extends BaseIntegrationTest {
 
         Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.SC_OK);
 
-        Assertions.assertThat(singleQueryCountHolder.select()).isEqualTo(2L);
+        Assertions.assertThat(singleQueryCountHolder.select()).isEqualTo(3L);
         Assertions.assertThat(singleQueryCountHolder.insert()).isEqualTo(0L);
         Assertions.assertThat(singleQueryCountHolder.update()).isEqualTo(0L);
         Assertions.assertThat(singleQueryCountHolder.delete()).isEqualTo(1L);

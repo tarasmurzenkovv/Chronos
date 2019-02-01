@@ -35,7 +35,7 @@ public class JwtTokenProvider {
                 .compact();
     }
 
-    Long getUserIdFromJWT(String token) {
+    public Long getUserIdFromJWT(String token) {
         Claims claims = Jwts.parser()
                 .setSigningKey(jwtSecret)
                 .parseClaimsJws(token)
@@ -44,7 +44,7 @@ public class JwtTokenProvider {
         return Long.parseLong(claims.getSubject());
     }
 
-    String getJwtFromRequest(HttpServletRequest request) {
+    public String getJwtFromRequest(HttpServletRequest request) {
         String bearerToken = request.getHeader(HttpHeaders.AUTHORIZATION);
         if (StringUtils.hasText(bearerToken) && bearerToken.startsWith(TOKEN_PREFIX_NAME)) {
             return bearerToken.substring(TOKEN_PREFIX_NAME.length());
@@ -52,7 +52,7 @@ public class JwtTokenProvider {
         return null;
     }
 
-    boolean validateToken(String authToken) {
+    public boolean validateToken(String authToken) {
         try {
             Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(authToken);
             return true;
