@@ -1,8 +1,11 @@
 .timeAndDateBlock {
+  position: relative;
   display: flex;
   justify-content: space-between;
+  flex-wrap: wrap;
   align-items: center;
   margin-top: 25px;
+  margin-bottom: 9px;
 }
 
 .labelText {

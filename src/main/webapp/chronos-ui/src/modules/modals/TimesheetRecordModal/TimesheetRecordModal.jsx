@@ -12,6 +12,7 @@ import {
   OutlinedInput,
   Select,
   TextField,
+  FormLabel,
   withStyles
 } from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
@@ -54,6 +55,14 @@ const TimesheetRecordModal = ({
       >
         <CloseIcon />
       </IconButton>
+      <FormLabel
+        classes={{
+          required: `${classes.labelFieldRequired} ${classes.labelFiledBlock}`
+        }}
+        required
+      >
+        Required
+      </FormLabel>
       <form className={classes.container} onSubmit={handleFormSubmit}>
         <DialogContent className={classes.modalContent}>
           <FormControl
@@ -65,6 +74,7 @@ const TimesheetRecordModal = ({
             <InputLabel
               htmlFor="outlined-projectId"
               className={classes.labelText}
+              classes={{required: classes.textFieldRequired}}
             >
               Project
             </InputLabel>
@@ -117,7 +127,8 @@ const TimesheetRecordModal = ({
               InputLabelProps={{
                 classes: {
                   root: classes.textFieldLabel,
-                  focused: classes.textFieldLabelFocused
+                  focused: classes.textFieldLabelFocused,
+                  required: classes.textFieldRequired
                 },
                 required: true
               }}
@@ -144,11 +155,13 @@ const TimesheetRecordModal = ({
                 format="DD.MM.YYYY"
                 value={date}
                 onChange={handleDateChange}
+                className={classes.dateBlock}
                 InputLabelProps={{
                   shrink: true,
                   classes: {
                     root: classes.textFieldLabel,
-                    focused: classes.textFieldLabelFocused
+                    focused: classes.textFieldLabelFocused,
+                    required: classes.textFieldRequired
                   }
                 }}
                 InputProps={{
@@ -162,7 +175,6 @@ const TimesheetRecordModal = ({
             </MuiPickersUtilsProvider>
           </div>
 
-          <div className={theme.labelText}>Comments:</div>
           <div>
             <TextField
               id="comments"

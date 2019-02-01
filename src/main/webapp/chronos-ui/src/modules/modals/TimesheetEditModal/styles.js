@@ -6,7 +6,12 @@ const styles = () => ({
     maxHeight: '700px',
     boxSizing: 'border-box',
     overflowY: 'hidden',
-    overflowX: 'hidden'
+    overflowX: 'hidden',
+    '@media (max-width:560px)': {
+      // eslint-disable-line no-useless-computed-key
+      paddingRight: '36px',
+      paddingLeft: '36px'
+    }
   },
   container: {
     display: 'flex',
@@ -19,13 +24,34 @@ const styles = () => ({
     textAlign: 'left'
   },
   textFieldTime: {
-    margin: 0
+    margin: 0,
+    '@media (max-width:560px)': {
+      // eslint-disable-line no-useless-computed-key
+      width: '100%'
+    }
   },
   textFieldLabel: {
     color: '#4a4a4a'
   },
   textFieldLabelFocused: {
     color: 'rgba(173, 181, 199, 0.87)'
+  },
+  textFieldRequired: {
+    '& span': {
+      color: 'red'
+    }
+  },
+  labelFieldRequired: {
+    '& span': {
+      float: 'left',
+      marginRight: '5px',
+      color: 'red'
+    }
+  },
+  labelFiledBlock: {
+    fontSize: '13px',
+    marginLeft: '20px',
+    color: '#000000'
   },
   commentsInput: {
     width: '100%',
@@ -43,6 +69,10 @@ const styles = () => ({
     },
     '&:hover $textFieldFocusedNotchedOutline': {
       borderColor: 'rgba(173, 181, 199, 0.87) !important'
+    },
+    '@media (max-width:560px)': {
+      // eslint-disable-line no-useless-computed-key
+      width: 'auto'
     }
   },
   textFieldOutlinedInputError: {
@@ -52,9 +82,19 @@ const styles = () => ({
     },
     '&:hover $textFieldFocusedNotchedOutline': {
       borderColor: 'red !important'
+    },
+    '@media (max-width:560px)': {
+      // eslint-disable-line no-useless-computed-key
+      width: 'auto'
     }
   },
-
+  dateBlock: {
+    '@media (max-width:560px)': {
+      // eslint-disable-line no-useless-computed-key
+      marginTop: '25px',
+      width: '100%'
+    }
+  },
   selectOutlinedInput: {
     width: '100%',
     $textFieldFocusedNotchedOutline: {
@@ -91,8 +131,8 @@ const styles = () => ({
     color: 'rgba(0, 0, 0, 0.87)'
   },
   saveBtn: {
-    marginTop: '70px',
-    marginBottom: '50px',
+    marginTop: '24px',
+    marginBottom: '32px',
     width: '137px',
     height: '42px',
     backgroundColor: '#25cdda',
@@ -104,8 +144,15 @@ const styles = () => ({
     }
   },
   modalContent: {
+    paddingTop: '18px!important',
+    paddingBottom: '0px!important',
     overflowY: 'hidden',
-    overflowX: 'hidden'
+    overflowX: 'hidden',
+    '@media (max-width:768px)': {
+      // eslint-disable-line no-useless-computed-key
+      paddingRight: '15px',
+      paddingLeft: '15px'
+    }
   },
   selectionList: {
     position: 'absolute',
@@ -113,8 +160,8 @@ const styles = () => ({
   },
   closeBtn: {
     position: 'absolute',
-    top: '5px',
-    right: '0px'
+    top: '19px',
+    right: '17px'
   },
   iconClose: {
     width: '36px',
@@ -128,8 +175,8 @@ const styles = () => ({
   errorTime: {
     color: '#f44336',
     position: 'absolute',
-    bottom: '-15px',
-    left: '10px'
+    top: '257px',
+    left: '79px'
   }
 });
 

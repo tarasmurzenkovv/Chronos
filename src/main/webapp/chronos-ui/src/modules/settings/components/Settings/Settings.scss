@@ -12,3 +12,10 @@
   border: 1px solid rgba(173, 181, 199, 0.87);
   border-radius: 18px;
 }
+.colorOptionDisabled{
+  width: 26px;
+  height: 26px;
+  border: 1px solid rgba(173, 181, 199, 0.87);
+  border-radius: 18px;
+  background: rgba(173, 181, 199, 0.1)!important;
+}
