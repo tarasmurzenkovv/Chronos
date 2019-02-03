@@ -8,6 +8,7 @@ export interface IUser {
   first_name: string;
   last_name: string;
   role: string;
+  token: string;
 }
 
 export type TState = Readonly<IUser>;
@@ -17,7 +18,8 @@ const defaultState: TState = {
   email: '',
   first_name: '',
   last_name: '',
-  role: ''
+  role: '',
+  token: ''
 };
 
 const userItem = createReducer(defaultState, {

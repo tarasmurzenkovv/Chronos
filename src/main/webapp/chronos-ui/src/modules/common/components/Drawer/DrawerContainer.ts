@@ -12,7 +12,8 @@ const mapStateToProps = (state) => ({
   isOpen: state.common.drawer.isOpen,
   list: sortBy(state.common.usersList.list, ['first_name', 'last_name']),
   selectedId: state.common.usersList.selectedId,
-  userId: state.common.user.id
+  userId: state.common.user.id,
+  token: state.common.user.token
 });
 
 const mapDispatchToProps = {
@@ -23,9 +24,10 @@ const mapDispatchToProps = {
 };
 
 interface IProps {
-  fetchUsersList: () => Promise<any>;
+  fetchUsersList: (token: string) => Promise<any>;
   selectUserInUserlist: (userId: number) => void;
   userId: number;
+  token: string;
   selectAllUserIdForReports: () => void;
 }
 
@@ -48,13 +50,13 @@ export default compose(
     componentDidMount() {
       const {
         userId,
-
+        token,
         fetchUsersList,
         selectAllUserIdForReports,
         selectUserInUserlist
       } = this.props;
 
-      fetchUsersList().then(() => {
+      fetchUsersList(token).then(() => {
         selectUserInUserlist(userId);
         selectAllUserIdForReports();
       });

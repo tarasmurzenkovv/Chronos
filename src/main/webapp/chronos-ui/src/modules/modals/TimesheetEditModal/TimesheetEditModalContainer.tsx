@@ -13,6 +13,7 @@ import TimesheetRecordModal from './TimesheetEditModal';
 const mapStateToProps = (state) => ({
   list: state.projects.list.filter((item) => !item.deleted),
   userId: state.common.user.id,
+  token: state.common.user.token,
   selectedId: state.timesheet.selectedId,
   selectedItemData: state.timesheet.list.find(
     (item) => item.task_id === state.timesheet.selectedId
@@ -26,7 +27,8 @@ const mapDispatchToProps = {
 };
 
 interface IProps {
-  getProjectsList: () => void;
+  token: string;
+  getProjectsList: (token: string) => any;
 }
 
 export default compose(
@@ -88,6 +90,7 @@ export default compose(
     handleFormSubmit: ({
       editRecordApi,
       date,
+      token,
       handleOnClose,
       projectId,
       setSelectProjectError,
@@ -119,7 +122,7 @@ export default compose(
         user_id: userId
       };
 
-      editRecordApi(params)
+      editRecordApi(params, token)
         .then(() => {
           handleOnClose();
         })
@@ -129,7 +132,7 @@ export default compose(
 
   lifecycle<IProps, {}>({
     componentDidMount() {
-      this.props.getProjectsList();
+      this.props.getProjectsList(this.props.token);
     }
   })
 )(TimesheetRecordModal);

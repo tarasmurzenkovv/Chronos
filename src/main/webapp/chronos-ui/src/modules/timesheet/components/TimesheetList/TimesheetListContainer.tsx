@@ -28,6 +28,7 @@ import TimesheetList from './TimesheetList';
 const mapStateToProps = (state) => {
   const timesheetList = state.timesheet.list;
   const projectsList = state.projects.list;
+  const token = state.common.user.token;
 
   const month = state.timesheet.filters.date.month;
 
@@ -38,6 +39,7 @@ const mapStateToProps = (state) => {
   return {
     list,
     month,
+    token,
     visibleToUser,
     projectsList
   };
@@ -52,7 +54,8 @@ const mapDispatchToProps = {
 
 interface IProps {
   monthFilter: string;
-  getProjectsList: () => void;
+  token: string;
+  getProjectsList: (token: string) => void;
   setMonthFilter: (month: any) => void;
   projectsList: any;
 }
@@ -110,7 +113,7 @@ export default compose(
 
       setMonthFilter(today);
 
-      getProjectsList();
+      getProjectsList(this.props.token);
     }
   }),
 

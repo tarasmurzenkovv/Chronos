@@ -21,6 +21,7 @@ const Pages = ({history}) => (
         <Route path="/forgot-password" component={ForgotPasswordPage} />
 
         <PrivatePage exact path="/" component={() => <TimesheetPage />} />
+        <PrivatePage path="/calendar" component={() => <TimesheetPage />} />
         <PrivatePage path="/settings" component={() => <SettingsPage />} />
         <PrivatePage path="/reports" component={() => <ReportsPage />} />
       </Switch>

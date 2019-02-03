@@ -13,6 +13,7 @@ export interface IUser {
   first_name: string;
   last_name: string;
   role: string;
+  token: string;
 }
 
 export type TState = Readonly<{
@@ -31,7 +32,8 @@ const defaultState: TState = {
     email: '',
     first_name: '',
     last_name: '',
-    role: ''
+    role: '',
+    token: ''
   }
 };
 
