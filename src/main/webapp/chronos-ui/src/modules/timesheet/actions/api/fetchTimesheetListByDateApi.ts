@@ -9,9 +9,13 @@ import {timesheetByDateUrl} from '../../services';
 export const fetchTimesheetListByDateApi = () => (dispatch, getState) => {
   const state = getState();
   const userId = state.common.user.id;
+  const token = state.common.user.token;
   const selectedId = state.common.usersList.selectedId;
   const startOfMonth = state.timesheet.filters.date.startOfMonth;
   const endOfMonth = state.timesheet.filters.date.endOfMonth;
+  const params = {
+    headers: {Authorization: `Bearer ${token}`}
+  };
 
   dispatch({type: FETCH_TIMESHEET_LIST_BY_DATE.pending});
 
@@ -20,7 +24,8 @@ export const fetchTimesheetListByDateApi = () => (dispatch, getState) => {
       id: selectedId || userId,
       start: startOfMonth,
       end: endOfMonth
-    })
+    }),
+    params
   )
     .then(({data}) =>
       dispatch({

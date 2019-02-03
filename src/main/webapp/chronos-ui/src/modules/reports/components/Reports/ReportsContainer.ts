@@ -12,7 +12,8 @@ import Reports from './Reports';
 
 const mapStateToProps = (state) => ({
   list: sortAndCreateFullName(state.common.usersList.list),
-  selectedUsersIds: state.reports.selectedUsersIds
+  selectedUsersIds: state.reports.selectedUsersIds,
+  token: state.common.user.token
 });
 
 const mapDispatchToProps = {
@@ -49,10 +50,16 @@ export default compose(
       fetchReport,
       selectedUsersIds,
       startDay,
-      endDay
+      endDay,
+      token
     }) => (event) => {
       event.preventDefault();
-      fetchReport({ids: selectedUsersIds, start: startDay, end: endDay});
+      fetchReport({
+        ids: selectedUsersIds,
+        start: startDay,
+        end: endDay,
+        token
+      });
     }
   })
 )(Reports);

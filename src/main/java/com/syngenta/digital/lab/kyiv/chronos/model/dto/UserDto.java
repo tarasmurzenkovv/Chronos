@@ -1,5 +1,6 @@
 package com.syngenta.digital.lab.kyiv.chronos.model.dto;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -21,7 +22,9 @@ public class UserDto {
     @JsonProperty("last_name")
     private String lastName;
     private String email;
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private String password;
     private String role;
     private String jobTitle;
+    private String token;
 }

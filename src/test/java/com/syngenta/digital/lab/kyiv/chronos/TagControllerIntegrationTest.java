@@ -4,19 +4,16 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.github.springtestdbunit.annotation.DatabaseSetup;
 import com.github.springtestdbunit.annotation.DatabaseTearDown;
 import com.github.springtestdbunit.annotation.ExpectedDatabase;
-import com.jayway.restassured.RestAssured;
-import com.jayway.restassured.http.ContentType;
-import com.jayway.restassured.response.Response;
-import com.syngenta.digital.lab.kyiv.chronos.configuration.SingleCountQueryExecutionListenerWrapper;
+import io.restassured.RestAssured;
+import io.restassured.http.ContentType;
+import io.restassured.response.Response;
 import com.syngenta.digital.lab.kyiv.chronos.model.dto.TagDto;
 import com.syngenta.digital.lab.kyiv.chronos.model.response.GeneralResponse;
 import com.syngenta.digital.lab.kyiv.chronos.utils.JsonUtils;
 import lombok.SneakyThrows;
 import org.apache.http.HttpStatus;
 import org.assertj.core.api.Assertions;
-import org.junit.Before;
 import org.junit.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.annotation.DirtiesContext;
 
 import java.util.List;
@@ -27,20 +24,13 @@ import static com.github.springtestdbunit.assertion.DatabaseAssertionMode.NON_ST
 @DatabaseTearDown("/dbTearDown.xml")
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_CLASS)
 public class TagControllerIntegrationTest extends BaseIntegrationTest {
-    @Autowired
-    private SingleCountQueryExecutionListenerWrapper singleQueryCountHolder;
-    @Before
-    public void setUp() {
-        singleQueryCountHolder.reset();
-    }
 
     @Test
     @SneakyThrows
     @DatabaseSetup(value = "/TagControllerIntegrationTest/shouldAddNewTag/dbSetup.xml")
     @ExpectedDatabase(value = "/TagControllerIntegrationTest/shouldAddNewTag/expectedDataBase.xml", assertionMode = NON_STRICT_UNORDERED)
     public void shouldAddNewTag() {
-        Response response = RestAssured
-                .given()
+        Response response = this.getRestAssured()
                 .body(JsonUtils.readFromJson("/TagControllerIntegrationTest/shouldAddNewTag/addNewTagRequest.json", TagDto.class))
                 .contentType(ContentType.JSON)
                 .post("/api/v0/tag")
@@ -59,8 +49,8 @@ public class TagControllerIntegrationTest extends BaseIntegrationTest {
         Assertions.assertThat(actualResponse.getData().getTag()).isNotBlank();
         Assertions.assertThat(actualResponse.getData().getTag()).isEqualTo("awesome_tag");
 
-        Assertions.assertThat(singleQueryCountHolder.select()).isEqualTo(0L);
-        Assertions.assertThat(singleQueryCountHolder.insert()).isEqualTo(0L);
+        Assertions.assertThat(singleQueryCountHolder.select()).isEqualTo(1L);
+        Assertions.assertThat(singleQueryCountHolder.insert()).isEqualTo(1L);
         Assertions.assertThat(singleQueryCountHolder.update()).isEqualTo(0L);
         Assertions.assertThat(singleQueryCountHolder.delete()).isEqualTo(0L);
     }
@@ -88,7 +78,7 @@ public class TagControllerIntegrationTest extends BaseIntegrationTest {
         Assertions.assertThat(actualResponse.getData().stream().map(TagDto::getTag).collect(Collectors.toList()))
                 .isEqualTo(List.of("tag_123", "tag", "tag   "));
 
-        Assertions.assertThat(singleQueryCountHolder.select()).isEqualTo(0L);
+        Assertions.assertThat(singleQueryCountHolder.select()).isEqualTo(2L);
         Assertions.assertThat(singleQueryCountHolder.insert()).isEqualTo(0L);
         Assertions.assertThat(singleQueryCountHolder.update()).isEqualTo(0L);
         Assertions.assertThat(singleQueryCountHolder.delete()).isEqualTo(0L);

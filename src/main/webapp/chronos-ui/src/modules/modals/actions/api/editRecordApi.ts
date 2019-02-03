@@ -3,12 +3,17 @@ import errorAction from 'shared/utils/errorAction';
 import {CREATE_RECORD_URL} from '../../services';
 import {EDIT_TIMESHEET_RECORD} from '../../constants';
 
-export const editRecordApi = (params) => (dispatch) => {
+export const editRecordApi = (params, token) => (dispatch) => {
   const apiCallParams = {
     method: 'PUT',
     body: JSON.stringify({
       ...params
-    })
+    }),
+    headers: {
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json',
+      Accept: 'application/json'
+    }
   };
 
   return apiCall(CREATE_RECORD_URL, apiCallParams)

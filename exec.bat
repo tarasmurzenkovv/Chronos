@@ -1,1 +1,1 @@
-gradlew build && heroku deploy:jar ./build/libs/chronos.jar --app chronos-time-tracking
+gradlew build -x buildFe -x installFeDependencies && heroku deploy:jar ./build/libs/chronos.jar --app chronos-time-tracking

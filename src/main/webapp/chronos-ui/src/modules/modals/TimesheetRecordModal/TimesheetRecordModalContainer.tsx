@@ -13,10 +13,12 @@ import TimesheetRecordModal from './TimesheetRecordModal';
 const mapStateToProps = (state) => {
   const list = state.projects.list.filter((item) => !item.deleted);
   const userId = state.common.user.id;
+  const token = state.common.user.token;
 
   return {
     list,
-    userId
+    userId,
+    token
   };
 };
 
@@ -27,7 +29,8 @@ const mapDispatchToProps = {
 };
 
 interface IProps {
-  getProjectsList: () => void;
+  token: string;
+  getProjectsList: (token: string) => void;
 }
 
 export default compose(
@@ -87,7 +90,8 @@ export default compose(
       projectId,
       setSelectProjectError,
       setTimeError,
-      userId
+      userId,
+      token
     }) => (event) => {
       event.preventDefault();
 
@@ -113,7 +117,7 @@ export default compose(
         user_id: userId
       };
 
-      createRecordApi(params)
+      createRecordApi(params, token)
         .then(() => handleOnClose())
         .catch(() => {});
     }
@@ -121,7 +125,7 @@ export default compose(
 
   lifecycle<IProps, {}>({
     componentDidMount() {
-      this.props.getProjectsList();
+      this.props.getProjectsList(this.props.token);
     }
   })
 )(TimesheetRecordModal);

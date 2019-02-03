@@ -3,7 +3,6 @@ import {compose, withHandlers} from 'recompose';
 
 import {isUserAdmin, redirectTo} from 'shared/utils';
 
-import * as React from 'react';
 import {setDrawerStatus} from '../../actions/drawer';
 import Header from './Header';
 

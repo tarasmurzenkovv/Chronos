@@ -17,7 +17,6 @@ import PermIdentity from '@material-ui/icons/PermIdentity';
 
 import mainLogo from 'shared/assets/img/syngentaLogo.svg';
 
-import {history} from 'configurations/store';
 import * as theme from './Header.scss';
 import styles from './styles';
 
@@ -87,11 +86,9 @@ const Header: React.FunctionComponent<IProps> = ({
           <IconButton
             aria-label="Calendar"
             className={`${classes.navButton} ${
-              pathname === '/' ? classes.active : ''
+              pathname === '/' || pathname === '/calendar' ? classes.active : ''
             }`}
-            onClick={() => {
-              history.push('/');
-            }}
+            onClick={handleButtonClick('/calendar')}
           >
             <CalendarIcon className={classes.iconCalendar} />
           </IconButton>
@@ -103,9 +100,7 @@ const Header: React.FunctionComponent<IProps> = ({
               className={`${classes.navButton} ${classes.navSettings} ${
                 pathname === '/settings' ? classes.active : ''
               }`}
-              onClick={() => {
-                history.push('/settings');
-              }}
+              onClick={handleButtonClick('/settings')}
             >
               <SettingsIcon className={classes.iconSettings} />
             </IconButton>

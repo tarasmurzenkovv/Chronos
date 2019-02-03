@@ -8,7 +8,7 @@ import {deleteProjectApi} from '../../actions/api/deleteProjectApi';
 import {editProjectApi} from '../../actions/api/editProjectApi';
 
 const mapStateToProps = (state) => ({
-  projectsList: state.projects.list.filter((item) => item.deleted !== true),
+  projectsList: state.projects.list,
   selectedProjectId: state.settings.selectedProjectId,
   colorsSet: state.projects.list
     .map((item) => item.color)
@@ -17,7 +17,8 @@ const mapStateToProps = (state) => ({
     (obj, item) => ((obj[item.id] = item.color), obj),
     {}
   ),
-  isLoading: state.projects.isLoading
+  isLoading: state.projects.isLoading,
+  token: state.common.user.token
 });
 
 const mapDispatchToProps = {
@@ -29,7 +30,8 @@ const mapDispatchToProps = {
 };
 
 interface IProps {
-  getProjectsList: () => any;
+  token: string;
+  getProjectsList: (token: string) => any;
   updateProjectsList: (projects: any) => any;
   setColorValue: (projects: any) => any;
 }
@@ -156,17 +158,21 @@ export default compose(
 
   withHandlers({
     handleFormSubmit: ({
+      getProjectsList,
       selectedProjectId,
       createProjectApi,
       deleteProjectApi,
       editProjectApi,
       setActiveBtn,
-      setActionName,
-      projectNew,
+      setColorValue,
+      projects,
+      projectsList,
       projectSelected,
+      updateProjectsList,
       invokedAction,
       addParams,
-      editParams
+      editParams,
+      token
     }) => (event) => {
       event.preventDefault();
 
@@ -180,9 +186,14 @@ export default compose(
         switch (item) {
         case 'delete':
           projectSelected.forEach((value) => {
-            deleteProjectApi(value)
+            deleteProjectApi(value, token)
               .then(() => {
-                  setActiveBtn(false);
+                setActiveBtn(false);
+                getProjectsList(token)
+                    .then((response) => {
+                      updateProjectsList(response);
+                    })
+                    .catch(() => {});
                 })
               .catch(() => {});
           });
@@ -197,10 +208,21 @@ export default compose(
               deleted: 'false',
               color: value[1].color
             };
-            createProjectApi(params)
+            createProjectApi(params, token)
               .then(() => {
                 setActiveBtn(false);
-                })
+                getProjectsList(token)
+                  .then((response) => {
+                    updateProjectsList(response);
+                    setColorValue(
+                        response.reduce(
+                          (obj, item) => ((obj[item.id] = item.color), obj),
+                        {}
+                        )
+                    );
+                  })
+                  .catch(() => {});
+              })
               .catch(() => {});
           });
           break;
@@ -214,7 +236,7 @@ export default compose(
               deleted: 'false',
               color: value[1].color
             };
-              editProjectApi(params)
+              editProjectApi(params, token)
               .then(() => {
                   setActiveBtn(false);
                 })
@@ -229,23 +251,10 @@ export default compose(
   }),
   lifecycle<IProps, {}>({
     componentDidMount() {
-      this.props.getProjectsList().then((response) => {
-        const deletedProject = response.payload.list.filter(
-          (item) => item.deleted === true
-        );
-        const allProjects = response.payload.list;
-        deletedProject.forEach((item) => {
-          allProjects.push(allProjects.splice(allProjects.indexOf(item), 1)[0]);
-        });
-        this.props.updateProjectsList(
-          // response.payload.list.filter((item) => item.deleted !== true)
-          allProjects
-        );
+      this.props.getProjectsList(this.props.token).then((response) => {
+        this.props.updateProjectsList(response);
         this.props.setColorValue(
-          response.payload.list.reduce(
-            (obj, item) => ((obj[item.id] = item.color), obj),
-            {}
-          )
+          response.reduce((obj, item) => ((obj[item.id] = item.color), obj), {})
         );
       });
     }

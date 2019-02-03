@@ -3,12 +3,17 @@ import errorAction from 'shared/utils/errorAction';
 import {CREATE_PROJECT_URL} from '../../services';
 import {CREATE_CURRENT_PROJECT} from '../constants';
 
-export const createProjectApi = (params) => (dispatch) => {
+export const createProjectApi = (params, token) => (dispatch) => {
   const apiCallParams = {
     method: 'POST',
     body: JSON.stringify({
       ...params
-    })
+    }),
+    headers: {
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json',
+      'Access-Control-Allow-Origin': '*'
+    }
   };
   dispatch({type: CREATE_CURRENT_PROJECT.pending});
 
