@@ -55,7 +55,7 @@ public class TaskController {
         return GeneralResponse.from(taskService.register(taskDto), HttpStatus.FOUND);
     }
 
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_REGULAR')")
     @DeleteMapping("/task/{id}")
     public ResponseEntity<GeneralResponse<TaskDto>> delete(@PathVariable("id") long id) {
         log.info("About to delete task for id '{}'", id);
