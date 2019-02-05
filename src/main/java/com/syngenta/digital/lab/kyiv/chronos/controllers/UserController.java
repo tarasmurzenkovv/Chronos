@@ -50,7 +50,7 @@ public class UserController {
         return GeneralResponse.from(userService.find(userId), HttpStatus.FOUND);
     }
 
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_REGULAR')")
     @GetMapping("/user/information")
     public ResponseEntity<GeneralResponse<List<UserDto>>> find() {
         log.info("About to find all users ");
