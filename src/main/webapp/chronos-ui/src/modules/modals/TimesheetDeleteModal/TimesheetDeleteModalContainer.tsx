@@ -5,7 +5,8 @@ import TimesheetDeleteModal from './TimesheetDeleteModal';
 import {deleteRecordApi} from '../../modals/actions/api/deleteRecordApi';
 
 const mapStateToProps = (state) => ({
-  selectedId: state.timesheet.selectedId
+  selectedId: state.timesheet.selectedId,
+  token: state.common.user.token
 });
 
 const mapDispatchToProps = {
@@ -30,8 +31,13 @@ export default compose(
     }
   }),
   withHandlers({
-    handleDeleteItem: ({deleteRecordApi, handleOnClose, selectedId}) => () => {
-      deleteRecordApi(selectedId)
+    handleDeleteItem: ({
+      deleteRecordApi,
+      handleOnClose,
+      selectedId,
+      token
+    }) => () => {
+      deleteRecordApi(selectedId, token)
         .catch(() => {})
         .finally(handleOnClose());
     }
