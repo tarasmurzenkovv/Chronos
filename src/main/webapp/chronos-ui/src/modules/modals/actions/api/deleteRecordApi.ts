@@ -3,9 +3,14 @@ import errorAction from 'shared/utils/errorAction';
 import {DELETE_TIMESHEET_RECORD} from '../../constants';
 import {DELETE_RECORD_URL} from '../../services';
 
-export const deleteRecordApi = (id: number) => (dispatch) => {
+export const deleteRecordApi = (id: number, token) => (dispatch) => {
   const apiCallParams = {
-    method: 'DELETE'
+    method: 'DELETE',
+    headers: {
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json',
+      Accept: 'application/json'
+    }
   };
   return apiCall(DELETE_RECORD_URL(id), apiCallParams)
     .then(() =>
