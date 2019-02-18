@@ -40,7 +40,7 @@ public class ProjectController {
         return GeneralResponse.from(projectService.find(projectId), HttpStatus.FOUND);
     }
 
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_REGULAR')")
     @GetMapping("/project")
     public ResponseEntity<GeneralResponse<List<ProjectDto>>> find() {
         return GeneralResponse.from(projectService.find(), HttpStatus.FOUND);

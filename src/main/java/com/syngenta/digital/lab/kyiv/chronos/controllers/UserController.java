@@ -43,26 +43,28 @@ public class UserController {
         return GeneralResponse.from(userService.login(loginRequest), HttpStatus.FOUND);
     }
 
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_REGULAR')")
     @GetMapping("/user/{id}/task")
     public ResponseEntity<GeneralResponse<List<TaskDto>>> find(@PathVariable("id") long userId) {
         log.info("About to find task by user id '{}'", userId);
         return GeneralResponse.from(userService.find(userId), HttpStatus.FOUND);
     }
 
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_REGULAR')")
     @GetMapping("/user/information")
     public ResponseEntity<GeneralResponse<List<UserDto>>> find() {
         log.info("About to find all users ");
         return GeneralResponse.from(userService.find(), HttpStatus.FOUND);
     }
 
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_REGULAR')")
     @GetMapping("/user/information/{id}")
     public ResponseEntity<GeneralResponse<UserDto>> findUserInformation(@PathVariable("id") long userId) {
         log.info("About to find users for id '{}'", userId);
         return GeneralResponse.from(userService.findInformation(userId), HttpStatus.FOUND);
     }
 
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_REGULAR')")
     @GetMapping("/user/{id}")
     public ResponseEntity<GeneralResponse<List<TaskDto>>> find(
             @PathVariable("id") long userId,

@@ -76,7 +76,7 @@ public class ApplicationWebSecurityConfigurerAdapter extends WebSecurityConfigur
         http.authorizeRequests().antMatchers("/swagger-resources").permitAll();
         http.authorizeRequests().antMatchers("/v2/api-docs").permitAll();
         http.authorizeRequests().antMatchers("/",
-                "/**/.ico",
+                "/**/*.ico",
                 "/**/*.json",
                 "/**/*.png",
                 "/**/*.gif",

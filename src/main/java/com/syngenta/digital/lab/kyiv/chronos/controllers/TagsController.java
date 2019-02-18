@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -26,36 +27,42 @@ import java.util.List;
 public class TagsController {
     private final TagService tagService;
 
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_REGULAR')")
     @PostMapping("/tag")
     public ResponseEntity<GeneralResponse<TagDto>> save(@RequestBody TagDto tagDto) {
         log.info("About to register the following tag '{}'", tagDto);
         return GeneralResponse.from(tagService.register(tagDto), HttpStatus.CREATED);
     }
 
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_REGULAR')")
     @GetMapping("/tag/{id}")
     public ResponseEntity<GeneralResponse<TagDto>> find(@PathVariable("id") long id) {
         log.info("About to find the tag by id '{}'", id);
         return GeneralResponse.from(tagService.find(id), HttpStatus.FOUND);
     }
 
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_REGULAR')")
     @GetMapping("/tag")
     public ResponseEntity<GeneralResponse<List<TagDto>>> find() {
         log.info("About to find the tags ");
         return GeneralResponse.from(tagService.find(), HttpStatus.FOUND);
     }
 
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_REGULAR')")
     @GetMapping("/tag/matching")
     public ResponseEntity<GeneralResponse<List<TagDto>>> find(@RequestParam("prefix") String tag) {
         log.info("About to find the tags ");
         return GeneralResponse.from(tagService.findAllTagsMatching(tag), HttpStatus.FOUND);
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PutMapping("/tag")
     public ResponseEntity<GeneralResponse<TagDto>> update(@RequestBody TagDto tagDto) {
         log.info("About to update the following tag '{}'", tagDto);
         return GeneralResponse.from(tagService.register(tagDto), HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @DeleteMapping("/tag/{id}")
     public ResponseEntity<GeneralResponse<TagDto>> delete(@PathVariable("id") long id) {
         log.info("About to delete tag for id '{}'", id);

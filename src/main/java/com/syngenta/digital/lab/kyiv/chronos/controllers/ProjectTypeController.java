@@ -33,14 +33,14 @@ public class ProjectTypeController {
         return GeneralResponse.from(projectTypeService.register(projectTypeDto), HttpStatus.CREATED);
     }
 
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_REGULAR')")
     @GetMapping("/project-type")
     public ResponseEntity<GeneralResponse<List<ProjectTypeDto>>> find() {
         log.info("About to find all project types");
         return GeneralResponse.from(projectTypeService.find(), HttpStatus.FOUND);
     }
 
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_REGULAR')")
     @GetMapping("/project-type/{id}")
     public ResponseEntity<GeneralResponse<ProjectTypeDto>> find(@PathVariable("id") long id) {
         log.info("About to find for project type id " + id);
