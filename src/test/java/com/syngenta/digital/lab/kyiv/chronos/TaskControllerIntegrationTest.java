@@ -182,7 +182,7 @@ public class TaskControllerIntegrationTest extends BaseIntegrationTest {
         Assertions.assertThat(actualResponse.getData().getReportingDate()).isEqualTo(LocalDate.of(2019,1,1));
         Assertions.assertThat(actualResponse.getData().getSpentTime()).isEqualTo(0.8f);
 
-        Assertions.assertThat(singleQueryCountHolder.select()).isEqualTo(3L);
+        Assertions.assertThat(singleQueryCountHolder.select()).isEqualTo(2L);
         Assertions.assertThat(singleQueryCountHolder.insert()).isEqualTo(0L);
         Assertions.assertThat(singleQueryCountHolder.update()).isEqualTo(0L);
         Assertions.assertThat(singleQueryCountHolder.delete()).isEqualTo(0L);
@@ -272,7 +272,7 @@ public class TaskControllerIntegrationTest extends BaseIntegrationTest {
 
         Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.SC_OK);
 
-        Assertions.assertThat(singleQueryCountHolder.select()).isEqualTo(3L);
+        Assertions.assertThat(singleQueryCountHolder.select()).isEqualTo(2L);
         Assertions.assertThat(singleQueryCountHolder.insert()).isEqualTo(0L);
         Assertions.assertThat(singleQueryCountHolder.update()).isEqualTo(0L);
         Assertions.assertThat(singleQueryCountHolder.delete()).isEqualTo(1L);

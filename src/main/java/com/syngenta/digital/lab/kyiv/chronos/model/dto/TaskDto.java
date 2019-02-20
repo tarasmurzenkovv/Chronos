@@ -11,6 +11,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -30,11 +31,22 @@ public class TaskDto {
     @JsonSerialize(using = LocalDateSerializer.class)
     private LocalDate reportingDate;
     @JsonProperty("spent_time")
-    private float spentTime;
+    private Float spentTime;
     @JsonProperty("tags")
     private List<TagDto> tags;
     @JsonProperty("comments")
     private String comments;
     @JsonProperty("editable")
-    private boolean editable;
+    private Boolean editable;
+
+    public TaskDto(Long taskId, long userId, long projectId, LocalDate reportingDate, Float spentTime, String comments, Boolean editable) {
+        this.taskId = taskId;
+        this.userId = userId;
+        this.projectId = projectId;
+        this.reportingDate = reportingDate;
+        this.spentTime = spentTime;
+        this.comments = comments;
+        this.editable = editable;
+        this.tags = new ArrayList<>();
+    }
 }

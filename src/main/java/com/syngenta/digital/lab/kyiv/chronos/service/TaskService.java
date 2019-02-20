@@ -66,17 +66,13 @@ public class TaskService {
     public TaskDto find(long taskId) {
         return taskRepository.findById(taskId)
                 .map(taskMapper::mapToDto)
-                .map(tagDto -> {
-                    tagDto.setTags(findTags(taskId));
-                    return tagDto;
-                })
                 .orElseThrow(() -> new TaskException(ERROR_CODE, "Cannot find task for id " + taskId));
     }
 
     @Transactional
     public void delete(long taskId) {
         TaskDto taskDto = find(taskId);
-        if (!taskDto.isEditable()) {
+        if (!taskDto.getEditable()) {
             throw new TaskException(ERROR_CODE, String.format("The task with id '%s' is already frozen. Cannot modify it.", taskId));
         }
         taskRepository.deleteById(taskDto.getTaskId());
