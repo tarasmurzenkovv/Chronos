@@ -5,7 +5,9 @@ import com.github.springtestdbunit.annotation.DatabaseSetup;
 import com.github.springtestdbunit.annotation.DatabaseSetups;
 import com.github.springtestdbunit.annotation.DatabaseTearDown;
 import com.github.springtestdbunit.annotation.ExpectedDatabase;
-import io.restassured.http.ContentType;
+import com.syngenta.digital.lab.kyiv.chronos.utils.db.utils.ExpectedGeneratedQueryNumber;
+import com.syngenta.digital.lab.kyiv.chronos.utils.db.utils.ExpectedGeneratedQueryNumbers;
+import com.syngenta.digital.lab.kyiv.chronos.utils.db.utils.QueryType;
 import io.restassured.response.Response;
 import com.syngenta.digital.lab.kyiv.chronos.model.response.ErrorResponsePayload;
 import com.syngenta.digital.lab.kyiv.chronos.model.response.GeneralResponse;
@@ -44,6 +46,12 @@ public class ReportingControllerIntegrationTest extends BaseIntegrationTest {
     })
     @ExpectedDatabase(value = "/ReportingControllerIntegrationTest/shouldGenerateReport/dbSetup/expectedTasks.xml",
             assertionMode = NON_STRICT_UNORDERED)
+    @ExpectedGeneratedQueryNumbers({
+            @ExpectedGeneratedQueryNumber(queryType = QueryType.SELECT, expectedNumber = 2),
+            @ExpectedGeneratedQueryNumber(queryType = QueryType.INSERT, expectedNumber = 0),
+            @ExpectedGeneratedQueryNumber(queryType = QueryType.UPDATE, expectedNumber = 1),
+            @ExpectedGeneratedQueryNumber(queryType = QueryType.DELETE, expectedNumber = 0),
+    })
     public void shouldGenerateTheCsvReport() {
         Response response = this.getRestAssured()
                 .get("/api/v0/reporting/csv?id=1&id=2&id=3&start=01/01/2016&end=01/01/2020")
@@ -60,10 +68,6 @@ public class ReportingControllerIntegrationTest extends BaseIntegrationTest {
         List<String> actualParsedCsvFile = reader.lines().collect(Collectors.toList());
         List<String> expectedParsedCsvFile = FileUtils.parseCsvFile("/ReportingControllerIntegrationTest/shouldGenerateReport/response/expectedCsvFile.csv");
         Assertions.assertThat(actualParsedCsvFile).containsExactlyInAnyOrderElementsOf(expectedParsedCsvFile);
-        Assertions.assertThat(singleQueryCountHolder.select()).isEqualTo(2L);
-        Assertions.assertThat(singleQueryCountHolder.insert()).isEqualTo(0L);
-        Assertions.assertThat(singleQueryCountHolder.update()).isEqualTo(1L);
-        Assertions.assertThat(singleQueryCountHolder.delete()).isEqualTo(0L);
     }
 
     @Test
@@ -76,6 +80,12 @@ public class ReportingControllerIntegrationTest extends BaseIntegrationTest {
     })
     @ExpectedDatabase(value = "/ReportingControllerIntegrationTest/shouldGenerateReport/dbSetup/expectedTasks.xml",
             assertionMode = NON_STRICT_UNORDERED)
+    @ExpectedGeneratedQueryNumbers({
+            @ExpectedGeneratedQueryNumber(queryType = QueryType.SELECT, expectedNumber = 2),
+            @ExpectedGeneratedQueryNumber(queryType = QueryType.INSERT, expectedNumber = 0),
+            @ExpectedGeneratedQueryNumber(queryType = QueryType.UPDATE, expectedNumber = 1),
+            @ExpectedGeneratedQueryNumber(queryType = QueryType.DELETE, expectedNumber = 0),
+    })
     public void shouldGenerateTheXlsReport() {
         Response response = this.getRestAssured()
                 .get("/api/v0/reporting/xls?id=1&id=2&id=3&start=01/01/2016&end=01/01/2020")
@@ -110,16 +120,12 @@ public class ReportingControllerIntegrationTest extends BaseIntegrationTest {
 
         List<String> expectedParsedCsvFile = FileUtils.parseCsvFile("/ReportingControllerIntegrationTest/shouldGenerateReport/response/expectedCsvFile.csv");
         Assertions.assertThat(actualParsedValues).containsExactlyInAnyOrderElementsOf(expectedParsedCsvFile);
-
-        Assertions.assertThat(singleQueryCountHolder.select()).isEqualTo(2L);
-        Assertions.assertThat(singleQueryCountHolder.insert()).isEqualTo(0L);
-        Assertions.assertThat(singleQueryCountHolder.update()).isEqualTo(1L);
-        Assertions.assertThat(singleQueryCountHolder.delete()).isEqualTo(0L);
     }
 
     @Test
     @DatabaseSetup(value = "/ReportingControllerIntegrationTest/shouldGenerateReport/dbSetup/users.xml")
     @SneakyThrows
+    @ExpectedGeneratedQueryNumber(queryType = QueryType.SELECT, expectedNumber = 1)
     public void shouldNotGenerateTheReportIfStartDateIsAfterBeforeDate() {
         Response response = this.getRestAssured()
                 .get("/api/v0/reporting/csv?id=1&id=2&id=3&start=01/01/2021&end=01/01/2020")
@@ -139,10 +145,5 @@ public class ReportingControllerIntegrationTest extends BaseIntegrationTest {
                 });
 
         Assertions.assertThat(actualResponse).isEqualTo(expectedResponse);
-
-        Assertions.assertThat(singleQueryCountHolder.select()).isEqualTo(1L);
-        Assertions.assertThat(singleQueryCountHolder.insert()).isEqualTo(0L);
-        Assertions.assertThat(singleQueryCountHolder.update()).isEqualTo(0L);
-        Assertions.assertThat(singleQueryCountHolder.delete()).isEqualTo(0L);
     }
 }

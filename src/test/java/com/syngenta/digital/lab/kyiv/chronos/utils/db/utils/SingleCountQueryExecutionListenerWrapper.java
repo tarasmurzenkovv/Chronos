@@ -1,4 +1,4 @@
-package com.syngenta.digital.lab.kyiv.chronos.configuration;
+package com.syngenta.digital.lab.kyiv.chronos.utils.db.utils;
 
 import net.ttddyy.dsproxy.listener.SingleQueryCountHolder;
 import org.springframework.stereotype.Service;

@@ -4,6 +4,9 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.github.springtestdbunit.annotation.DatabaseSetup;
 import com.github.springtestdbunit.annotation.DatabaseTearDown;
 import com.github.springtestdbunit.annotation.ExpectedDatabase;
+import com.syngenta.digital.lab.kyiv.chronos.utils.db.utils.ExpectedGeneratedQueryNumber;
+import com.syngenta.digital.lab.kyiv.chronos.utils.db.utils.ExpectedGeneratedQueryNumbers;
+import com.syngenta.digital.lab.kyiv.chronos.utils.db.utils.QueryType;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
@@ -29,6 +32,10 @@ public class TagControllerIntegrationTest extends BaseIntegrationTest {
     @SneakyThrows
     @DatabaseSetup(value = "/TagControllerIntegrationTest/shouldAddNewTag/dbSetup.xml")
     @ExpectedDatabase(value = "/TagControllerIntegrationTest/shouldAddNewTag/expectedDataBase.xml", assertionMode = NON_STRICT_UNORDERED)
+    @ExpectedGeneratedQueryNumbers({
+            @ExpectedGeneratedQueryNumber(queryType = QueryType.SELECT, expectedNumber = 1),
+            @ExpectedGeneratedQueryNumber(queryType = QueryType.INSERT, expectedNumber = 1)
+    })
     public void shouldAddNewTag() {
         Response response = this.getRestAssured()
                 .body(JsonUtils.readFromJson("/TagControllerIntegrationTest/shouldAddNewTag/addNewTagRequest.json", TagDto.class))
@@ -48,17 +55,13 @@ public class TagControllerIntegrationTest extends BaseIntegrationTest {
         Assertions.assertThat(actualResponse.getData().getTagId()).isNotNull();
         Assertions.assertThat(actualResponse.getData().getTag()).isNotBlank();
         Assertions.assertThat(actualResponse.getData().getTag()).isEqualTo("awesome_tag");
-
-        Assertions.assertThat(singleQueryCountHolder.select()).isEqualTo(1L);
-        Assertions.assertThat(singleQueryCountHolder.insert()).isEqualTo(1L);
-        Assertions.assertThat(singleQueryCountHolder.update()).isEqualTo(0L);
-        Assertions.assertThat(singleQueryCountHolder.delete()).isEqualTo(0L);
     }
 
     @Test
     @SneakyThrows
     @DatabaseSetup(value = "/TagControllerIntegrationTest/shouldFindAllTagsMatchingRegex/dbSetup.xml")
     @ExpectedDatabase(value = "/TagControllerIntegrationTest/shouldFindAllTagsMatchingRegex/expectedDataBase.xml", assertionMode = NON_STRICT_UNORDERED)
+    @ExpectedGeneratedQueryNumber(queryType = QueryType.SELECT, expectedNumber = 2)
     public void shouldFindAllTagsMatchingRegex() {
         Response response = RestAssured
                 .given()
@@ -77,10 +80,5 @@ public class TagControllerIntegrationTest extends BaseIntegrationTest {
         Assertions.assertThat(actualResponse.getData()).isNotEmpty();
         Assertions.assertThat(actualResponse.getData().stream().map(TagDto::getTag).collect(Collectors.toList()))
                 .isEqualTo(List.of("tag_123", "tag", "tag   "));
-
-        Assertions.assertThat(singleQueryCountHolder.select()).isEqualTo(2L);
-        Assertions.assertThat(singleQueryCountHolder.insert()).isEqualTo(0L);
-        Assertions.assertThat(singleQueryCountHolder.update()).isEqualTo(0L);
-        Assertions.assertThat(singleQueryCountHolder.delete()).isEqualTo(0L);
     }
 }

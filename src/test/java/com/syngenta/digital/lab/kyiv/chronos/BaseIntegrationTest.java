@@ -3,9 +3,9 @@ package com.syngenta.digital.lab.kyiv.chronos;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.springtestdbunit.DbUnitTestExecutionListener;
 
-import com.syngenta.digital.lab.kyiv.chronos.configuration.SingleCountQueryExecutionListenerWrapper;
 import com.syngenta.digital.lab.kyiv.chronos.configuration.security.service.JwtTokenProvider;
 import com.syngenta.digital.lab.kyiv.chronos.service.ClockService;
+import com.syngenta.digital.lab.kyiv.chronos.utils.db.utils.GeneratedQueryStatisticsQueryExecutionListener;
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import io.restassured.response.ResponseBody;
@@ -19,7 +19,6 @@ import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.mock.mockito.MockitoTestExecutionListener;
@@ -38,7 +37,8 @@ import java.time.LocalDateTime;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = ChronosApplicationEntryPoint.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@TestExecutionListeners({DependencyInjectionTestExecutionListener.class, DbUnitTestExecutionListener.class, MockitoTestExecutionListener.class})
+@TestExecutionListeners({DependencyInjectionTestExecutionListener.class, DbUnitTestExecutionListener.class,
+        MockitoTestExecutionListener.class, GeneratedQueryStatisticsQueryExecutionListener.class})
 public class BaseIntegrationTest {
     @Rule
     public TemporaryFolder testFolder = new TemporaryFolder();
@@ -48,8 +48,6 @@ public class BaseIntegrationTest {
     private AuthenticationManager authenticationManager;
     @MockBean
     private JwtTokenProvider jwtTokenProvider;
-    @Autowired
-    protected SingleCountQueryExecutionListenerWrapper singleQueryCountHolder;
 
     protected ObjectMapper objectMapper = new ObjectMapper();
 
@@ -66,7 +64,6 @@ public class BaseIntegrationTest {
         Mockito.when(authenticationManager.authenticate(Mockito.any())).thenReturn(new TestingAuthenticationToken("login", "password"));
         Mockito.when(clockService.nowTime()).thenReturn(LocalDateTime.of(2017, 1, 1, 1, 1));
         Mockito.when(clockService.now()).thenReturn(LocalDate.of(2017, 1, 1));
-        singleQueryCountHolder.reset();
     }
 
     @Test

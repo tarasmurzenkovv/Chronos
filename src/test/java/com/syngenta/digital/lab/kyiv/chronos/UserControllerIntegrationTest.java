@@ -4,6 +4,9 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.github.springtestdbunit.annotation.DatabaseSetup;
 import com.github.springtestdbunit.annotation.DatabaseTearDown;
 import com.github.springtestdbunit.annotation.ExpectedDatabase;
+import com.syngenta.digital.lab.kyiv.chronos.utils.db.utils.ExpectedGeneratedQueryNumber;
+import com.syngenta.digital.lab.kyiv.chronos.utils.db.utils.ExpectedGeneratedQueryNumbers;
+import com.syngenta.digital.lab.kyiv.chronos.utils.db.utils.QueryType;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
@@ -32,6 +35,7 @@ public class UserControllerIntegrationTest extends BaseIntegrationTest {
     @DatabaseSetup(value = "/UserControllerIntegrationTest/shouldFindAllTasksForUserIdAndTimePeriod/dbSetup.xml")
     @ExpectedDatabase(value = "/UserControllerIntegrationTest/shouldFindAllTasksForUserIdAndTimePeriod/expectedDataBase.xml",
             assertionMode = NON_STRICT_UNORDERED)
+    @ExpectedGeneratedQueryNumber(queryType = QueryType.SELECT, expectedNumber = 2)
     public void shouldFindAllTasksForUserIdAndTimePeriod() {
         Response response = this.getRestAssured()
                 .contentType(ContentType.JSON)
@@ -71,11 +75,6 @@ public class UserControllerIntegrationTest extends BaseIntegrationTest {
         Assertions.assertThat(reportingDates).isNotEmpty();
         Assertions.assertThat(reportingDates)
                 .isEqualTo(List.of(LocalDate.of(2019, 1, 1), LocalDate.of(2019, 2, 1)));
-
-        Assertions.assertThat(singleQueryCountHolder.select()).isEqualTo(2L);
-        Assertions.assertThat(singleQueryCountHolder.insert()).isEqualTo(0L);
-        Assertions.assertThat(singleQueryCountHolder.update()).isEqualTo(0L);
-        Assertions.assertThat(singleQueryCountHolder.delete()).isEqualTo(0L);
     }
 
 
@@ -84,6 +83,7 @@ public class UserControllerIntegrationTest extends BaseIntegrationTest {
     @DatabaseSetup(value = "/UserControllerIntegrationTest/shouldGetTasksByUserId/dbSetup.xml")
     @ExpectedDatabase(value = "/UserControllerIntegrationTest/shouldGetTasksByUserId/expectedDataBase.xml",
             assertionMode = NON_STRICT_UNORDERED)
+    @ExpectedGeneratedQueryNumber(queryType = QueryType.SELECT, expectedNumber = 2)
     public void shouldGetTasksByUserId() {
         Response response = this.getRestAssured()
                 .contentType(ContentType.JSON)
@@ -114,11 +114,6 @@ public class UserControllerIntegrationTest extends BaseIntegrationTest {
         Assertions.assertThat(actualResponse.getData().get(1).getComments()).isEqualTo("comments");
         Assertions.assertThat(actualResponse.getData().get(1).getReportingDate()).isEqualTo(LocalDate.of(2019, 1, 1));
         Assertions.assertThat(actualResponse.getData().get(1).getSpentTime()).isEqualTo(0.8f);
-
-        Assertions.assertThat(singleQueryCountHolder.select()).isEqualTo(2L);
-        Assertions.assertThat(singleQueryCountHolder.insert()).isEqualTo(0L);
-        Assertions.assertThat(singleQueryCountHolder.update()).isEqualTo(0L);
-        Assertions.assertThat(singleQueryCountHolder.delete()).isEqualTo(0L);
     }
 
     @Test
@@ -126,6 +121,7 @@ public class UserControllerIntegrationTest extends BaseIntegrationTest {
     @DatabaseSetup("/UserControllerIntegrationTest/shouldFailLoginTheExistingUserIfNoPasswordIsPresentInRequest/dbSetup.xml")
     @ExpectedDatabase(value = "/UserControllerIntegrationTest/shouldFailLoginTheExistingUserIfNoPasswordIsPresentInRequest/expectedDataBase.xml",
             assertionMode = NON_STRICT_UNORDERED)
+    @ExpectedGeneratedQueryNumber(queryType = QueryType.SELECT, expectedNumber = 1)
     public void shouldFailLoginTheExistingUserIfNoPasswordIsPresentInRequest() {
         Response response = this.getRestAssured()
                 .contentType(ContentType.JSON)
@@ -146,11 +142,6 @@ public class UserControllerIntegrationTest extends BaseIntegrationTest {
                 });
 
         Assertions.assertThat(actualResponse).isEqualTo(expectedResponse);
-
-        Assertions.assertThat(singleQueryCountHolder.select()).isEqualTo(1L);
-        Assertions.assertThat(singleQueryCountHolder.insert()).isEqualTo(0L);
-        Assertions.assertThat(singleQueryCountHolder.update()).isEqualTo(0L);
-        Assertions.assertThat(singleQueryCountHolder.delete()).isEqualTo(0L);
     }
 
     @Test
@@ -158,6 +149,7 @@ public class UserControllerIntegrationTest extends BaseIntegrationTest {
     @DatabaseSetup("/UserControllerIntegrationTest/shouldFailLoginTheExistingUserIfNoSuchEmailIsPresentInDb/dbSetup.xml")
     @ExpectedDatabase(value = "/UserControllerIntegrationTest/shouldFailLoginTheExistingUserIfNoSuchEmailIsPresentInDb/expectedDataBase.xml",
             assertionMode = NON_STRICT_UNORDERED)
+    @ExpectedGeneratedQueryNumber(queryType = QueryType.SELECT, expectedNumber = 2)
     public void shouldFailLoginTheExistingUserIfNoSuchEmailIsPresentInDb() {
         Response response = this.getRestAssured()
                 .contentType(ContentType.JSON)
@@ -178,11 +170,6 @@ public class UserControllerIntegrationTest extends BaseIntegrationTest {
                 });
 
         Assertions.assertThat(actualResponse).isEqualTo(expectedResponse);
-
-        Assertions.assertThat(singleQueryCountHolder.select()).isEqualTo(2L);
-        Assertions.assertThat(singleQueryCountHolder.insert()).isEqualTo(0L);
-        Assertions.assertThat(singleQueryCountHolder.update()).isEqualTo(0L);
-        Assertions.assertThat(singleQueryCountHolder.delete()).isEqualTo(0L);
     }
 
     @Test
@@ -190,6 +177,7 @@ public class UserControllerIntegrationTest extends BaseIntegrationTest {
     @DatabaseSetup("/UserControllerIntegrationTest/shouldSuccessfullyLoginTheExistingUser/dbSetup.xml")
     @ExpectedDatabase(value = "/UserControllerIntegrationTest/shouldSuccessfullyLoginTheExistingUser/expectedDataBase.xml",
             assertionMode = NON_STRICT_UNORDERED)
+    @ExpectedGeneratedQueryNumber(queryType = QueryType.SELECT, expectedNumber = 2)
     public void shouldSuccessfullyLoginTheExistingUser() {
         Response response = this.getRestAssured()
                 .contentType(ContentType.JSON)
@@ -211,11 +199,6 @@ public class UserControllerIntegrationTest extends BaseIntegrationTest {
         Assertions.assertThat(actualResponse.getData().getFirstName()).isEqualTo("First_name");
         Assertions.assertThat(actualResponse.getData().getLastName()).isEqualTo("Last_name");
         Assertions.assertThat(actualResponse.getData().getPassword()).isNull();
-
-        Assertions.assertThat(singleQueryCountHolder.select()).isEqualTo(2L);
-        Assertions.assertThat(singleQueryCountHolder.insert()).isEqualTo(0L);
-        Assertions.assertThat(singleQueryCountHolder.update()).isEqualTo(0L);
-        Assertions.assertThat(singleQueryCountHolder.delete()).isEqualTo(0L);
     }
 
     @Test
@@ -223,6 +206,10 @@ public class UserControllerIntegrationTest extends BaseIntegrationTest {
     @DatabaseSetup("/UserControllerIntegrationTest/shouldSuccessfullyLoginTheExistingUser/dbSetup.xml")
     @ExpectedDatabase(value = "/UserControllerIntegrationTest/shouldSuccessfullyRegisterNewUser/expectedDataBase.xml",
             assertionMode = NON_STRICT_UNORDERED)
+    @ExpectedGeneratedQueryNumbers({
+            @ExpectedGeneratedQueryNumber(queryType = QueryType.SELECT, expectedNumber = 3),
+            @ExpectedGeneratedQueryNumber(queryType = QueryType.INSERT, expectedNumber = 1)
+    })
     public void shouldSuccessfullyRegisterNewUser() {
         Response response = this.getRestAssured()
                 .contentType(ContentType.JSON)
@@ -244,11 +231,6 @@ public class UserControllerIntegrationTest extends BaseIntegrationTest {
         Assertions.assertThat(actualResponse.getData().getFirstName()).isEqualTo("First_name");
         Assertions.assertThat(actualResponse.getData().getLastName()).isEqualTo("Last_name");
         Assertions.assertThat(actualResponse.getData().getPassword()).isNull();
-
-        Assertions.assertThat(singleQueryCountHolder.select()).isEqualTo(3L);
-        Assertions.assertThat(singleQueryCountHolder.insert()).isEqualTo(1L);
-        Assertions.assertThat(singleQueryCountHolder.update()).isEqualTo(0L);
-        Assertions.assertThat(singleQueryCountHolder.delete()).isEqualTo(0L);
     }
 
     @Test
@@ -256,6 +238,7 @@ public class UserControllerIntegrationTest extends BaseIntegrationTest {
     @DatabaseSetup("/UserControllerIntegrationTest/shouldFailToRegisterNewUserIfEmailIsNotUnique/dbSetup.xml")
     @ExpectedDatabase(value = "/UserControllerIntegrationTest/shouldFailToRegisterNewUserIfEmailIsNotUnique/expectedDataBase.xml",
             assertionMode = NON_STRICT_UNORDERED)
+    @ExpectedGeneratedQueryNumber(queryType = QueryType.SELECT, expectedNumber = 2)
     public void shouldFailToRegisterNewUserIfEmailIsNotUnique() {
         Response response = this.getRestAssured()
                 .contentType(ContentType.JSON)
@@ -276,10 +259,6 @@ public class UserControllerIntegrationTest extends BaseIntegrationTest {
                 });
 
         Assertions.assertThat(actualResponse).isEqualTo(expectedResponse);
-        Assertions.assertThat(singleQueryCountHolder.select()).isEqualTo(2L);
-        Assertions.assertThat(singleQueryCountHolder.insert()).isEqualTo(0L);
-        Assertions.assertThat(singleQueryCountHolder.update()).isEqualTo(0L);
-        Assertions.assertThat(singleQueryCountHolder.delete()).isEqualTo(0L);
     }
 
 
@@ -288,6 +267,7 @@ public class UserControllerIntegrationTest extends BaseIntegrationTest {
     @DatabaseSetup("/UserControllerIntegrationTest/shouldFailToRegisterNewUserIfFirstNameIsNull/dbSetup.xml")
     @ExpectedDatabase(value = "/UserControllerIntegrationTest/shouldFailToRegisterNewUserIfFirstNameIsNull/expectedDataBase.xml",
             assertionMode = NON_STRICT_UNORDERED)
+    @ExpectedGeneratedQueryNumber(queryType = QueryType.SELECT, expectedNumber = 2)
     public void shouldFailToRegisterNewUserIfFirstNameIsNull() {
         Response response = this.getRestAssured()
                 .contentType(ContentType.JSON)
@@ -308,10 +288,6 @@ public class UserControllerIntegrationTest extends BaseIntegrationTest {
                 });
 
         Assertions.assertThat(actualResponse).isEqualTo(expectedResponse);
-        Assertions.assertThat(singleQueryCountHolder.select()).isEqualTo(2L);
-        Assertions.assertThat(singleQueryCountHolder.insert()).isEqualTo(0L);
-        Assertions.assertThat(singleQueryCountHolder.update()).isEqualTo(0L);
-        Assertions.assertThat(singleQueryCountHolder.delete()).isEqualTo(0L);
     }
 
     @Test
@@ -319,6 +295,7 @@ public class UserControllerIntegrationTest extends BaseIntegrationTest {
     @DatabaseSetup("/UserControllerIntegrationTest/shouldFailToRegisterNewUserIfFirstNameIsEmpty/dbSetup.xml")
     @ExpectedDatabase(value = "/UserControllerIntegrationTest/shouldFailToRegisterNewUserIfFirstNameIsEmpty/expectedDataBase.xml",
             assertionMode = NON_STRICT_UNORDERED)
+    @ExpectedGeneratedQueryNumber(queryType = QueryType.SELECT, expectedNumber = 2)
     public void shouldFailToRegisterNewUserIfFirstNameIsEmpty() {
         Response response = this.getRestAssured()
                 .contentType(ContentType.JSON)
@@ -340,10 +317,6 @@ public class UserControllerIntegrationTest extends BaseIntegrationTest {
                 });
 
         Assertions.assertThat(actualResponse).isEqualTo(expectedResponse);
-        Assertions.assertThat(singleQueryCountHolder.select()).isEqualTo(2L);
-        Assertions.assertThat(singleQueryCountHolder.insert()).isEqualTo(0L);
-        Assertions.assertThat(singleQueryCountHolder.update()).isEqualTo(0L);
-        Assertions.assertThat(singleQueryCountHolder.delete()).isEqualTo(0L);
     }
 
     @Test
@@ -351,6 +324,7 @@ public class UserControllerIntegrationTest extends BaseIntegrationTest {
     @DatabaseSetup("/UserControllerIntegrationTest/shouldFailToRegisterNewUserIfLastNameIsNull/dbSetup.xml")
     @ExpectedDatabase(value = "/UserControllerIntegrationTest/shouldFailToRegisterNewUserIfLastNameIsNull/expectedDataBase.xml",
             assertionMode = NON_STRICT_UNORDERED)
+    @ExpectedGeneratedQueryNumber(queryType = QueryType.SELECT, expectedNumber = 2)
     public void shouldFailToRegisterNewUserIfLastNameIsNull() {
         Response response = RestAssured
                 .given()
@@ -372,10 +346,6 @@ public class UserControllerIntegrationTest extends BaseIntegrationTest {
                 });
 
         Assertions.assertThat(actualResponse).isEqualTo(expectedResponse);
-        Assertions.assertThat(singleQueryCountHolder.select()).isEqualTo(2L);
-        Assertions.assertThat(singleQueryCountHolder.insert()).isEqualTo(0L);
-        Assertions.assertThat(singleQueryCountHolder.update()).isEqualTo(0L);
-        Assertions.assertThat(singleQueryCountHolder.delete()).isEqualTo(0L);
     }
 
     @Test
@@ -383,6 +353,7 @@ public class UserControllerIntegrationTest extends BaseIntegrationTest {
     @DatabaseSetup("/UserControllerIntegrationTest/shouldFailToRegisterNewUserIfLastNameIsEmpty/dbSetup.xml")
     @ExpectedDatabase(value = "/UserControllerIntegrationTest/shouldFailToRegisterNewUserIfLastNameIsEmpty/expectedDataBase.xml",
             assertionMode = NON_STRICT_UNORDERED)
+    @ExpectedGeneratedQueryNumber(queryType = QueryType.SELECT, expectedNumber = 2)
     public void shouldFailToRegisterNewUserIfLastNameIsEmpty() {
         Response response = RestAssured
                 .given()
@@ -404,10 +375,6 @@ public class UserControllerIntegrationTest extends BaseIntegrationTest {
                 });
 
         Assertions.assertThat(actualResponse).isEqualTo(expectedResponse);
-        Assertions.assertThat(singleQueryCountHolder.select()).isEqualTo(2L);
-        Assertions.assertThat(singleQueryCountHolder.insert()).isEqualTo(0L);
-        Assertions.assertThat(singleQueryCountHolder.update()).isEqualTo(0L);
-        Assertions.assertThat(singleQueryCountHolder.delete()).isEqualTo(0L);
     }
 
     @Test
@@ -415,6 +382,7 @@ public class UserControllerIntegrationTest extends BaseIntegrationTest {
     @DatabaseSetup("/UserControllerIntegrationTest/shouldFailToRegisterNewUserIfEmailHasInvalidFormat/dbSetup.xml")
     @ExpectedDatabase(value = "/UserControllerIntegrationTest/shouldFailToRegisterNewUserIfEmailHasInvalidFormat/expectedDataBase.xml",
             assertionMode = NON_STRICT_UNORDERED)
+    @ExpectedGeneratedQueryNumber(queryType = QueryType.SELECT, expectedNumber = 2)
     public void shouldFailToRegisterNewUserIfEmailHasInvalidFormat() {
         Response response = RestAssured
                 .given()
@@ -436,10 +404,6 @@ public class UserControllerIntegrationTest extends BaseIntegrationTest {
                 });
 
         Assertions.assertThat(actualResponse).isEqualTo(expectedResponse);
-        Assertions.assertThat(singleQueryCountHolder.select()).isEqualTo(2L);
-        Assertions.assertThat(singleQueryCountHolder.insert()).isEqualTo(0L);
-        Assertions.assertThat(singleQueryCountHolder.update()).isEqualTo(0L);
-        Assertions.assertThat(singleQueryCountHolder.delete()).isEqualTo(0L);
     }
 
     @Test
@@ -447,6 +411,7 @@ public class UserControllerIntegrationTest extends BaseIntegrationTest {
     @DatabaseSetup("/UserControllerIntegrationTest/shouldFailToRegisterNewUserIfEmailIsBlank/dbSetup.xml")
     @ExpectedDatabase(value = "/UserControllerIntegrationTest/shouldFailToRegisterNewUserIfEmailIsBlank/expectedDataBase.xml",
             assertionMode = NON_STRICT_UNORDERED)
+    @ExpectedGeneratedQueryNumber(queryType = QueryType.SELECT, expectedNumber = 2)
     public void shouldFailToRegisterNewUserIfEmailIsBlank() {
         Response response = this.getRestAssured()
                 .contentType(ContentType.JSON)
@@ -468,10 +433,6 @@ public class UserControllerIntegrationTest extends BaseIntegrationTest {
                 });
 
         Assertions.assertThat(actualResponse).isEqualTo(expectedResponse);
-        Assertions.assertThat(singleQueryCountHolder.select()).isEqualTo(2L);
-        Assertions.assertThat(singleQueryCountHolder.insert()).isEqualTo(0L);
-        Assertions.assertThat(singleQueryCountHolder.update()).isEqualTo(0L);
-        Assertions.assertThat(singleQueryCountHolder.delete()).isEqualTo(0L);
     }
 
     @Test
@@ -479,6 +440,7 @@ public class UserControllerIntegrationTest extends BaseIntegrationTest {
     @DatabaseSetup("/UserControllerIntegrationTest/shouldFailToRegisterNewUserIfEmailIsNull/dbSetup.xml")
     @ExpectedDatabase(value = "/UserControllerIntegrationTest/shouldFailToRegisterNewUserIfEmailIsNull/expectedDataBase.xml",
             assertionMode = NON_STRICT_UNORDERED)
+    @ExpectedGeneratedQueryNumber(queryType = QueryType.SELECT, expectedNumber = 2)
     public void shouldFailToRegisterNewUserIfEmailIsNull() {
         Response response = this.getRestAssured()
                 .contentType(ContentType.JSON)
@@ -500,10 +462,6 @@ public class UserControllerIntegrationTest extends BaseIntegrationTest {
                 });
 
         Assertions.assertThat(actualResponse).isEqualTo(expectedResponse);
-        Assertions.assertThat(singleQueryCountHolder.select()).isEqualTo(2L);
-        Assertions.assertThat(singleQueryCountHolder.insert()).isEqualTo(0L);
-        Assertions.assertThat(singleQueryCountHolder.update()).isEqualTo(0L);
-        Assertions.assertThat(singleQueryCountHolder.delete()).isEqualTo(0L);
     }
 
     @Test
@@ -511,6 +469,7 @@ public class UserControllerIntegrationTest extends BaseIntegrationTest {
     @DatabaseSetup("/UserControllerIntegrationTest/shouldFailToRegisterNewUserIfPasswordHasInvalidFormat/dbSetup.xml")
     @ExpectedDatabase(value = "/UserControllerIntegrationTest/shouldFailToRegisterNewUserIfPasswordHasInvalidFormat/expectedDataBase.xml",
             assertionMode = NON_STRICT_UNORDERED)
+    @ExpectedGeneratedQueryNumber(queryType = QueryType.SELECT, expectedNumber = 2)
     public void shouldFailToRegisterNewUserIfPasswordHasInvalidFormat() {
         Response response = this.getRestAssured()
                 .contentType(ContentType.JSON)
@@ -532,10 +491,6 @@ public class UserControllerIntegrationTest extends BaseIntegrationTest {
                 });
 
         Assertions.assertThat(actualResponse).isEqualTo(expectedResponse);
-        Assertions.assertThat(singleQueryCountHolder.select()).isEqualTo(2L);
-        Assertions.assertThat(singleQueryCountHolder.insert()).isEqualTo(0L);
-        Assertions.assertThat(singleQueryCountHolder.update()).isEqualTo(0L);
-        Assertions.assertThat(singleQueryCountHolder.delete()).isEqualTo(0L);
     }
 
     @Test
@@ -543,6 +498,7 @@ public class UserControllerIntegrationTest extends BaseIntegrationTest {
     @DatabaseSetup("/UserControllerIntegrationTest/shouldFailToRegisterNewUserIfPasswordIsNull/dbSetup.xml")
     @ExpectedDatabase(value = "/UserControllerIntegrationTest/shouldFailToRegisterNewUserIfPasswordIsNull/expectedDataBase.xml",
             assertionMode = NON_STRICT_UNORDERED)
+    @ExpectedGeneratedQueryNumber(queryType = QueryType.SELECT, expectedNumber = 2)
     public void shouldFailToRegisterNewUserIfPasswordIsNull() {
         Response response = RestAssured
                 .given()
@@ -565,9 +521,5 @@ public class UserControllerIntegrationTest extends BaseIntegrationTest {
                 });
 
         Assertions.assertThat(actualResponse).isEqualTo(expectedResponse);
-        Assertions.assertThat(singleQueryCountHolder.select()).isEqualTo(2L);
-        Assertions.assertThat(singleQueryCountHolder.insert()).isEqualTo(0L);
-        Assertions.assertThat(singleQueryCountHolder.update()).isEqualTo(0L);
-        Assertions.assertThat(singleQueryCountHolder.delete()).isEqualTo(0L);
     }
 }

@@ -4,6 +4,9 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.github.springtestdbunit.annotation.DatabaseSetup;
 import com.github.springtestdbunit.annotation.DatabaseTearDown;
 import com.github.springtestdbunit.annotation.ExpectedDatabase;
+import com.syngenta.digital.lab.kyiv.chronos.utils.db.utils.ExpectedGeneratedQueryNumber;
+import com.syngenta.digital.lab.kyiv.chronos.utils.db.utils.ExpectedGeneratedQueryNumbers;
+import com.syngenta.digital.lab.kyiv.chronos.utils.db.utils.QueryType;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
@@ -30,6 +33,7 @@ public class TaskControllerIntegrationTest extends BaseIntegrationTest {
     @Test
     @SneakyThrows
     @DatabaseSetup(value = "/TaskControllerIntegrationTest/shouldNotEditFrozenTask/dbSetup.xml")
+    @ExpectedGeneratedQueryNumber(queryType = QueryType.SELECT, expectedNumber = 4)
     public void shouldNotEditFrozenTask() {
 
         Response response = this.getRestAssured()
@@ -50,16 +54,12 @@ public class TaskControllerIntegrationTest extends BaseIntegrationTest {
                 });
 
         Assertions.assertThat(actualResponse).isEqualTo(expectedResponse);
-
-        Assertions.assertThat(singleQueryCountHolder.select()).isEqualTo(4L);
-        Assertions.assertThat(singleQueryCountHolder.insert()).isEqualTo(0L);
-        Assertions.assertThat(singleQueryCountHolder.update()).isEqualTo(0L);
-        Assertions.assertThat(singleQueryCountHolder.delete()).isEqualTo(0L);
     }
 
     @Test
     @SneakyThrows
     @DatabaseSetup(value = "/TaskControllerIntegrationTest/shouldFindTaskTags/dbSetup.xml")
+    @ExpectedGeneratedQueryNumber(queryType = QueryType.SELECT, expectedNumber = 2)
     public void shouldFindTaskTags() {
 
         Response response = this.getRestAssured()
@@ -77,16 +77,15 @@ public class TaskControllerIntegrationTest extends BaseIntegrationTest {
         Assertions.assertThat(actualResponse.getData()).isNotNull();
         Assertions.assertThat(actualResponse.getData().stream().map(TagDto::getTag).collect(Collectors.toList()))
                 .containsExactlyInAnyOrderElementsOf(List.of("#awesome_tag_existing", "#awesome_new_new_tag", "#awesome_tag"));
-
-        Assertions.assertThat(singleQueryCountHolder.select()).isEqualTo(2L);
-        Assertions.assertThat(singleQueryCountHolder.insert()).isEqualTo(0L);
-        Assertions.assertThat(singleQueryCountHolder.update()).isEqualTo(0L);
-        Assertions.assertThat(singleQueryCountHolder.delete()).isEqualTo(0L);
     }
 
     @Test
     @SneakyThrows
     @DatabaseSetup(value = "/TaskControllerIntegrationTest/shouldAddNewTaskWithNewTags/dbSetup.xml")
+    @ExpectedGeneratedQueryNumbers({
+            @ExpectedGeneratedQueryNumber(queryType = QueryType.SELECT, expectedNumber = 6),
+            @ExpectedGeneratedQueryNumber(queryType = QueryType.INSERT, expectedNumber = 5)
+    })
     public void shouldAddNewTaskWithNewTags() {
 
         Response response = this.getRestAssured()
@@ -108,13 +107,8 @@ public class TaskControllerIntegrationTest extends BaseIntegrationTest {
         Assertions.assertThat(actualResponse.getData().getProjectId()).isEqualTo(1);
         Assertions.assertThat(actualResponse.getData().getUserId()).isEqualTo(1);
         Assertions.assertThat(actualResponse.getData().getComments()).isEqualTo("comments");
-        Assertions.assertThat(actualResponse.getData().getReportingDate()).isEqualTo(LocalDate.of(2019,1,1));
+        Assertions.assertThat(actualResponse.getData().getReportingDate()).isEqualTo(LocalDate.of(2019, 1, 1));
         Assertions.assertThat(actualResponse.getData().getSpentTime()).isEqualTo(0.8f);
-
-        Assertions.assertThat(singleQueryCountHolder.select()).isEqualTo(6L);
-        Assertions.assertThat(singleQueryCountHolder.insert()).isEqualTo(5L);
-        Assertions.assertThat(singleQueryCountHolder.update()).isEqualTo(0L);
-        Assertions.assertThat(singleQueryCountHolder.delete()).isEqualTo(0L);
     }
 
     @Test
@@ -122,6 +116,10 @@ public class TaskControllerIntegrationTest extends BaseIntegrationTest {
     @DatabaseSetup(value = "/TaskControllerIntegrationTest/shouldAddNewTask/dbSetup.xml")
     @ExpectedDatabase(value = "/TaskControllerIntegrationTest/shouldAddNewTask/expectedDataBase.xml",
             assertionMode = NON_STRICT_UNORDERED)
+    @ExpectedGeneratedQueryNumbers({
+            @ExpectedGeneratedQueryNumber(queryType = QueryType.SELECT, expectedNumber = 3),
+            @ExpectedGeneratedQueryNumber(queryType = QueryType.INSERT, expectedNumber = 1)
+    })
     public void shouldAddNewTask() {
 
         Response response = RestAssured
@@ -144,14 +142,9 @@ public class TaskControllerIntegrationTest extends BaseIntegrationTest {
         Assertions.assertThat(actualResponse.getData().getProjectId()).isEqualTo(1);
         Assertions.assertThat(actualResponse.getData().getUserId()).isEqualTo(1);
         Assertions.assertThat(actualResponse.getData().getComments()).isEqualTo("comments");
-        Assertions.assertThat(actualResponse.getData().getReportingDate()).isEqualTo(LocalDate.of(2019,1,1));
+        Assertions.assertThat(actualResponse.getData().getReportingDate()).isEqualTo(LocalDate.of(2019, 1, 1));
         Assertions.assertThat(actualResponse.getData().getSpentTime()).isEqualTo(0.8f);
         Assertions.assertThat(actualResponse.getData().getTags()).isEqualTo(Collections.emptyList());
-
-        Assertions.assertThat(singleQueryCountHolder.select()).isEqualTo(3L);
-        Assertions.assertThat(singleQueryCountHolder.insert()).isEqualTo(1L);
-        Assertions.assertThat(singleQueryCountHolder.update()).isEqualTo(0L);
-        Assertions.assertThat(singleQueryCountHolder.delete()).isEqualTo(0L);
     }
 
     @Test
@@ -159,6 +152,7 @@ public class TaskControllerIntegrationTest extends BaseIntegrationTest {
     @DatabaseSetup(value = "/TaskControllerIntegrationTest/shouldGetTaskByItsId/dbSetup.xml")
     @ExpectedDatabase(value = "/TaskControllerIntegrationTest/shouldGetTaskByItsId/expectedDataBase.xml",
             assertionMode = NON_STRICT_UNORDERED)
+    @ExpectedGeneratedQueryNumber(queryType = QueryType.SELECT, expectedNumber = 2)
     public void shouldGetTaskByItsId() {
         Response response = RestAssured
                 .given()
@@ -179,18 +173,18 @@ public class TaskControllerIntegrationTest extends BaseIntegrationTest {
         Assertions.assertThat(actualResponse.getData().getProjectId()).isEqualTo(1);
         Assertions.assertThat(actualResponse.getData().getUserId()).isEqualTo(1);
         Assertions.assertThat(actualResponse.getData().getComments()).isEqualTo("comments");
-        Assertions.assertThat(actualResponse.getData().getReportingDate()).isEqualTo(LocalDate.of(2019,1,1));
+        Assertions.assertThat(actualResponse.getData().getReportingDate()).isEqualTo(LocalDate.of(2019, 1, 1));
         Assertions.assertThat(actualResponse.getData().getSpentTime()).isEqualTo(0.8f);
-
-        Assertions.assertThat(singleQueryCountHolder.select()).isEqualTo(2L);
-        Assertions.assertThat(singleQueryCountHolder.insert()).isEqualTo(0L);
-        Assertions.assertThat(singleQueryCountHolder.update()).isEqualTo(0L);
-        Assertions.assertThat(singleQueryCountHolder.delete()).isEqualTo(0L);
     }
 
     @Test
     @SneakyThrows
     @DatabaseSetup(value = "/TaskControllerIntegrationTest/shouldUpdateTheExistingTaskWithNewAndExistingTags/dbSetup.xml")
+    @ExpectedGeneratedQueryNumbers({
+            @ExpectedGeneratedQueryNumber(queryType = QueryType.SELECT, expectedNumber = 10),
+            @ExpectedGeneratedQueryNumber(queryType = QueryType.INSERT, expectedNumber = 2),
+            @ExpectedGeneratedQueryNumber(queryType = QueryType.UPDATE, expectedNumber = 3)
+    })
     public void shouldUpdateTheExistingTaskWithNewAndExistingTags() {
 
         Response response = this.getRestAssured()
@@ -212,13 +206,8 @@ public class TaskControllerIntegrationTest extends BaseIntegrationTest {
         Assertions.assertThat(actualResponse.getData().getProjectId()).isEqualTo(1);
         Assertions.assertThat(actualResponse.getData().getUserId()).isEqualTo(1);
         Assertions.assertThat(actualResponse.getData().getComments()).isEqualTo("new comments");
-        Assertions.assertThat(actualResponse.getData().getReportingDate()).isEqualTo(LocalDate.of(2019,1,1));
+        Assertions.assertThat(actualResponse.getData().getReportingDate()).isEqualTo(LocalDate.of(2019, 1, 1));
         Assertions.assertThat(actualResponse.getData().getSpentTime()).isEqualTo(0.8f);
-
-        Assertions.assertThat(singleQueryCountHolder.select()).isEqualTo(10L);
-        Assertions.assertThat(singleQueryCountHolder.insert()).isEqualTo(2L);
-        Assertions.assertThat(singleQueryCountHolder.update()).isEqualTo(3L);
-        Assertions.assertThat(singleQueryCountHolder.delete()).isEqualTo(0L);
     }
 
     @Test
@@ -226,6 +215,10 @@ public class TaskControllerIntegrationTest extends BaseIntegrationTest {
     @DatabaseSetup(value = "/TaskControllerIntegrationTest/shouldUpdateTheExistingTask/dbSetup.xml")
     @ExpectedDatabase(value = "/TaskControllerIntegrationTest/shouldUpdateTheExistingTask/expectedDataBase.xml",
             assertionMode = NON_STRICT_UNORDERED)
+    @ExpectedGeneratedQueryNumbers({
+            @ExpectedGeneratedQueryNumber(queryType = QueryType.SELECT, expectedNumber = 5),
+            @ExpectedGeneratedQueryNumber(queryType = QueryType.UPDATE, expectedNumber = 1)
+    })
     public void shouldUpdateTheExistingTask() {
 
         Response response = this.getRestAssured()
@@ -247,14 +240,9 @@ public class TaskControllerIntegrationTest extends BaseIntegrationTest {
         Assertions.assertThat(actualResponse.getData().getProjectId()).isEqualTo(1);
         Assertions.assertThat(actualResponse.getData().getUserId()).isEqualTo(1);
         Assertions.assertThat(actualResponse.getData().getComments()).isEqualTo("new comments");
-        Assertions.assertThat(actualResponse.getData().getReportingDate()).isEqualTo(LocalDate.of(2019,1,1));
+        Assertions.assertThat(actualResponse.getData().getReportingDate()).isEqualTo(LocalDate.of(2019, 1, 1));
         Assertions.assertThat(actualResponse.getData().getSpentTime()).isEqualTo(0.8f);
         Assertions.assertThat(actualResponse.getData().getTags()).isEqualTo(Collections.emptyList());
-
-        Assertions.assertThat(singleQueryCountHolder.select()).isEqualTo(5L);
-        Assertions.assertThat(singleQueryCountHolder.insert()).isEqualTo(0L);
-        Assertions.assertThat(singleQueryCountHolder.update()).isEqualTo(1L);
-        Assertions.assertThat(singleQueryCountHolder.delete()).isEqualTo(0L);
     }
 
     @Test
@@ -262,6 +250,10 @@ public class TaskControllerIntegrationTest extends BaseIntegrationTest {
     @DatabaseSetup(value = "/TaskControllerIntegrationTest/shouldDeleteTheExistingNonFrozenTask/dbSetup.xml")
     @ExpectedDatabase(value = "/TaskControllerIntegrationTest/shouldDeleteTheExistingNonFrozenTask/expectedDataBase.xml",
             assertionMode = NON_STRICT_UNORDERED)
+    @ExpectedGeneratedQueryNumbers({
+            @ExpectedGeneratedQueryNumber(queryType = QueryType.SELECT, expectedNumber = 2),
+            @ExpectedGeneratedQueryNumber(queryType = QueryType.DELETE, expectedNumber = 1),
+    })
     public void shouldDeleteTheExistingNonFrozenTask() {
 
         Response response = this.getRestAssured()
@@ -271,10 +263,5 @@ public class TaskControllerIntegrationTest extends BaseIntegrationTest {
                 .response();
 
         Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.SC_OK);
-
-        Assertions.assertThat(singleQueryCountHolder.select()).isEqualTo(2L);
-        Assertions.assertThat(singleQueryCountHolder.insert()).isEqualTo(0L);
-        Assertions.assertThat(singleQueryCountHolder.update()).isEqualTo(0L);
-        Assertions.assertThat(singleQueryCountHolder.delete()).isEqualTo(1L);
     }
 }

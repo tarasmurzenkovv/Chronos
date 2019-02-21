@@ -4,6 +4,9 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.github.springtestdbunit.annotation.DatabaseSetup;
 import com.github.springtestdbunit.annotation.DatabaseTearDown;
 import com.github.springtestdbunit.annotation.ExpectedDatabase;
+import com.syngenta.digital.lab.kyiv.chronos.utils.db.utils.ExpectedGeneratedQueryNumber;
+import com.syngenta.digital.lab.kyiv.chronos.utils.db.utils.ExpectedGeneratedQueryNumbers;
+import com.syngenta.digital.lab.kyiv.chronos.utils.db.utils.QueryType;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 import com.syngenta.digital.lab.kyiv.chronos.model.dto.ProjectDto;
@@ -27,6 +30,7 @@ public class ProjectControllerIntegrationTest extends BaseIntegrationTest {
     @DatabaseSetup(value = "/ProjectControllerIntegrationTest/shouldFailToUpdateDeletedProject/dbSetup.xml")
     @ExpectedDatabase(value = "/ProjectControllerIntegrationTest/shouldFailToUpdateDeletedProject/expectedDataBase.xml",
             assertionMode = NON_STRICT_UNORDERED)
+    @ExpectedGeneratedQueryNumber(queryType = QueryType.SELECT, expectedNumber = 3)
     public void shouldFailToUpdateDeletedProject() {
 
         Response response = this.getRestAssured()
@@ -48,11 +52,6 @@ public class ProjectControllerIntegrationTest extends BaseIntegrationTest {
                 });
 
         Assertions.assertThat(actualResponse).isEqualTo(expectedResponse);
-
-        Assertions.assertThat(singleQueryCountHolder.select()).isEqualTo(3L);
-        Assertions.assertThat(singleQueryCountHolder.insert()).isEqualTo(0L);
-        Assertions.assertThat(singleQueryCountHolder.update()).isEqualTo(0L);
-        Assertions.assertThat(singleQueryCountHolder.delete()).isEqualTo(0L);
     }
 
     @Test
@@ -60,6 +59,7 @@ public class ProjectControllerIntegrationTest extends BaseIntegrationTest {
     @DatabaseSetup(value = "/ProjectControllerIntegrationTest/shouldFailToUpdateProjectIfProjectWithIdDoesntExist/dbSetup.xml")
     @ExpectedDatabase(value = "/ProjectControllerIntegrationTest/shouldFailToUpdateProjectIfProjectWithIdDoesntExist/expectedDataBase.xml",
             assertionMode = NON_STRICT_UNORDERED)
+    @ExpectedGeneratedQueryNumber(queryType = QueryType.SELECT, expectedNumber = 3)
     public void shouldFailToUpdateProjectIfProjectWithIdDoesntExist() {
         Response response = this.getRestAssured()
                 .body(JsonUtils.readFromJson("/ProjectControllerIntegrationTest/shouldFailToUpdateProjectIfProjectWithIdDoesntExist/failRequest.json", ProjectDto.class))
@@ -80,10 +80,6 @@ public class ProjectControllerIntegrationTest extends BaseIntegrationTest {
                 });
 
         Assertions.assertThat(actualResponse).isEqualTo(expectedResponse);
-        Assertions.assertThat(singleQueryCountHolder.select()).isEqualTo(3L);
-        Assertions.assertThat(singleQueryCountHolder.insert()).isEqualTo(0L);
-        Assertions.assertThat(singleQueryCountHolder.update()).isEqualTo(0L);
-        Assertions.assertThat(singleQueryCountHolder.delete()).isEqualTo(0L);
     }
 
     @Test
@@ -91,6 +87,7 @@ public class ProjectControllerIntegrationTest extends BaseIntegrationTest {
     @DatabaseSetup(value = "/ProjectControllerIntegrationTest/shouldFailToUpdateProjectIfDtoHasNullId/dbSetup.xml")
     @ExpectedDatabase(value = "/ProjectControllerIntegrationTest/shouldFailToUpdateProjectIfDtoHasNullId/expectedDataBase.xml",
             assertionMode = NON_STRICT_UNORDERED)
+    @ExpectedGeneratedQueryNumber(queryType = QueryType.SELECT, expectedNumber = 1)
     public void shouldFailToUpdateProjectIfDtoHasNullId() {
         Response response = this.getRestAssured()
                 .body(JsonUtils.readFromJson("/ProjectControllerIntegrationTest/shouldFailToUpdateProjectIfDtoHasNullId/failRequest.json", ProjectDto.class))
@@ -111,10 +108,6 @@ public class ProjectControllerIntegrationTest extends BaseIntegrationTest {
                 });
 
         Assertions.assertThat(actualResponse).isEqualTo(expectedResponse);
-        Assertions.assertThat(singleQueryCountHolder.select()).isEqualTo(1L);
-        Assertions.assertThat(singleQueryCountHolder.insert()).isEqualTo(0L);
-        Assertions.assertThat(singleQueryCountHolder.update()).isEqualTo(0L);
-        Assertions.assertThat(singleQueryCountHolder.delete()).isEqualTo(0L);
     }
 
     @Test
@@ -122,6 +115,7 @@ public class ProjectControllerIntegrationTest extends BaseIntegrationTest {
     @DatabaseSetup(value = "/ProjectControllerIntegrationTest/shouldNotAddNewProjectWithFlagDeletedSetToTrue/dbDataBase.xml")
     @ExpectedDatabase(value = "/ProjectControllerIntegrationTest/shouldNotAddNewProjectWithFlagDeletedSetToTrue/expectedDataBase.xml",
             assertionMode = NON_STRICT_UNORDERED)
+    @ExpectedGeneratedQueryNumber(queryType = QueryType.SELECT, expectedNumber = 1)
     public void shouldNotAddNewProjectWithFlagDeletedSetToTrue() {
         Response response = this.getRestAssured()
                 .body(JsonUtils.readFromJson("/ProjectControllerIntegrationTest/shouldNotAddNewProjectWithFlagDeletedSetToTrue/failToAddNewProjectRequest.json", ProjectDto.class))
@@ -142,10 +136,6 @@ public class ProjectControllerIntegrationTest extends BaseIntegrationTest {
                 });
 
         Assertions.assertThat(actualResponse).isEqualTo(expectedResponse);
-        Assertions.assertThat(singleQueryCountHolder.select()).isEqualTo(1L);
-        Assertions.assertThat(singleQueryCountHolder.insert()).isEqualTo(0L);
-        Assertions.assertThat(singleQueryCountHolder.update()).isEqualTo(0L);
-        Assertions.assertThat(singleQueryCountHolder.delete()).isEqualTo(0L);
     }
 
     @Test
@@ -153,6 +143,10 @@ public class ProjectControllerIntegrationTest extends BaseIntegrationTest {
     @DatabaseSetup(value = "/ProjectControllerIntegrationTest/shouldSuccessfullyAddNewProject/dbSetup.xml")
     @ExpectedDatabase(value = "/ProjectControllerIntegrationTest/shouldSuccessfullyAddNewProject/expectedDataBase.xml",
             assertionMode = NON_STRICT_UNORDERED)
+    @ExpectedGeneratedQueryNumbers({
+            @ExpectedGeneratedQueryNumber(queryType = QueryType.SELECT, expectedNumber = 2),
+            @ExpectedGeneratedQueryNumber(queryType = QueryType.INSERT, expectedNumber = 1)
+    })
     public void shouldSuccessfullyAddNewProject() {
         Response response = this.getRestAssured()
                 .body(JsonUtils.readFromJson("/ProjectControllerIntegrationTest/shouldSuccessfullyAddNewProject/addNewProjectRequest.json", ProjectDto.class))
@@ -174,11 +168,6 @@ public class ProjectControllerIntegrationTest extends BaseIntegrationTest {
         Assertions.assertThat(actualResponse.getData().getProjectName()).isEqualTo("Project name");
         Assertions.assertThat(actualResponse.getData().getColor()).isEqualTo("color");
         Assertions.assertThat(actualResponse.getData().getProjectDescription()).isEqualTo("Some useful description");
-
-        Assertions.assertThat(singleQueryCountHolder.select()).isEqualTo(2L);
-        Assertions.assertThat(singleQueryCountHolder.update()).isEqualTo(0L);
-        Assertions.assertThat(singleQueryCountHolder.insert()).isEqualTo(1L);
-        Assertions.assertThat(singleQueryCountHolder.delete()).isEqualTo(0L);
     }
 
     @Test
@@ -186,6 +175,7 @@ public class ProjectControllerIntegrationTest extends BaseIntegrationTest {
     @DatabaseSetup(value = "/ProjectControllerIntegrationTest/shouldFailToAddNewProjectIfNoExistingProjectTypeIdIsSpecified/dbSetup.xml")
     @ExpectedDatabase(value = "/ProjectControllerIntegrationTest/shouldFailToAddNewProjectIfNoExistingProjectTypeIdIsSpecified/expectedDataBase.xml",
             assertionMode = NON_STRICT_UNORDERED)
+    @ExpectedGeneratedQueryNumber(queryType = QueryType.SELECT, expectedNumber = 2)
     public void shouldFailToAddNewProjectIfNoExistingProjectTypeIdIsSpecified() {
         Response response = this.getRestAssured()
                 .body(JsonUtils.readFromJson("/ProjectControllerIntegrationTest/shouldFailToAddNewProjectIfNoExistingProjectTypeIdIsSpecified/failToAddNewProjectRequest.json", ProjectDto.class))
@@ -206,10 +196,6 @@ public class ProjectControllerIntegrationTest extends BaseIntegrationTest {
                 });
 
         Assertions.assertThat(actualResponse).isEqualTo(expectedResponse);
-        Assertions.assertThat(singleQueryCountHolder.select()).isEqualTo(2L);
-        Assertions.assertThat(singleQueryCountHolder.insert()).isEqualTo(0L);
-        Assertions.assertThat(singleQueryCountHolder.update()).isEqualTo(0L);
-        Assertions.assertThat(singleQueryCountHolder.delete()).isEqualTo(0L);
     }
 
     @Test
@@ -217,6 +203,7 @@ public class ProjectControllerIntegrationTest extends BaseIntegrationTest {
     @DatabaseSetup(value = "/ProjectControllerIntegrationTest/shouldSuccessfullyFindProjectByItsId/dbSetup.xml")
     @ExpectedDatabase(value = "/ProjectControllerIntegrationTest/shouldSuccessfullyFindProjectByItsId/expectedDataBase.xml",
             assertionMode = NON_STRICT_UNORDERED)
+    @ExpectedGeneratedQueryNumber(queryType = QueryType.SELECT, expectedNumber = 2)
     public void shouldSuccessfullyFindProjectByItsId() {
         Response response = this.getRestAssured()
                 .get("/api/v0/project/999")
@@ -235,10 +222,6 @@ public class ProjectControllerIntegrationTest extends BaseIntegrationTest {
         Assertions.assertThat(actualResponse.getData().getProjectTypeId()).isNotNull();
         Assertions.assertThat(actualResponse.getData().getProjectName()).isEqualTo("Project name");
         Assertions.assertThat(actualResponse.getData().getProjectDescription()).isEqualTo("Some useful description");
-        Assertions.assertThat(singleQueryCountHolder.select()).isEqualTo(2L);
-        Assertions.assertThat(singleQueryCountHolder.insert()).isEqualTo(0L);
-        Assertions.assertThat(singleQueryCountHolder.update()).isEqualTo(0L);
-        Assertions.assertThat(singleQueryCountHolder.delete()).isEqualTo(0L);
     }
 
     @Test
@@ -246,6 +229,7 @@ public class ProjectControllerIntegrationTest extends BaseIntegrationTest {
     @DatabaseSetup(value = "/ProjectControllerIntegrationTest/shouldSuccessfullyFindAllProjects/dbSetup.xml")
     @ExpectedDatabase(value = "/ProjectControllerIntegrationTest/shouldSuccessfullyFindAllProjects/expectedDataBase.xml",
             assertionMode = NON_STRICT_UNORDERED)
+    @ExpectedGeneratedQueryNumber(queryType = QueryType.SELECT, expectedNumber = 2)
     public void shouldSuccessfullyFindAllProjects() {
         Response response = this.getRestAssured()
                 .get("/api/v0/project")
@@ -272,10 +256,6 @@ public class ProjectControllerIntegrationTest extends BaseIntegrationTest {
         Assertions.assertThat(actualResponse.getData().get(1).getProjectTypeId()).isNotNull();
         Assertions.assertThat(actualResponse.getData().get(1).getProjectName()).isEqualTo("Project name");
         Assertions.assertThat(actualResponse.getData().get(1).getProjectDescription()).isEqualTo("Some useful description");
-        Assertions.assertThat(singleQueryCountHolder.select()).isEqualTo(2L);
-        Assertions.assertThat(singleQueryCountHolder.insert()).isEqualTo(0L);
-        Assertions.assertThat(singleQueryCountHolder.update()).isEqualTo(0L);
-        Assertions.assertThat(singleQueryCountHolder.delete()).isEqualTo(0L);
     }
 
     @Test
@@ -283,6 +263,10 @@ public class ProjectControllerIntegrationTest extends BaseIntegrationTest {
     @DatabaseSetup(value = "/ProjectControllerIntegrationTest/shouldSuccessfullyUpdateTheExistingProject/dbSetup.xml")
     @ExpectedDatabase(value = "/ProjectControllerIntegrationTest/shouldSuccessfullyUpdateTheExistingProject/expectedDataBase.xml",
             assertionMode = NON_STRICT_UNORDERED)
+    @ExpectedGeneratedQueryNumbers({
+            @ExpectedGeneratedQueryNumber(queryType = QueryType.SELECT, expectedNumber = 3),
+            @ExpectedGeneratedQueryNumber(queryType = QueryType.UPDATE, expectedNumber = 1)
+    })
     public void shouldSuccessfullyUpdateTheExistingProject() {
         Response response = this.getRestAssured()
                 .body(JsonUtils.readFromJson("/ProjectControllerIntegrationTest/shouldSuccessfullyUpdateTheExistingProject/updateTheExistingProjectRequest.json", ProjectDto.class))
@@ -303,11 +287,6 @@ public class ProjectControllerIntegrationTest extends BaseIntegrationTest {
         Assertions.assertThat(actualResponse.getData().getProjectTypeId()).isNotNull();
         Assertions.assertThat(actualResponse.getData().getProjectName()).isEqualTo("Updated project name");
         Assertions.assertThat(actualResponse.getData().getProjectDescription()).isEqualTo("Some useful description");
-
-        Assertions.assertThat(singleQueryCountHolder.select()).isEqualTo(3L);
-        Assertions.assertThat(singleQueryCountHolder.update()).isEqualTo(1L);
-        Assertions.assertThat(singleQueryCountHolder.insert()).isEqualTo(0L);
-        Assertions.assertThat(singleQueryCountHolder.delete()).isEqualTo(0L);
     }
 
     @Test
