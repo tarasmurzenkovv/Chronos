@@ -2,7 +2,6 @@ package com.syngenta.digital.lab.kyiv.chronos.configuration.security.service;
 
 import com.syngenta.digital.lab.kyiv.chronos.configuration.security.UserPrincipal;
 import com.syngenta.digital.lab.kyiv.chronos.mappers.UserMapper;
-import com.syngenta.digital.lab.kyiv.chronos.model.dto.LoginRequest;
 import com.syngenta.digital.lab.kyiv.chronos.model.dto.UserRoleEnum;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -18,14 +17,9 @@ public class ApplicationAuthenticationService {
     private final JwtTokenProvider jwtTokenProvider;
     private final AuthenticationManager authenticationManager;
 
-    public String authenticate(LoginRequest loginRequest) {
-        Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        loginRequest.getEmail(),
-                        loginRequest.getPassword()
-                )
-        );
-
+    public String authenticate(String email, String password) {
+        UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(email, password);
+        Authentication authentication = authenticationManager.authenticate(authToken);
         SecurityContextHolder.getContext().setAuthentication(authentication);
         return jwtTokenProvider.generateToken(authentication);
     }

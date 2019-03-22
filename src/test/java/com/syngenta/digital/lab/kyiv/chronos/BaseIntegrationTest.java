@@ -25,6 +25,8 @@ import org.springframework.boot.test.mock.mockito.MockitoTestExecutionListener;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.TestingAuthenticationToken;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestExecutionListeners;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -32,6 +34,7 @@ import org.springframework.test.context.support.DependencyInjectionTestExecution
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.function.Function;
 
 @Slf4j
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -49,6 +52,7 @@ public class BaseIntegrationTest {
     @MockBean
     private JwtTokenProvider jwtTokenProvider;
 
+
     protected ObjectMapper objectMapper = new ObjectMapper();
 
     @LocalServerPort
@@ -61,6 +65,7 @@ public class BaseIntegrationTest {
         Mockito.when(jwtTokenProvider.getJwtFromRequest(Mockito.any())).thenReturn("token");
         Mockito.when(jwtTokenProvider.validateToken(Mockito.any())).thenReturn(true);
         Mockito.when(jwtTokenProvider.getUserIdFromJWT(Mockito.any())).thenReturn(1L);
+
         Mockito.when(authenticationManager.authenticate(Mockito.any())).thenReturn(new TestingAuthenticationToken("login", "password"));
         Mockito.when(clockService.nowTime()).thenReturn(LocalDateTime.of(2017, 1, 1, 1, 1));
         Mockito.when(clockService.now()).thenReturn(LocalDate.of(2017, 1, 1));

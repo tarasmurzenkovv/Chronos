@@ -1,5 +1,6 @@
 package com.syngenta.digital.lab.kyiv.chronos.model.response;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -17,6 +18,7 @@ import org.springframework.http.ResponseEntity;
 @ToString
 public class GeneralResponse<T> {
     private boolean error;
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private T data;
 
     public static <T> ResponseEntity<GeneralResponse<T>> from(HttpStatus status) {

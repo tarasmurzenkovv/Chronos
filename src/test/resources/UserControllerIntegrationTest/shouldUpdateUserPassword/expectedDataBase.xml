@@ -1,0 +1,8 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<dataset>
+    <APPLICATION_USER_ROLE ID="1" ROLE="Regular"/>
+    <APPLICATION_USER FIRST_NAME="First_name" LAST_NAME="Last_name" USER_EMAIL="email@email.com" USER_PASSWORD="qwerty100$" JOB_TITLE="Developer"/>
+    <PROJECT/>
+    <PROJECT_TYPE/>
+    <TASK/>
+</dataset>

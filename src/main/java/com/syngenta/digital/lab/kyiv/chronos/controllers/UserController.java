@@ -1,6 +1,7 @@
 package com.syngenta.digital.lab.kyiv.chronos.controllers;
 
 import com.syngenta.digital.lab.kyiv.chronos.model.dto.LoginRequest;
+import com.syngenta.digital.lab.kyiv.chronos.model.dto.ResetPasswordRequest;
 import com.syngenta.digital.lab.kyiv.chronos.model.dto.TaskDto;
 import com.syngenta.digital.lab.kyiv.chronos.model.dto.UserDto;
 import com.syngenta.digital.lab.kyiv.chronos.model.response.GeneralResponse;
@@ -10,15 +11,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.time.LocalDate;
@@ -41,6 +35,13 @@ public class UserController {
     public ResponseEntity<GeneralResponse<UserDto>> login(@Valid @RequestBody LoginRequest loginRequest) {
         log.info("About to login the following user '{}'", loginRequest);
         return GeneralResponse.from(userService.login(loginRequest), HttpStatus.FOUND);
+    }
+
+    @PutMapping("/user/password")
+    public ResponseEntity resetPassword(@Valid @RequestBody ResetPasswordRequest resetPasswordRequest) {
+        log.info("About to reset password for the following request '{}'", resetPasswordRequest);
+        userService.resetPassword(resetPasswordRequest);
+        return GeneralResponse.from(HttpStatus.OK);
     }
 
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_REGULAR')")

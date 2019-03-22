@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.github.springtestdbunit.annotation.DatabaseSetup;
 import com.github.springtestdbunit.annotation.DatabaseTearDown;
 import com.github.springtestdbunit.annotation.ExpectedDatabase;
+import com.syngenta.digital.lab.kyiv.chronos.model.dto.ResetPasswordRequest;
 import com.syngenta.digital.lab.kyiv.chronos.utils.db.utils.ExpectedGeneratedQueryNumber;
 import com.syngenta.digital.lab.kyiv.chronos.utils.db.utils.ExpectedGeneratedQueryNumbers;
 import com.syngenta.digital.lab.kyiv.chronos.utils.db.utils.QueryType;
@@ -20,6 +21,9 @@ import lombok.SneakyThrows;
 import org.apache.http.HttpStatus;
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
+import org.mockito.Mockito;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -29,6 +33,30 @@ import static com.github.springtestdbunit.assertion.DatabaseAssertionMode.NON_ST
 
 @DatabaseTearDown("/dbTearDown.xml")
 public class UserControllerIntegrationTest extends BaseIntegrationTest {
+    @MockBean
+    private PasswordEncoder passwordEncoder;
+
+    @Test
+    @SneakyThrows
+    @DatabaseSetup(value = "/UserControllerIntegrationTest/shouldUpdateUserPassword/dbSetup.xml")
+    @ExpectedDatabase(value = "/UserControllerIntegrationTest/shouldUpdateUserPassword/expectedDataBase.xml",
+            assertionMode = NON_STRICT_UNORDERED)
+    @ExpectedGeneratedQueryNumbers({
+            @ExpectedGeneratedQueryNumber(queryType = QueryType.SELECT, expectedNumber = 2),
+            @ExpectedGeneratedQueryNumber(queryType = QueryType.UPDATE, expectedNumber = 1)
+    })
+    public void shouldUpdateUserPassword() {
+        Mockito.when(passwordEncoder.encode(Mockito.any())).thenReturn("qwerty100$");
+        Response response = this.getRestAssured()
+                .contentType(ContentType.JSON)
+                .body(JsonUtils.readFromJson("/UserControllerIntegrationTest/shouldUpdateUserPassword/resetPasswordRequest.json", ResetPasswordRequest.class))
+                .put("/api/v0/user/password")
+                .then()
+                .extract()
+                .response();
+
+        Assertions.assertThat(response.getStatusCode()).isEqualTo(200);
+    }
 
     @Test
     @SneakyThrows
@@ -211,6 +239,8 @@ public class UserControllerIntegrationTest extends BaseIntegrationTest {
             @ExpectedGeneratedQueryNumber(queryType = QueryType.INSERT, expectedNumber = 1)
     })
     public void shouldSuccessfullyRegisterNewUser() {
+        Mockito.when(passwordEncoder.encode(Mockito.any())).thenReturn("passW3$rdd");
+
         Response response = this.getRestAssured()
                 .contentType(ContentType.JSON)
                 .body(JsonUtils.readFromJson("/UserControllerIntegrationTest/shouldSuccessfullyRegisterNewUser/registrationRequest.json", UserDto.class))

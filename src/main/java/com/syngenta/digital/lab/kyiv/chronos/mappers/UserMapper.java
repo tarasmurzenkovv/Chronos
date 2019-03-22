@@ -7,7 +7,6 @@ import com.syngenta.digital.lab.kyiv.chronos.model.dto.UserRoleEnum;
 import com.syngenta.digital.lab.kyiv.chronos.model.entities.UserEntity;
 import com.syngenta.digital.lab.kyiv.chronos.repositories.UserRoleRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
