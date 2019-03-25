@@ -5,6 +5,7 @@ import com.syngenta.digital.lab.kyiv.chronos.model.dto.ResetPasswordRequest;
 import com.syngenta.digital.lab.kyiv.chronos.model.dto.TaskDto;
 import com.syngenta.digital.lab.kyiv.chronos.model.dto.UserDto;
 import com.syngenta.digital.lab.kyiv.chronos.model.response.GeneralResponse;
+import com.syngenta.digital.lab.kyiv.chronos.service.SecurityService;
 import com.syngenta.digital.lab.kyiv.chronos.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,23 +25,24 @@ import java.util.List;
 @RequiredArgsConstructor
 public class UserController {
     private final UserService userService;
+    private final SecurityService securityService;
 
     @PostMapping("/user")
     public ResponseEntity<GeneralResponse<UserDto>> register(@Valid @RequestBody UserDto userDto) {
         log.info("About to register the following user '{}'", userDto);
-        return GeneralResponse.from(userService.register(userDto), HttpStatus.CREATED);
+        return GeneralResponse.from(securityService.register(userDto), HttpStatus.CREATED);
     }
 
     @PostMapping("/user/login")
     public ResponseEntity<GeneralResponse<UserDto>> login(@Valid @RequestBody LoginRequest loginRequest) {
         log.info("About to login the following user '{}'", loginRequest);
-        return GeneralResponse.from(userService.login(loginRequest), HttpStatus.FOUND);
+        return GeneralResponse.from(securityService.login(loginRequest), HttpStatus.FOUND);
     }
 
     @PutMapping("/user/password")
     public ResponseEntity resetPassword(@Valid @RequestBody ResetPasswordRequest resetPasswordRequest) {
         log.info("About to reset password for the following request '{}'", resetPasswordRequest);
-        userService.resetPassword(resetPasswordRequest);
+        securityService.resetPassword(resetPasswordRequest);
         return GeneralResponse.from(HttpStatus.OK);
     }
 

@@ -21,6 +21,7 @@ import lombok.SneakyThrows;
 import org.apache.http.HttpStatus;
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
+import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -47,6 +48,7 @@ public class UserControllerIntegrationTest extends BaseIntegrationTest {
     })
     public void shouldUpdateUserPassword() {
         Mockito.when(passwordEncoder.encode(Mockito.any())).thenReturn("qwerty100$");
+        Mockito.when(passwordEncoder.matches(Mockito.eq("strong_password"), Mockito.any())).thenReturn(Boolean.TRUE);
         Response response = this.getRestAssured()
                 .contentType(ContentType.JSON)
                 .body(JsonUtils.readFromJson("/UserControllerIntegrationTest/shouldUpdateUserPassword/resetPasswordRequest.json", ResetPasswordRequest.class))
