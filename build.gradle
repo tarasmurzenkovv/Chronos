@@ -3,7 +3,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'org.springframework.boot:spring-boot-gradle-plugin:2.1.3.RELEASE'
+        classpath 'org.springframework.boot:spring-boot-gradle-plugin:2.1.5.RELEASE'
         classpath 'com.moowork.gradle:gradle-node-plugin:1.2.0'
         classpath 'org.liquibase:liquibase-gradle-plugin:1.2.0'
         classpath 'mysql:mysql-connector-java:5.1.46'
@@ -51,7 +51,7 @@ lombok {
 }
 
 bootJar {
-    baseName = 'chronos'
+    archiveFileName = 'chronos'
     from('src/main/webapp/chronos-ui/build') {
         into 'public'
     }

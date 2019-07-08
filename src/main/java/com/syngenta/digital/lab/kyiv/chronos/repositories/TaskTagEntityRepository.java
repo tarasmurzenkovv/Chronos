@@ -12,8 +12,7 @@ import java.util.Optional;
 
 public interface TaskTagEntityRepository extends JpaRepository<TaskTagEntity, Long> {
 
-    @Query("select taskTagEntity from TaskTagEntity taskTagEntity " +
-            "where taskTagEntity.task=:task and taskTagEntity.tag=:tag ")
+    @Query("select taskTagEntity from TaskTagEntity taskTagEntity where taskTagEntity.task=:task and taskTagEntity.tag=:tag ")
     Optional<TaskTagEntity> findByTaskAndTag(@Param("task") TaskEntity taskEntity, @Param("tag") TagEntity tagEntity);
 
     @Modifying

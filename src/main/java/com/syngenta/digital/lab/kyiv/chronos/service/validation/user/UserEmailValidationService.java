@@ -47,7 +47,7 @@ public class UserEmailValidationService implements UserValidationService {
     }
 
     private void validateEmailUniqueness(String email) {
-        Long emailsCount = userRepository.countEmails(email);
+        long emailsCount = userRepository.countEmails(email);
 
         if (emailsCount > 0) {
             String errorMessage = String.format(EMAIL_UNIQUENESS_ERROR_MESSAGE, email);

@@ -14,12 +14,12 @@ public class DataSourceBeanPostProcessor implements BeanPostProcessor {
 
     @Override
     public Object postProcessAfterInitialization(Object bean, String beanName) {
-        if (bean instanceof DataSource) {
-            DataSource actualDataSource = (DataSource) bean;
-            return ProxyDataSourceBuilder.create(SingleCountQueryExecutionListenerWrapper.TEST_DATA_SOURCE_NAME, actualDataSource)
-                    .countQuery(singleQueryCountHolder)
-                    .build();
-        }
-        return bean;
+        return (bean instanceof DataSource) ? wrapAroundQueryCounter((DataSource) bean) : bean;
+    }
+
+    private Object wrapAroundQueryCounter(DataSource actualDataSource) {
+        return ProxyDataSourceBuilder.create(SingleCountQueryExecutionListenerWrapper.TEST_DATA_SOURCE_NAME, actualDataSource)
+                .countQuery(singleQueryCountHolder)
+                .build();
     }
 }
