@@ -5,7 +5,7 @@ import com.syngenta.digital.lab.kyiv.chronos.mappers.TaskMapper;
 import com.syngenta.digital.lab.kyiv.chronos.mappers.UserMapper;
 import com.syngenta.digital.lab.kyiv.chronos.model.dto.TaskDto;
 import com.syngenta.digital.lab.kyiv.chronos.model.dto.UserDto;
-import com.syngenta.digital.lab.kyiv.chronos.model.exceptions.UserValidationException;
+import com.syngenta.digital.lab.kyiv.chronos.model.exceptions.ApplicationBaseException;
 import com.syngenta.digital.lab.kyiv.chronos.repositories.TaskRepository;
 import com.syngenta.digital.lab.kyiv.chronos.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -37,7 +37,7 @@ public class UserService {
     @Transactional(readOnly = true)
     public List<TaskDto> find(long userId) {
         if (!authenticationService.isAllowed(userId)) {
-            throw new UserValidationException(ERROR_CODE_FOR_NON_EXISTING_EMAIL,
+            throw new ApplicationBaseException(ERROR_CODE_FOR_NON_EXISTING_EMAIL,
                     String.format("Cannot view the given user id '%s'", userId));
         }
         return taskRepository.find(userId)
@@ -56,12 +56,12 @@ public class UserService {
     @Transactional(readOnly = true)
     public UserDto findInformation(long userId) {
         if (!authenticationService.isAllowed(userId)) {
-            throw new UserValidationException(ERROR_CODE_FOR_NON_EXISTING_EMAIL,
+            throw new ApplicationBaseException(ERROR_CODE_FOR_NON_EXISTING_EMAIL,
                     String.format("Cannot view the given user id '%s'", userId));
         }
         return userRepository.findById(userId)
                 .map(userMapper::mapToDto)
-                .orElseThrow(() -> new UserValidationException(ERROR_CODE_FOR_NON_EXISTING_EMAIL,
+                .orElseThrow(() -> new ApplicationBaseException(ERROR_CODE_FOR_NON_EXISTING_EMAIL,
                         String.format("Cannot find the given user id '%s'", userId)));
     }
 }

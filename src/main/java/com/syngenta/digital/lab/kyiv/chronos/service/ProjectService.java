@@ -4,8 +4,7 @@ import com.syngenta.digital.lab.kyiv.chronos.mappers.ProjectMapper;
 import com.syngenta.digital.lab.kyiv.chronos.model.dto.ProjectDto;
 import com.syngenta.digital.lab.kyiv.chronos.model.entities.project.ProjectEntity;
 import com.syngenta.digital.lab.kyiv.chronos.model.entities.ProjectTypeEntity;
-import com.syngenta.digital.lab.kyiv.chronos.model.exceptions.ProjectException;
-import com.syngenta.digital.lab.kyiv.chronos.model.exceptions.ProjectTypeException;
+import com.syngenta.digital.lab.kyiv.chronos.model.exceptions.ApplicationBaseException;
 import com.syngenta.digital.lab.kyiv.chronos.repositories.ProjectRepository;
 import com.syngenta.digital.lab.kyiv.chronos.repositories.ProjectTypeRepository;
 import com.syngenta.digital.lab.kyiv.chronos.repositories.TaskRepository;
@@ -29,10 +28,10 @@ public class ProjectService {
     @Transactional
     public ProjectDto create(ProjectDto projectDto) {
         if (projectDto.isDeleted()) {
-            throw new ProjectException(ERR_CODE_NOT_EXISTING_PROJECT_TYPE, "Cannot save new project with flag deleted set to true");
+            throw new ApplicationBaseException(ERR_CODE_NOT_EXISTING_PROJECT_TYPE, "Cannot save new project with flag deleted set to true");
         }
         ProjectTypeEntity projectTypeEntity = projectTypeRepository.findById(projectDto.getProjectTypeId())
-                .orElseThrow(() -> new ProjectException(ERR_CODE_NOT_EXISTING_PROJECT_TYPE, "Cannot find project type for id " + projectDto.getProjectTypeId()));
+                .orElseThrow(() -> new ApplicationBaseException(ERR_CODE_NOT_EXISTING_PROJECT_TYPE, "Cannot find project type for id " + projectDto.getProjectTypeId()));
         ProjectEntity projectEntity = projectMapper.mapToEntity(projectDto, projectTypeEntity);
         ProjectEntity savedProjectEntity = projectRepository.save(projectEntity);
         return projectMapper.mapToDto(savedProjectEntity);
@@ -41,17 +40,17 @@ public class ProjectService {
     @Transactional
     public ProjectDto update(ProjectDto projectDto) {
         if (projectDto.getId() == null) {
-            throw new ProjectException(ERR_CODE_NOT_EXISTING_PROJECT_TYPE, "Cannot update project for null id value");
+            throw new ApplicationBaseException(ERR_CODE_NOT_EXISTING_PROJECT_TYPE, "Cannot update project for null id value");
         }
 
         ProjectTypeEntity projectTypeEntity = projectTypeRepository.findById(projectDto.getProjectTypeId())
-                .orElseThrow(() -> new ProjectException(ERR_CODE_NOT_EXISTING_PROJECT_TYPE, "Cannot find project type for id " + projectDto.getProjectTypeId()));
+                .orElseThrow(() -> new ApplicationBaseException(ERR_CODE_NOT_EXISTING_PROJECT_TYPE, "Cannot find project type for id " + projectDto.getProjectTypeId()));
 
         ProjectEntity existingProjectEntity = projectRepository.findById(projectDto.getId())
-                .orElseThrow(() -> new ProjectException(ERR_CODE_NOT_EXISTING_PROJECT_TYPE, "Cannot find project for id " + projectDto.getId()));
+                .orElseThrow(() -> new ApplicationBaseException(ERR_CODE_NOT_EXISTING_PROJECT_TYPE, "Cannot find project for id " + projectDto.getId()));
 
         if (existingProjectEntity.isDeleted()) {
-            throw new ProjectException(ERR_CODE_NOT_EXISTING_PROJECT_TYPE, "Cannot modify deleted project for id " + projectDto.getId());
+            throw new ApplicationBaseException(ERR_CODE_NOT_EXISTING_PROJECT_TYPE, "Cannot modify deleted project for id " + projectDto.getId());
         }
 
         ProjectEntity projectEntity = projectMapper.mapToEntity(projectDto, projectTypeEntity);
@@ -73,7 +72,7 @@ public class ProjectService {
     @Transactional
     public void delete(long id) {
         ProjectEntity projectEntity = projectRepository.findById(id)
-                .orElseThrow(() -> new ProjectTypeException(ERR_CODE_NOT_EXISTING_PROJECT_TYPE, "Cannot find project for id " + id));
+                .orElseThrow(() -> new ApplicationBaseException(ERR_CODE_NOT_EXISTING_PROJECT_TYPE, "Cannot find project for id " + id));
         projectEntity.setDeleted(true);
         projectRepository.save(projectEntity);
         taskRepository.freezeTasks(id);

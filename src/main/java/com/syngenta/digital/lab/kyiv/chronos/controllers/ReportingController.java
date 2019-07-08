@@ -4,7 +4,7 @@ import com.syngenta.digital.lab.kyiv.chronos.model.dto.reporting.Range;
 import com.syngenta.digital.lab.kyiv.chronos.model.dto.reporting.ReportType;
 import com.syngenta.digital.lab.kyiv.chronos.model.dto.reporting.ReportingRequest;
 import com.syngenta.digital.lab.kyiv.chronos.model.dto.reporting.ReportingResponse;
-import com.syngenta.digital.lab.kyiv.chronos.model.exceptions.ReportingException;
+import com.syngenta.digital.lab.kyiv.chronos.model.exceptions.ApplicationBaseException;
 import com.syngenta.digital.lab.kyiv.chronos.service.report.ReportingService;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
@@ -60,7 +60,7 @@ public class ReportingController {
                 responseHeaders.setContentType(MediaType.parseMediaType("application/csv"));
                 break;
             default:
-                throw new ReportingException(10, "No suitable reporting type is provided");
+                throw new ApplicationBaseException(10, "No suitable reporting type is provided");
         }
         return responseHeaders;
     }

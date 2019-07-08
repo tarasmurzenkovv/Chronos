@@ -6,7 +6,7 @@ import com.syngenta.digital.lab.kyiv.chronos.model.dto.LoginRequest;
 import com.syngenta.digital.lab.kyiv.chronos.model.dto.ResetPasswordRequest;
 import com.syngenta.digital.lab.kyiv.chronos.model.dto.UserDto;
 import com.syngenta.digital.lab.kyiv.chronos.model.entities.UserEntity;
-import com.syngenta.digital.lab.kyiv.chronos.model.exceptions.UserValidationException;
+import com.syngenta.digital.lab.kyiv.chronos.model.exceptions.ApplicationBaseException;
 import com.syngenta.digital.lab.kyiv.chronos.repositories.UserRepository;
 import com.syngenta.digital.lab.kyiv.chronos.service.validation.user.UserValidationService;
 import lombok.RequiredArgsConstructor;
@@ -40,7 +40,7 @@ public class SecurityService {
         String password = loginRequest.getPassword();
         String email = loginRequest.getEmail();
         if (StringUtils.isEmpty(password)) {
-            throw new UserValidationException(ERROR_CODE_FOR_NULL_BLANK_PASSWORD, "User password cannot be null/blank");
+            throw new ApplicationBaseException(ERROR_CODE_FOR_NULL_BLANK_PASSWORD, "User password cannot be null/blank");
         }
 
         return userRepository.find(email)
@@ -49,7 +49,7 @@ public class SecurityService {
                     userDto.setToken(authenticationService.authenticate(email, password));
                     return userDto;
                 })
-                .orElseThrow(() -> new UserValidationException(ERROR_CODE_FOR_NON_EXISTING_EMAIL,
+                .orElseThrow(() -> new ApplicationBaseException(ERROR_CODE_FOR_NON_EXISTING_EMAIL,
                         String.format("Cannot find the given email '%s'", email)));
     }
 
@@ -58,17 +58,17 @@ public class SecurityService {
         String newPassword = resetPasswordRequest.getNewPassword();
         String email = resetPasswordRequest.getEmail();
         if (StringUtils.isEmpty(newPassword)) {
-            throw new UserValidationException(ERROR_CODE_FOR_NULL_BLANK_PASSWORD, "User password cannot be null/blank");
+            throw new ApplicationBaseException(ERROR_CODE_FOR_NULL_BLANK_PASSWORD, "User password cannot be null/blank");
         }
         userRepository.find(email)
                 .ifPresentOrElse(user -> {
                     if (!passwordEncoder.matches(resetPasswordRequest.getOldPassword(), user.getUserPassword())) {
-                        throw new UserValidationException(ERROR_CODE_FOR_NON_EXISTING_EMAIL, "Old password doesnt match the stored one. ");
+                        throw new ApplicationBaseException(ERROR_CODE_FOR_NON_EXISTING_EMAIL, "Old password doesnt match the stored one. ");
                     }
                     String newEncodedPassword = passwordEncoder.encode(resetPasswordRequest.getNewPassword());
                     userRepository.updatePassword(newEncodedPassword, email);
                 }, () -> {
-                    throw new UserValidationException(ERROR_CODE_FOR_NON_EXISTING_EMAIL, String.format("Cannot find the given email '%s'", email));
+                    throw new ApplicationBaseException(ERROR_CODE_FOR_NON_EXISTING_EMAIL, String.format("Cannot find the given email '%s'", email));
                 });
     }
 }

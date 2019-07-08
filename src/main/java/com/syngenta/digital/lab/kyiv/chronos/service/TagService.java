@@ -7,7 +7,7 @@ import com.syngenta.digital.lab.kyiv.chronos.model.dto.TaskDto;
 import com.syngenta.digital.lab.kyiv.chronos.model.entities.TagEntity;
 import com.syngenta.digital.lab.kyiv.chronos.model.entities.task.TaskEntity;
 import com.syngenta.digital.lab.kyiv.chronos.model.entities.task.TaskTagEntity;
-import com.syngenta.digital.lab.kyiv.chronos.model.exceptions.TagException;
+import com.syngenta.digital.lab.kyiv.chronos.model.exceptions.ApplicationBaseException;
 import com.syngenta.digital.lab.kyiv.chronos.repositories.TagRepository;
 import com.syngenta.digital.lab.kyiv.chronos.repositories.TaskTagEntityRepository;
 import lombok.RequiredArgsConstructor;
@@ -71,7 +71,7 @@ public class TagService {
     public TagDto find(long id) {
         return tagRepository.findById(id)
                 .map(tagMapper::mapToDto)
-                .orElseThrow(() -> new TagException(ERROR_CODE, String.format("Cannot find tag for id '%s'", id)));
+                .orElseThrow(() -> new ApplicationBaseException(ERROR_CODE, String.format("Cannot find tag for id '%s'", id)));
     }
 
     public List<TagDto> find() {

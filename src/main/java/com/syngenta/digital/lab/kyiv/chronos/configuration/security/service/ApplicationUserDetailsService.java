@@ -2,7 +2,7 @@ package com.syngenta.digital.lab.kyiv.chronos.configuration.security.service;
 
 import com.syngenta.digital.lab.kyiv.chronos.configuration.security.UserPrincipal;
 import com.syngenta.digital.lab.kyiv.chronos.mappers.UserMapper;
-import com.syngenta.digital.lab.kyiv.chronos.model.exceptions.UserValidationException;
+import com.syngenta.digital.lab.kyiv.chronos.model.exceptions.ApplicationBaseException;
 import com.syngenta.digital.lab.kyiv.chronos.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -21,7 +21,7 @@ public class ApplicationUserDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(String userEmail) {
         return userRepository.find(userEmail)
                 .map(userMapper::mapToUserPrinciple)
-                .orElseThrow(() -> new UserValidationException(ERROR_CODE_FOR_NON_EXISTING_EMAIL,
+                .orElseThrow(() -> new ApplicationBaseException(ERROR_CODE_FOR_NON_EXISTING_EMAIL,
                         String.format("Cannot find the given user for the provided name '%s'", userEmail)));
     }
 
@@ -30,7 +30,7 @@ public class ApplicationUserDetailsService implements UserDetailsService {
         return userRepository
                 .findById(userId)
                 .map(userMapper::mapToUserPrinciple)
-                .orElseThrow(() -> new UserValidationException(ERROR_CODE_FOR_NON_EXISTING_EMAIL,
+                .orElseThrow(() -> new ApplicationBaseException(ERROR_CODE_FOR_NON_EXISTING_EMAIL,
                         String.format("Cannot find the given user id '%s'", userId)));
     }
 }

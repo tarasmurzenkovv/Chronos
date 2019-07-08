@@ -4,7 +4,7 @@ import com.syngenta.digital.lab.kyiv.chronos.model.dto.ReportingProperties;
 import com.syngenta.digital.lab.kyiv.chronos.model.dto.reporting.Range;
 import com.syngenta.digital.lab.kyiv.chronos.model.dto.reporting.Report;
 import com.syngenta.digital.lab.kyiv.chronos.model.dto.reporting.ReportingResponse;
-import com.syngenta.digital.lab.kyiv.chronos.model.exceptions.ReportingException;
+import com.syngenta.digital.lab.kyiv.chronos.model.exceptions.ApplicationBaseException;
 import com.syngenta.digital.lab.kyiv.chronos.service.ClockService;
 import com.syngenta.digital.lab.kyiv.chronos.utils.DateTimeUtils;
 import lombok.RequiredArgsConstructor;
@@ -38,7 +38,7 @@ public class CsvViewRenderer implements ViewRenderer {
             reports.forEach(report -> printRecord(report, printer));
             return new ReportingResponse(fileName, writer.toString().getBytes());
         } catch (IOException e) {
-            throw new ReportingException(ERROR_CODE, e.getMessage());
+            throw new ApplicationBaseException(ERROR_CODE, e.getMessage());
         }
     }
 

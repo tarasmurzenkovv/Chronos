@@ -1,7 +1,7 @@
 package com.syngenta.digital.lab.kyiv.chronos.model.dto.reporting;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
-import com.syngenta.digital.lab.kyiv.chronos.model.exceptions.ReportingException;
+import com.syngenta.digital.lab.kyiv.chronos.model.exceptions.ApplicationBaseException;
 
 import java.util.Arrays;
 
@@ -21,6 +21,6 @@ public enum ReportType {
         return Arrays.stream(ReportType.values())
                 .filter(value -> typeAsString.equalsIgnoreCase(value.typeAsString))
                 .findFirst()
-                .orElseThrow(() -> new ReportingException(errorCode, "No suitable report type is provided"));
+                .orElseThrow(() -> new ApplicationBaseException(errorCode, "No suitable report type is provided"));
     }
 }

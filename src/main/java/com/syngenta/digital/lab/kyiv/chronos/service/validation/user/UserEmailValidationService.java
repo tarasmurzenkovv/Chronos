@@ -1,7 +1,7 @@
 package com.syngenta.digital.lab.kyiv.chronos.service.validation.user;
 
 import com.syngenta.digital.lab.kyiv.chronos.model.dto.UserDto;
-import com.syngenta.digital.lab.kyiv.chronos.model.exceptions.UserValidationException;
+import com.syngenta.digital.lab.kyiv.chronos.model.exceptions.ApplicationBaseException;
 import com.syngenta.digital.lab.kyiv.chronos.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
@@ -35,14 +35,14 @@ public class UserEmailValidationService implements UserValidationService {
         Matcher matcher = EMAIL_REGEX.matcher(email);
         if (!matcher.matches()) {
             String errorMessage = String.format(ERROR_CODE_EMAIL_INVALID_FORMAT_MESSAGE, email);
-            throw new UserValidationException(ERROR_CODE_EMAIL_INVALID_FORMAT, errorMessage);
+            throw new ApplicationBaseException(ERROR_CODE_EMAIL_INVALID_FORMAT, errorMessage);
         }
     }
 
     private void validateIfEmailsIsNullOrEmpty(String email) {
         if (StringUtils.isEmpty(email)) {
 
-            throw new UserValidationException(ERROR_CODE_EMAIL_EMAIL_IS_NULL_BLANK, ERROR_MESSAGE_EMPTY_OR_NULL_EMAIL);
+            throw new ApplicationBaseException(ERROR_CODE_EMAIL_EMAIL_IS_NULL_BLANK, ERROR_MESSAGE_EMPTY_OR_NULL_EMAIL);
         }
     }
 
@@ -51,7 +51,7 @@ public class UserEmailValidationService implements UserValidationService {
 
         if (emailsCount > 0) {
             String errorMessage = String.format(EMAIL_UNIQUENESS_ERROR_MESSAGE, email);
-            throw new UserValidationException(ERROR_CODE_EMAIL_UNIQUENESS, errorMessage);
+            throw new ApplicationBaseException(ERROR_CODE_EMAIL_UNIQUENESS, errorMessage);
         }
     }
 }

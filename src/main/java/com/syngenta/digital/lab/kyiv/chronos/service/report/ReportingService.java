@@ -4,7 +4,7 @@ import com.syngenta.digital.lab.kyiv.chronos.model.dto.reporting.ReportType;
 import com.syngenta.digital.lab.kyiv.chronos.model.dto.reporting.ReportingRequest;
 import com.syngenta.digital.lab.kyiv.chronos.model.dto.reporting.Report;
 import com.syngenta.digital.lab.kyiv.chronos.model.dto.reporting.ReportingResponse;
-import com.syngenta.digital.lab.kyiv.chronos.model.exceptions.ReportingException;
+import com.syngenta.digital.lab.kyiv.chronos.model.exceptions.ApplicationBaseException;
 import com.syngenta.digital.lab.kyiv.chronos.repositories.TaskRepository;
 import com.syngenta.digital.lab.kyiv.chronos.repositories.UserRepository;
 import com.syngenta.digital.lab.kyiv.chronos.service.report.view.ViewRenderer;
@@ -38,13 +38,13 @@ public class ReportingService {
             case XLS:
                 return xlsViewRenderer.writeToFile(reports, reportingRequest.getRange());
             default:
-                throw new ReportingException(ERROR_CODE, "No suitable report type is provided");
+                throw new ApplicationBaseException(ERROR_CODE, "No suitable report type is provided");
         }
     }
 
     private void freezeTasks(List<Report> reports) {
         if (CollectionUtils.isEmpty(reports)) {
-            throw new ReportingException(ERROR_CODE, "No tasks have been found for the report generations.");
+            throw new ApplicationBaseException(ERROR_CODE, "No tasks have been found for the report generations.");
         }
         List<Long> taskIds = reports.stream().map(Report::getTaskId).collect(Collectors.toList());
         taskRepository.freezeTasks(taskIds);

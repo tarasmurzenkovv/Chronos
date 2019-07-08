@@ -8,7 +8,7 @@ import com.syngenta.digital.lab.kyiv.chronos.model.entities.project.ProjectEntit
 import com.syngenta.digital.lab.kyiv.chronos.model.entities.TagEntity;
 import com.syngenta.digital.lab.kyiv.chronos.model.entities.task.TaskEntity;
 import com.syngenta.digital.lab.kyiv.chronos.model.entities.UserEntity;
-import com.syngenta.digital.lab.kyiv.chronos.model.exceptions.TaskException;
+import com.syngenta.digital.lab.kyiv.chronos.model.exceptions.ApplicationBaseException;
 import com.syngenta.digital.lab.kyiv.chronos.repositories.ProjectRepository;
 import com.syngenta.digital.lab.kyiv.chronos.repositories.TagRepository;
 import com.syngenta.digital.lab.kyiv.chronos.repositories.TaskRepository;
@@ -34,16 +34,7 @@ public class TaskService {
 
     @Transactional
     public TaskDto register(TaskDto taskDto) {
-        UserEntity userEntity = userRepository.findById(taskDto.getUserId())
-                .orElseThrow(() -> new TaskException(ERROR_CODE, "Cannot find user for id" + taskDto.getUserId()));
-        ProjectEntity projectEntity = projectRepository.findById(taskDto.getProjectId())
-                .orElseThrow(() -> new TaskException(ERROR_CODE, "Cannot find project for id" + taskDto.getProjectId()));
-
-        if (projectEntity.isDeleted()) {
-            throw new TaskException(ERROR_CODE, "Cannot modify tasks list for the deleted project with id " + taskDto.getProjectId());
-        }
-
-        TaskEntity savedTaskEntity = saveTask(taskDto, userEntity, projectEntity);
+        TaskEntity savedTaskEntity = saveTask(taskDto);
         List<TagEntity> savedTagEntities = tagService.saveTags(taskDto);
         tagService.saveTaskTags(savedTaskEntity, savedTagEntities);
         TaskDto processedTaskDto = taskMapper.mapToDto(savedTaskEntity);
@@ -51,13 +42,18 @@ public class TaskService {
         return processedTaskDto;
     }
 
-    private TaskEntity saveTask(TaskDto taskDto, UserEntity userEntity, ProjectEntity projectEntity) {
+    private TaskEntity saveTask(TaskDto taskDto) {
+        UserEntity userEntity = userRepository.findById(taskDto.getUserId())
+                .orElseThrow(() -> new ApplicationBaseException(ERROR_CODE, "Cannot find user for id" + taskDto.getUserId()));
+        ProjectEntity projectEntity = projectRepository.findById(taskDto.getProjectId())
+                .orElseThrow(() -> new ApplicationBaseException(ERROR_CODE, "Cannot find project for id" + taskDto.getProjectId()));
+        if (projectEntity.isDeleted()) {
+            throw new ApplicationBaseException(ERROR_CODE, "Cannot modify tasks list for the deleted project with id " + taskDto.getProjectId());
+        }
         TaskEntity taskEntity = taskMapper.mapToEntity(taskDto, userEntity, projectEntity);
         Long taskId = taskEntity.getId();
-        if (taskId != null) {
-            if (!taskRepository.isEditable(taskId)) {
-                throw new TaskException(ERROR_CODE, String.format("The task with id '%s' is already frozen. Cannot modify it.", taskId));
-            }
+        if (taskId != null && !taskRepository.isEditable(taskId)) {
+            throw new ApplicationBaseException(ERROR_CODE, String.format("The task with id '%s' is already frozen. Cannot modify it.", taskId));
         }
         return taskRepository.save(taskEntity);
     }
@@ -66,14 +62,14 @@ public class TaskService {
     public TaskDto find(long taskId) {
         return taskRepository.findById(taskId)
                 .map(taskMapper::mapToDto)
-                .orElseThrow(() -> new TaskException(ERROR_CODE, "Cannot find task for id " + taskId));
+                .orElseThrow(() -> new ApplicationBaseException(ERROR_CODE, "Cannot find task for id " + taskId));
     }
 
     @Transactional
     public void delete(long taskId) {
         TaskDto taskDto = find(taskId);
         if (!taskDto.getEditable()) {
-            throw new TaskException(ERROR_CODE, String.format("The task with id '%s' is already frozen. Cannot modify it.", taskId));
+            throw new ApplicationBaseException(ERROR_CODE, String.format("The task with id '%s' is already frozen. Cannot modify it.", taskId));
         }
         taskRepository.deleteById(taskDto.getTaskId());
     }

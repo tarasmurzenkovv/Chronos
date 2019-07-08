@@ -1,7 +1,7 @@
 package com.syngenta.digital.lab.kyiv.chronos.service.validation.user;
 
 import com.syngenta.digital.lab.kyiv.chronos.model.dto.UserDto;
-import com.syngenta.digital.lab.kyiv.chronos.model.exceptions.UserValidationException;
+import com.syngenta.digital.lab.kyiv.chronos.model.exceptions.ApplicationBaseException;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
@@ -26,14 +26,14 @@ public class UserPasswordValidationService implements UserValidationService {
 
     private void validateIfPasswordIsNullOrBlank(String password) {
         if (StringUtils.isEmpty(password)) {
-            throw new UserValidationException(ERROR_CODE_FOR_NULL_BLANK_PASSWORD, ERROR_MESSAGE_FOR_NULL_BLANK_PASSWORD);
+            throw new ApplicationBaseException(ERROR_CODE_FOR_NULL_BLANK_PASSWORD, ERROR_MESSAGE_FOR_NULL_BLANK_PASSWORD);
         }
     }
 
     private void validatePasswordFormat(String password) {
         Matcher matcher = VALID_PASSWORD_REGEX.matcher(password);
         if (!matcher.matches()) {
-            throw new UserValidationException(ERROR_CODE_FOR_INVALID_PASSWORD_FORMAT, INVALID_PASSWORD_FORMAT_ERR_MSG);
+            throw new ApplicationBaseException(ERROR_CODE_FOR_INVALID_PASSWORD_FORMAT, INVALID_PASSWORD_FORMAT_ERR_MSG);
         }
     }
 }
