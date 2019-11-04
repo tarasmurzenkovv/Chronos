@@ -18,14 +18,12 @@ public class JwtTokenProvider {
     private static final String TOKEN_PREFIX_NAME = "Bearer ";
     private String jwtSecret = "password";
 
-    private int jwtExpirationInMs = Integer.MAX_VALUE;
+    public String generateToken(final Authentication authentication) {
+        final UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
 
-    public String generateToken(Authentication authentication) {
-
-        UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
-
-        Date now = new Date();
-        Date expiryDate = new Date(now.getTime() + jwtExpirationInMs);
+        final Date now = new Date();
+        int jwtExpirationInMs = Integer.MAX_VALUE;
+        final Date expiryDate = new Date(now.getTime() + jwtExpirationInMs);
 
         return Jwts.builder()
                 .setSubject(Long.toString(userPrincipal.getId()))
@@ -36,12 +34,13 @@ public class JwtTokenProvider {
     }
 
     public Long getUserIdFromJWT(String token) {
-        Claims claims = Jwts.parser()
+        String subject = Jwts.parser()
                 .setSigningKey(jwtSecret)
                 .parseClaimsJws(token)
-                .getBody();
+                .getBody()
+                .getSubject();
 
-        return Long.parseLong(claims.getSubject());
+        return Long.parseLong(subject);
     }
 
     public String getJwtFromRequest(HttpServletRequest request) {

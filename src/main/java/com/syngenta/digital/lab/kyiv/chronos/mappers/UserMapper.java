@@ -60,16 +60,4 @@ public class UserMapper {
                 authorities
         );
     }
-
-    public UserDto mapToDto(Authentication authentication, UserPrincipal principal) {
-
-        UserDto userDto = new UserDto();
-
-        userDto.setEmail(principal.getEmail());
-        userDto.setFirstName(principal.getName());
-        userDto.setLastName(principal.getUsername());
-        userDto.setId(principal.getId());
-        userDto.setRole(principal.getAuthorities().stream().map(GrantedAuthority::getAuthority).findFirst().get());
-        return userDto;
-    }
 }

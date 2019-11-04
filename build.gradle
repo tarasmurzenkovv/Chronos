@@ -29,7 +29,7 @@ apply plugin: "org.hidetake.ssh"
 
 remotes {
     webServer {
-        def pathToRsa = project.findProperty("host.id_rsa.file.path")
+        String pathToRsa = project.findProperty("host.id_rsa.file.path")
         host = project.findProperty("host")
         user = project.findProperty("host.user")
         password = project.findProperty("host.password")
