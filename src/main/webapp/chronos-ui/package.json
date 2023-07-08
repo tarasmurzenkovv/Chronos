@@ -150,7 +150,7 @@
     "resolve": "1.8.1",
     "sass-loader": "7.1.0",
     "style-loader": "0.23.0",
-    "stylelint": "^9.9.0",
+    "stylelint": "^15.10.1",
     "stylelint-config-standard": "^18.2.0",
     "terser-webpack-plugin": "1.1.0",
     "typescript": "^3.2.2",
